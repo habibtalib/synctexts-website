@@ -1,5 +1,3 @@
-import './style.css';
-
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Navbar Scroll Effect
   const nav = document.querySelector('.glass-nav');
