@@ -1085,6 +1085,125 @@ a {
   align-items: stretch;
 }
 
+/* Portfolio Grid */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.portfolio-card-content {
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.portfolio-card-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.portfolio-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.portfolio-languages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tech-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--secondary);
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.portfolio-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.updated-date {
+  font-size: 0.8rem;
+  color: var(--text-dimmed);
+}
+
+.project-link.muted {
+  color: var(--text-dimmed);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Case Study Detail Page */
+.case-study-page {
+  padding-top: 8rem;
+  padding-bottom: 4rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.case-study-header {
+  margin-bottom: 3rem;
+}
+
+.case-study-header h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1.5rem;
+  letter-spacing: -1px;
+}
+
+.case-study-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.case-study-meta strong {
+  color: var(--text-primary);
+}
+
+.case-study-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.case-study-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.back-to-portfolio {
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.back-to-portfolio:hover {
+  color: var(--primary);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .contact-wrapper {
@@ -1136,6 +1255,10 @@ a {
   }
 
   .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-grid {
     grid-template-columns: 1fr;
   }
 

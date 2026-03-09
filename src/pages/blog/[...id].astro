@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const readTime =
+  Math.ceil((post.body || '').split(/\s+/).length / 200) + ' min read';
+
+const formattedDate = post.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={post.data.title} description={post.data.excerpt}>
+  <article class="blog-post-page container">
+    <header class="blog-post-header">
+      <div class="blog-post-meta">
+        <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+        <span class="blog-card-separator">&mdash;</span>
+        <span>{readTime}</span>
+      </div>
+      <h1 class="text-gradient">{post.data.title}</h1>
+      {
+        post.data.tags.length > 0 && (
+          <div class="tags-list">
+            {post.data.tags.map((tag: string) => (
+              <span class="tag-pill">{tag}</span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <footer class="blog-post-footer">
+      <a href="/blog" class="back-to-blog">&larr; Back to blog</a>
+    </footer>
+  </article>
+</BaseLayout>
