@@ -1,0 +1,115 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/team', label: 'Team' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/contact', label: 'Contact' },
+];
+
+function isActive(linkHref: string): boolean {
+  if (linkHref === '/') {
+    return currentPath === '/' || currentPath === '';
+  }
+  return currentPath.startsWith(linkHref);
+}
+---
+
+<nav class="glass-nav">
+  <div class="container nav-content">
+    <a href="/" class="logo">
+      <span class="logo-sync">Sync</span><span class="logo-texts">Texts</span>
+      <span class="logo-dot">.</span>
+    </a>
+
+    <div class="nav-links-desktop">
+      {navLinks.map((link) => (
+        <a href={link.href} class:list={[{ active: isActive(link.href) }]}>
+          {link.label}
+        </a>
+      ))}
+      <a href="/contact" class="btn btn-primary">Start Project</a>
+    </div>
+
+    <button
+      class="hamburger"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="sidebar-overlay" aria-hidden="true"></div>
+<div class="mobile-sidebar" aria-hidden="true">
+  {navLinks.map((link) => (
+    <a href={link.href} class:list={['sidebar-link', { active: isActive(link.href) }]}>
+      {link.label}
+    </a>
+  ))}
+  <a href="/contact" class="btn btn-primary btn-block">Start Project</a>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const sidebar = document.querySelector('.mobile-sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    const body = document.body;
+
+    if (!hamburger || !sidebar || !overlay) return;
+
+    function openSidebar() {
+      hamburger!.setAttribute('aria-expanded', 'true');
+      sidebar!.classList.add('open');
+      sidebar!.setAttribute('aria-hidden', 'false');
+      overlay!.classList.add('open');
+      body.classList.add('sidebar-open');
+    }
+
+    function closeSidebar() {
+      hamburger!.setAttribute('aria-expanded', 'false');
+      sidebar!.classList.remove('open');
+      sidebar!.setAttribute('aria-hidden', 'true');
+      overlay!.classList.remove('open');
+      body.classList.remove('sidebar-open');
+    }
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+      if (isOpen) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar on link click
+    sidebar.querySelectorAll('.sidebar-link').forEach((link) => {
+      link.addEventListener('click', closeSidebar);
+    });
+  });
+
+  // Close sidebar before View Transition navigation
+  document.addEventListener('astro:before-preparation', () => {
+    const sidebar = document.querySelector('.mobile-sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    const hamburger = document.querySelector('.hamburger');
+
+    if (sidebar) {
+      sidebar.classList.remove('open');
+      sidebar.setAttribute('aria-hidden', 'true');
+    }
+    if (overlay) overlay.classList.remove('open');
+    if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('sidebar-open');
+  });
+</script>
