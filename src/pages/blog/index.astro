@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const sorted = posts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Insights, tutorials, and engineering stories from the SyncTexts team."
+>
+  <PageHeader title="Blog" subtitle="Insights, tutorials, and engineering stories" />
+  <section class="container section">
+    <div class="blog-grid">
+      {
+        sorted.map((post, i) => {
+          const readTime =
+            Math.ceil((post.body || '').split(/\s+/).length / 200) + ' min read';
+          return (
+            <BlogPostCard
+              title={post.data.title}
+              date={post.data.date}
+              excerpt={post.data.excerpt}
+              readTime={readTime}
+              tags={post.data.tags}
+              href={`/blog/${post.id}`}
+              delay={`${i * 0.1}s`}
+            />
+          );
+        })
+      }
+    </div>
+  </section>
+</BaseLayout>

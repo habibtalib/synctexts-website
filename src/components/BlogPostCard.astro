@@ -1,0 +1,48 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  excerpt: string;
+  readTime: string;
+  tags: string[];
+  href: string;
+  delay?: string;
+}
+
+const { title, date, excerpt, readTime, tags, href, delay } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+const truncatedExcerpt =
+  excerpt.length > 150 ? excerpt.slice(0, 147) + '...' : excerpt;
+---
+
+<article
+  class="glass-panel blog-card reveal"
+  style={delay ? `transition-delay: ${delay}` : undefined}
+>
+  <div class="blog-card-content">
+    <div class="blog-card-meta">
+      <span class="blog-card-date">{formattedDate}</span>
+      <span class="blog-card-separator">&mdash;</span>
+      <span class="blog-card-read-time">{readTime}</span>
+    </div>
+    <h3 class="blog-card-title">
+      <a href={href}>{title}</a>
+    </h3>
+    <p class="blog-card-excerpt">{truncatedExcerpt}</p>
+    {
+      tags.length > 0 && (
+        <div class="tags-list">
+          {tags.map((tag) => (
+            <span class="tag-pill">{tag}</span>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>
