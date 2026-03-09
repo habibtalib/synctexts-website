@@ -1,0 +1,36 @@
+---
+const technologies = [
+  { name: 'Laravel', icon: 'laravel', variant: 'original' },
+  { name: 'PHP', icon: 'php', variant: 'plain' },
+  { name: 'Flutter', icon: 'flutter', variant: 'original' },
+  { name: 'Kubernetes', icon: 'kubernetes', variant: 'plain' },
+  { name: 'Terraform', icon: 'terraform', variant: 'original' },
+  { name: 'Docker', icon: 'docker', variant: 'original' },
+  { name: 'Google Cloud', icon: 'googlecloud', variant: 'original' },
+  { name: 'PostgreSQL', icon: 'postgresql', variant: 'original' },
+];
+---
+
+<section id="tech" class="tech-stack section full-width">
+  <div class="container">
+    <div class="section-heading reveal">
+      <h2>Our <span class="text-gradient">Technology Arsenal</span></h2>
+      <p>We use the best tools for the job, ensuring high performance, maintainability, and rapid iteration.</p>
+    </div>
+
+    <div class="tech-grid reveal">
+      {technologies.map((tech) => (
+        <div class="tech-item glass-panel">
+          <img
+            src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${tech.icon}/${tech.icon}-${tech.variant}.svg`}
+            alt={tech.name}
+            width="40"
+            height="40"
+            loading="lazy"
+          />
+          <span>{tech.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

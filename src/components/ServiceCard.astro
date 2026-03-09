@@ -1,0 +1,16 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  delay?: string;
+}
+
+const { icon, title, description, delay } = Astro.props;
+---
+
+<div class="service-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
+  <div class="service-icon">{icon}</div>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</div>

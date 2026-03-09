@@ -1,0 +1,48 @@
+---
+import ServiceCard from './ServiceCard.astro';
+
+const services = [
+  {
+    icon: '\u{1F310}',
+    title: 'Web & Mobile Dev',
+    description: 'Crafting bespoke digital platforms using cutting-edge frameworks like Laravel, FilamentPHP, and Flutter for seamless multi-platform experiences.',
+    delay: '0.1s',
+  },
+  {
+    icon: '\u{2699}\u{FE0F}',
+    title: 'DevOps & Cloud',
+    description: 'Architecting resilient infrastructure. We leverage Kubernetes and Terraform to automate, scale, and secure your cloud environments.',
+    delay: '0.2s',
+  },
+  {
+    icon: '\u{1F4CA}',
+    title: 'Analytics & Insights',
+    description: 'Turning data into competitive advantage. Expert implementation of Google Analytics and Google Tag Manager for actionable business intelligence.',
+    delay: '0.3s',
+  },
+  {
+    icon: '\u{1F6E1}\u{FE0F}',
+    title: 'Security & Compliance',
+    description: 'Proactive security audits, vulnerability management, and compliance frameworks to protect your digital assets and customer data.',
+    delay: '0.4s',
+  },
+];
+---
+
+<section id="services" class="services container section">
+  <div class="section-heading reveal">
+    <h2>Core <span class="text-gradient">Expertise</span></h2>
+    <p>Delivering end-to-end solutions combining engineering excellence with modern infrastructure.</p>
+  </div>
+
+  <div class="services-grid">
+    {services.map((service) => (
+      <ServiceCard
+        icon={service.icon}
+        title={service.title}
+        description={service.description}
+        delay={service.delay}
+      />
+    ))}
+  </div>
+</section>

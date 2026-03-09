@@ -1,0 +1,19 @@
+---
+interface Props {
+  tag: string;
+  title: string;
+  description: string;
+  delay?: string;
+}
+
+const { tag, title, description, delay } = Astro.props;
+---
+
+<div class="project-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
+  <div class="project-content">
+    <span class="project-tag">{tag}</span>
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <a href="/portfolio" class="project-link">View Details &rarr;</a>
+  </div>
+</div>

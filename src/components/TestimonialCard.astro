@@ -1,0 +1,55 @@
+---
+interface Props {
+  quote: string;
+  name: string;
+  role: string;
+  company: string;
+  delay?: string;
+}
+
+const { quote, name, role, company, delay } = Astro.props;
+---
+
+<div class="testimonial-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
+  <blockquote class="testimonial-quote">
+    <p>&ldquo;{quote}&rdquo;</p>
+  </blockquote>
+  <div class="testimonial-attribution">
+    <span class="testimonial-name">{name}</span>
+    <span class="testimonial-role">{role} at {company}</span>
+  </div>
+</div>
+
+<style>
+  .testimonial-card {
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .testimonial-quote p {
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .testimonial-attribution {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .testimonial-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .testimonial-role {
+    font-size: 0.85rem;
+    color: var(--text-dimmed);
+  }
+</style>
