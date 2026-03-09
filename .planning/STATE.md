@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-09T04:19:55.518Z"
-last_activity: 2026-03-09 -- Completed Plan 01-02 (Homepage components)
+status: in-progress
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-09T17:18:41Z"
+last_activity: 2026-03-09 -- Completed Plan 02-01 (Content collections & data infrastructure)
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_plans: 7
+  completed_plans: 3
+  percent: 43
 ---
 
 # Project State
@@ -21,29 +21,30 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** Phase 1: Foundation & Migration
+**Current focus:** Phase 2: Content & Portfolio
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Migration) -- COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase Complete
-Last activity: 2026-03-09 -- Completed Plan 01-02 (Homepage components)
+Phase: 2 of 4 (Content & Portfolio)
+Plan: 1 of 3 in current phase -- COMPLETE
+Status: In Progress
+Last activity: 2026-03-09 -- Completed Plan 02-01 (Content collections & data infrastructure)
 
-Progress: [██████████] 100%
+Progress: [████░░░░░░] 43%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 9 min
-- Total execution time: 0.30 hours
+- Total plans completed: 3
+- Average duration: 11 min
+- Total execution time: 0.57 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-migration | 2 | 18 min | 9 min |
+| 02-content-portfolio | 1 | 16 min | 16 min |
 
 **Recent Trend:**
 - Last 5 plans: -
@@ -67,6 +68,9 @@ Recent decisions affecting current work:
 - [01-01]: Scripts use astro:page-load event for View Transition compatibility
 - [01-02]: Tech icons loaded from Devicon CDN for consistent SVG rendering
 - [01-02]: Portfolio/testimonial data inline as placeholder -- real data in Phase 2
+- [02-01]: Used process.env.GITHUB_PAT for server-only build-time GitHub API access
+- [02-01]: Portfolio loader gracefully degrades to local-only data when PAT is missing
+- [02-01]: Testimonials YAML preserves 3 existing entries and adds 2 new ones
 
 ### Pending Todos
 
@@ -80,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T04:20:00.000Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-03-09T17:18:41Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None

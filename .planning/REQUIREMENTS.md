@@ -21,24 +21,24 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **PORT-01**: Portfolio page displays 5-10 curated projects from GitHub private repos via API
 - [ ] **PORT-02**: Each portfolio card shows repo name, description, primary languages, and last updated date
-- [ ] **PORT-03**: Config file defines which repos to display (repo slugs + GitHub PAT in env var)
+- [x] **PORT-03**: Config file defines which repos to display (repo slugs + GitHub PAT in env var)
 - [ ] **PORT-04**: Manual override capability per project (custom title, description, screenshots, tech tags)
 - [ ] **PORT-05**: Individual project detail pages with full case study content
-- [ ] **PORT-06**: GitHub API data fetched at build time only (PAT never exposed to client)
+- [x] **PORT-06**: GitHub API data fetched at build time only (PAT never exposed to client)
 
 ### Content Pages
 
 - [ ] **TEAM-01**: Team page with member profiles (photo, name, role, short bio)
-- [ ] **TEAM-02**: Team data driven by config file (YAML/JSON), not hardcoded HTML
+- [x] **TEAM-02**: Team data driven by config file (YAML/JSON), not hardcoded HTML
 - [ ] **TEST-01**: Testimonials section on homepage with client quotes, name, role, and company
-- [ ] **TEST-02**: Testimonials data driven by config file
+- [x] **TEST-02**: Testimonials data driven by config file
 - [ ] **PRIC-01**: Pricing page with 3 service tiers (Starter/Growth/Enterprise or similar)
 - [ ] **PRIC-02**: Each tier shows included services, starting price, and CTA
-- [ ] **PRIC-03**: Pricing data driven by config file
+- [x] **PRIC-03**: Pricing data driven by config file
 - [ ] **BLOG-01**: Blog listing page showing all posts with title, date, excerpt, and read time
 - [ ] **BLOG-02**: Individual blog post pages rendered from Markdown files with YAML frontmatter
 - [ ] **BLOG-03**: Syntax highlighting for code blocks in blog posts
-- [ ] **BLOG-04**: Blog posts support tags for categorization
+- [x] **BLOG-04**: Blog posts support tags for categorization
 
 ### Lead Capture
 
@@ -113,21 +113,21 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-07 | Phase 1 | Complete |
 | PORT-01 | Phase 2 | Pending |
 | PORT-02 | Phase 2 | Pending |
-| PORT-03 | Phase 2 | Pending |
+| PORT-03 | Phase 2 | Complete |
 | PORT-04 | Phase 2 | Pending |
 | PORT-05 | Phase 2 | Pending |
-| PORT-06 | Phase 2 | Pending |
+| PORT-06 | Phase 2 | Complete |
 | TEAM-01 | Phase 2 | Pending |
-| TEAM-02 | Phase 2 | Pending |
+| TEAM-02 | Phase 2 | Complete |
 | TEST-01 | Phase 2 | Pending |
-| TEST-02 | Phase 2 | Pending |
+| TEST-02 | Phase 2 | Complete |
 | PRIC-01 | Phase 2 | Pending |
 | PRIC-02 | Phase 2 | Pending |
-| PRIC-03 | Phase 2 | Pending |
+| PRIC-03 | Phase 2 | Complete |
 | BLOG-01 | Phase 2 | Pending |
 | BLOG-02 | Phase 2 | Pending |
 | BLOG-03 | Phase 2 | Pending |
-| BLOG-04 | Phase 2 | Pending |
+| BLOG-04 | Phase 2 | Complete |
 | LEAD-01 | Phase 3 | Pending |
 | LEAD-02 | Phase 3 | Pending |
 | LEAD-03 | Phase 3 | Pending |
