@@ -9,11 +9,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Foundation
 
-- [ ] **FOUND-01**: Site uses Astro framework with hybrid rendering (static pages + server endpoints)
-- [ ] **FOUND-02**: Multi-page structure with shared layout (Home, Portfolio, Team, Blog, Pricing, Contact)
-- [ ] **FOUND-03**: Sticky navigation with links to all pages and a CTA button
-- [ ] **FOUND-04**: Mobile-responsive navigation (hamburger menu at small breakpoints)
-- [ ] **FOUND-05**: Existing glassmorphism design system extended consistently to all new pages
+- [x] **FOUND-01**: Site uses Astro framework with hybrid rendering (static pages + server endpoints)
+- [x] **FOUND-02**: Multi-page structure with shared layout (Home, Portfolio, Team, Blog, Pricing, Contact)
+- [x] **FOUND-03**: Sticky navigation with links to all pages and a CTA button
+- [x] **FOUND-04**: Mobile-responsive navigation (hamburger menu at small breakpoints)
+- [x] **FOUND-05**: Existing glassmorphism design system extended consistently to all new pages
 - [ ] **FOUND-06**: All pages fully responsive across mobile, tablet, and desktop
 - [ ] **FOUND-07**: Refined homepage sections (hero, services, tech stack) with improved content and polish
 
@@ -104,11 +104,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
-| FOUND-02 | Phase 1 | Pending |
-| FOUND-03 | Phase 1 | Pending |
-| FOUND-04 | Phase 1 | Pending |
-| FOUND-05 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
+| FOUND-02 | Phase 1 | Complete |
+| FOUND-03 | Phase 1 | Complete |
+| FOUND-04 | Phase 1 | Complete |
+| FOUND-05 | Phase 1 | Complete |
 | FOUND-06 | Phase 1 | Pending |
 | FOUND-07 | Phase 1 | Pending |
 | PORT-01 | Phase 2 | Pending |
