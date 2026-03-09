@@ -29,11 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Navigation collapses into a working hamburger menu on mobile viewports
   4. Glassmorphism design system (glass panels, colors, typography) renders consistently across all pages with no unstyled sections
   5. Homepage hero, services, and tech stack sections are migrated to Astro components with refined content and polish
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Astro project setup, layout shell, navigation, CSS migration, and all page routes
+- [ ] 01-02-PLAN.md — Homepage component migration (Hero, Services, TechGrid, previews), responsive polish, visual verification
 
 ### Phase 2: Content & Portfolio
 **Goal**: Visitors can explore the agency's work, team, blog, pricing, and testimonials -- all driven by config files and content collections
