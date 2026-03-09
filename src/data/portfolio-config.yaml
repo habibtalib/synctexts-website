@@ -1,0 +1,38 @@
+- slug: "enterprise-crm"
+  repo: "synctexts/enterprise-crm"
+  title: "Enterprise CRM Dashboard"
+  description: "A comprehensive customer relationship management system built with Laravel and FilamentPHP, featuring real-time analytics and role-based access control."
+  techTags:
+    - "Laravel"
+    - "FilamentPHP"
+    - "PostgreSQL"
+    - "Redis"
+    - "Tailwind CSS"
+  screenshots: []
+  caseStudySlug: "project-crm"
+
+- slug: "k8s-platform"
+  repo: "synctexts/k8s-platform"
+  title: "High-Availability Microservices"
+  description: "Terraform-provisioned Kubernetes cluster architecture handling 1M+ daily requests with automated scaling and zero-downtime deployments."
+  techTags:
+    - "Kubernetes"
+    - "Terraform"
+    - "Go"
+    - "Prometheus"
+    - "ArgoCD"
+  screenshots: []
+  caseStudySlug: "project-infra"
+
+- slug: "fintech-wallet"
+  repo: "synctexts/fintech-wallet"
+  title: "FinTech Mobile Wallet"
+  description: "Cross-platform mobile application utilizing Flutter for a native feel, integrating secure payment gateways and biometric authentication."
+  techTags:
+    - "Flutter"
+    - "Dart"
+    - "Firebase"
+    - "Stripe"
+    - "Node.js"
+  screenshots: []
+  caseStudySlug: "project-fintech"

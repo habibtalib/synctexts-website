@@ -1,0 +1,42 @@
+- id: "starter"
+  name: "Starter"
+  description: "Perfect for early-stage startups and small teams who need a polished web presence and reliable infrastructure."
+  price: "$2,500/mo"
+  features:
+    - "Custom responsive website or landing page"
+    - "Basic CI/CD pipeline setup"
+    - "Up to 20 hours of development per month"
+    - "Monthly performance reporting"
+    - "Email support (48h response)"
+  highlighted: false
+  cta: "Get Started"
+
+- id: "growth"
+  name: "Growth"
+  description: "For scaling companies that need full-stack development, DevOps automation, and ongoing iteration on their digital products."
+  price: "$5,000/mo"
+  features:
+    - "Full-stack web or mobile application development"
+    - "Kubernetes cluster management & monitoring"
+    - "Up to 50 hours of development per month"
+    - "Weekly sprint reviews and planning"
+    - "Analytics dashboard and conversion tracking"
+    - "Priority Slack support (4h response)"
+    - "Infrastructure cost optimization audit"
+  highlighted: true
+  cta: "Scale Now"
+
+- id: "enterprise"
+  name: "Enterprise"
+  description: "Dedicated engineering capacity for organizations with complex requirements, compliance needs, and mission-critical systems."
+  price: "Custom"
+  features:
+    - "Dedicated cross-functional team"
+    - "Enterprise architecture and system design"
+    - "24/7 infrastructure monitoring and incident response"
+    - "Compliance and security hardening (SOC 2, HIPAA)"
+    - "Custom integrations and API development"
+    - "Quarterly strategy reviews with leadership"
+    - "SLA-backed uptime guarantees"
+  highlighted: false
+  cta: "Contact Us"
