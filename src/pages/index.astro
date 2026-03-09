@@ -1,22 +1,111 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ServicesGrid from '../components/ServicesGrid.astro';
+import TechGrid from '../components/TechGrid.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+
+const projects = [
+  {
+    tag: 'Laravel + Filament',
+    title: 'Enterprise CRM Dashboard',
+    description: 'A comprehensive customer relationship management system built with Laravel and FilamentPHP, featuring real-time analytics and role-based access control.',
+    delay: '0.1s',
+  },
+  {
+    tag: 'DevOps / Kubernetes',
+    title: 'High-Availability Microservices',
+    description: 'Terraform-provisioned Kubernetes cluster architecture handling 1M+ daily requests with automated scaling and zero-downtime deployments.',
+    delay: '0.2s',
+  },
+  {
+    tag: 'Flutter App',
+    title: 'FinTech Mobile Wallet',
+    description: 'Cross-platform mobile application utilizing Flutter for a native feel, integrating secure payment gateways and biometric authentication.',
+    delay: '0.3s',
+  },
+];
+
+const testimonials = [
+  {
+    quote: 'SyncTexts transformed our legacy system into a modern, scalable platform. Their DevOps expertise cut our deployment time from hours to minutes.',
+    name: 'Sarah Mitchell',
+    role: 'CTO',
+    company: 'CloudBridge Solutions',
+    delay: '0.1s',
+  },
+  {
+    quote: 'The team delivered our Flutter app ahead of schedule with exceptional quality. Their attention to UX detail and performance optimization was outstanding.',
+    name: 'James Rodriguez',
+    role: 'Product Director',
+    company: 'PayFlow Inc.',
+    delay: '0.2s',
+  },
+  {
+    quote: 'Their analytics implementation gave us visibility we never had before. We now make data-driven decisions that have increased conversion by 40%.',
+    name: 'Emily Chen',
+    role: 'VP of Marketing',
+    company: 'Nextera Digital',
+    delay: '0.3s',
+  },
+];
 ---
 
 <BaseLayout title="Premium Web & DevOps Agency">
-  <section class="hero container reveal">
-    <div class="hero-content">
-      <div class="badge">Future-Proof Engineering</div>
-      <h1 class="hero-title">
-        We Build <span class="text-gradient">Digital Products</span> That Scale.
-      </h1>
-      <p class="hero-subtitle">
-        From brilliant web applications and mobile experiences to rock-solid Kubernetes infrastructure, SyncTexts is
-        your premier technology partner.
-      </p>
-      <div class="hero-cta">
-        <a href="/contact" class="btn btn-primary btn-lg">Partner With Us</a>
-        <a href="/portfolio" class="btn btn-secondary btn-lg">Explore Expertise</a>
-      </div>
+  <Hero />
+
+  <ServicesGrid />
+
+  <TechGrid />
+
+  <!-- Portfolio Preview -->
+  <section id="projects" class="projects container section">
+    <div class="section-heading reveal">
+      <h2>Featured <span class="text-gradient">Projects</span></h2>
+      <p>A selection of recent work, demonstrating our capabilities across the full stack.</p>
+    </div>
+
+    <div class="projects-grid">
+      {projects.map((project) => (
+        <ProjectCard
+          tag={project.tag}
+          title={project.title}
+          description={project.description}
+          delay={project.delay}
+        />
+      ))}
+    </div>
+
+    <div class="section-view-all reveal">
+      <a href="/portfolio" class="view-all-link">View All Projects &rarr;</a>
     </div>
   </section>
+
+  <!-- Testimonials Preview -->
+  <section id="testimonials" class="testimonials container section">
+    <div class="section-heading reveal">
+      <h2>What <span class="text-gradient">Clients Say</span></h2>
+      <p>Trusted by teams building the next generation of digital products.</p>
+    </div>
+
+    <div class="testimonials-grid">
+      {testimonials.map((testimonial) => (
+        <TestimonialCard
+          quote={testimonial.quote}
+          name={testimonial.name}
+          role={testimonial.role}
+          company={testimonial.company}
+          delay={testimonial.delay}
+        />
+      ))}
+    </div>
+
+    <div class="section-view-all reveal">
+      <a href="/portfolio" class="view-all-link">Read More Testimonials &rarr;</a>
+    </div>
+  </section>
+
+  <ContactCTA />
 </BaseLayout>
