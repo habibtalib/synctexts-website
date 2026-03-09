@@ -14,8 +14,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **FOUND-03**: Sticky navigation with links to all pages and a CTA button
 - [x] **FOUND-04**: Mobile-responsive navigation (hamburger menu at small breakpoints)
 - [x] **FOUND-05**: Existing glassmorphism design system extended consistently to all new pages
-- [ ] **FOUND-06**: All pages fully responsive across mobile, tablet, and desktop
-- [ ] **FOUND-07**: Refined homepage sections (hero, services, tech stack) with improved content and polish
+- [x] **FOUND-06**: All pages fully responsive across mobile, tablet, and desktop
+- [x] **FOUND-07**: Refined homepage sections (hero, services, tech stack) with improved content and polish
 
 ### Portfolio
 
@@ -109,8 +109,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-03 | Phase 1 | Complete |
 | FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Complete |
-| FOUND-06 | Phase 1 | Pending |
-| FOUND-07 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Complete |
+| FOUND-07 | Phase 1 | Complete |
 | PORT-01 | Phase 2 | Pending |
 | PORT-02 | Phase 2 | Pending |
 | PORT-03 | Phase 2 | Pending |
