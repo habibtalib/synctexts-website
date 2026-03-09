@@ -4,11 +4,14 @@
   --bg-surface: rgba(255, 255, 255, 0.04);
   --bg-surface-hover: rgba(255, 255, 255, 0.08);
 
-  --primary: #6366f1; /* Indigo */
+  --primary: #6366f1;
+  /* Indigo */
   --primary-glow: rgba(99, 102, 241, 0.15);
-  --secondary: #ec4899; /* Pink */
+  --secondary: #ec4899;
+  /* Pink */
   --secondary-glow: rgba(236, 72, 153, 0.15);
-  --accent: #06b6d4; /* Cyan */
+  --accent: #06b6d4;
+  /* Cyan */
 
   --text-primary: #ffffff;
   --text-secondary: #94a3b8;
@@ -113,9 +116,29 @@ a {
   opacity: 0.08;
 }
 
+.mouse-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  transform: translate(-50%, -50%);
+}
+
 @keyframes pulse {
-  0% { transform: scale(1) translate(0, 0); opacity: 0.1; }
-  100% { transform: scale(1.1) translate(20px, 20px); opacity: 0.15; }
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.1;
+  }
+
+  100% {
+    transform: scale(1.1) translate(20px, 20px);
+    opacity: 0.15;
+  }
 }
 
 /* Glassmorphism Classes */
@@ -169,14 +192,17 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 50%, var(--secondary) 100%);
+  background-size: 200% auto;
   color: white;
   box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+  transition: var(--transition-smooth), background-position 0.5s ease;
 }
 
 .btn-primary:hover {
+  background-position: right center;
   box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .btn-secondary {
@@ -198,6 +224,23 @@ a {
 
 .btn-block {
   width: 100%;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Navigation */
@@ -515,6 +558,24 @@ a {
 .footer-links p {
   color: #64748b;
   font-size: 0.85rem;
+}
+
+.success-message p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Animations */
