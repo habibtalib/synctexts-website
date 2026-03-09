@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  languages: string[];
+  updatedAt: string | null;
+  caseStudySlug: string | null;
+  delay?: string;
+}
+
+const { title, description, languages, updatedAt, caseStudySlug, delay } = Astro.props;
+
+// Truncate description to ~120 chars
+const truncated = description.length > 120 ? description.slice(0, 117) + '...' : description;
+
+// Format date as "Updated Mar 2026"
+let formattedDate: string | null = null;
+if (updatedAt) {
+  const d = new Date(updatedAt);
+  const month = d.toLocaleString('en-US', { month: 'short' });
+  const year = d.getFullYear();
+  formattedDate = `Updated ${month} ${year}`;
+}
+---
+
+<div class="portfolio-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
+  <div class="portfolio-card-content">
+    <h3>{title}</h3>
+    <p class="portfolio-description">{truncated}</p>
+    <div class="portfolio-languages">
+      {languages.map((lang) => (
+        <span class="tech-tag">{lang}</span>
+      ))}
+    </div>
+    <div class="portfolio-card-footer">
+      {formattedDate && <span class="updated-date">{formattedDate}</span>}
+      {caseStudySlug ? (
+        <a href={`/portfolio/${caseStudySlug}`} class="project-link">View Case Study &rarr;</a>
+      ) : (
+        <span class="project-link muted">View Details</span>
+      )}
+    </div>
+  </div>
+</div>

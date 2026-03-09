@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PortfolioCard from '../../components/PortfolioCard.astro';
+
+const projects = await getCollection('portfolio');
+---
+
+<BaseLayout title="Portfolio" description="A selection of our finest web development, DevOps, and analytics projects.">
+  <PageHeader title="Portfolio" subtitle="A selection of our finest work" />
+
+  <section class="container section">
+    <div class="portfolio-grid">
+      {projects.map((project, i) => (
+        <PortfolioCard
+          title={project.data.title}
+          description={project.data.description}
+          languages={project.data.languages}
+          updatedAt={project.data.updatedAt}
+          caseStudySlug={project.data.caseStudySlug}
+          delay={`${(i + 1) * 0.1}s`}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

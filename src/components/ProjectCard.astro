@@ -4,9 +4,10 @@ interface Props {
   title: string;
   description: string;
   delay?: string;
+  href?: string;
 }
 
-const { tag, title, description, delay } = Astro.props;
+const { tag, title, description, delay, href = '/portfolio' } = Astro.props;
 ---
 
 <div class="project-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
@@ -14,6 +15,6 @@ const { tag, title, description, delay } = Astro.props;
     <span class="project-tag">{tag}</span>
     <h3>{title}</h3>
     <p>{description}</p>
-    <a href="/portfolio" class="project-link">View Details &rarr;</a>
+    <a href={href} class="project-link">View Details &rarr;</a>
   </div>
 </div>

@@ -8,26 +8,8 @@ import TestimonialCard from '../components/TestimonialCard.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import { getCollection } from 'astro:content';
 
-const projects = [
-  {
-    tag: 'Laravel + Filament',
-    title: 'Enterprise CRM Dashboard',
-    description: 'A comprehensive customer relationship management system built with Laravel and FilamentPHP, featuring real-time analytics and role-based access control.',
-    delay: '0.1s',
-  },
-  {
-    tag: 'DevOps / Kubernetes',
-    title: 'High-Availability Microservices',
-    description: 'Terraform-provisioned Kubernetes cluster architecture handling 1M+ daily requests with automated scaling and zero-downtime deployments.',
-    delay: '0.2s',
-  },
-  {
-    tag: 'Flutter App',
-    title: 'FinTech Mobile Wallet',
-    description: 'Cross-platform mobile application utilizing Flutter for a native feel, integrating secure payment gateways and biometric authentication.',
-    delay: '0.3s',
-  },
-];
+const allProjects = await getCollection('portfolio');
+const projects = allProjects.slice(0, 3);
 
 const testimonials = await getCollection('testimonials');
 ---
@@ -47,12 +29,13 @@ const testimonials = await getCollection('testimonials');
     </div>
 
     <div class="projects-grid">
-      {projects.map((project) => (
+      {projects.map((p, i) => (
         <ProjectCard
-          tag={project.tag}
-          title={project.title}
-          description={project.description}
-          delay={project.delay}
+          tag={p.data.languages.join(' / ')}
+          title={p.data.title}
+          description={p.data.description}
+          delay={`${(i + 1) * 0.1}s`}
+          href={`/portfolio/${p.data.caseStudySlug || p.id}`}
         />
       ))}
     </div>
