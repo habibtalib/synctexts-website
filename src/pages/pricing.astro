@@ -1,11 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
+import PricingTier from '../components/PricingTier.astro';
+import { getCollection } from 'astro:content';
+
+const tiers = await getCollection('pricing');
 ---
 
 <BaseLayout title="Pricing" description="Transparent pricing for every stage of growth.">
   <PageHeader title="Pricing" subtitle="Transparent pricing for every stage of growth" />
   <section class="container section">
-    <p class="coming-soon">Content coming soon.</p>
+    <div class="pricing-grid">
+      {tiers.map((tier, i) => (
+        <PricingTier
+          name={tier.data.name}
+          description={tier.data.description}
+          price={tier.data.price}
+          features={tier.data.features}
+          highlighted={tier.data.highlighted}
+          cta={tier.data.cta}
+          delay={`${(i + 1) * 0.1}s`}
+        />
+      ))}
+    </div>
   </section>
 </BaseLayout>
