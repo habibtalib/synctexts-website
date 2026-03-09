@@ -1,25 +1,27 @@
 :root {
   /* Premium Dark Theme Palette */
-  --bg-base: #0a0a0c;
-  --bg-surface: rgba(255, 255, 255, 0.03);
+  --bg-base: #060608;
+  --bg-surface: rgba(255, 255, 255, 0.04);
   --bg-surface-hover: rgba(255, 255, 255, 0.08);
 
-  --primary: #6366f1;
-  /* Indigo */
-  --primary-hover: #4f46e5;
-  --secondary: #ec4899;
-  /* Pink */
+  --primary: #6366f1; /* Indigo */
+  --primary-glow: rgba(99, 102, 241, 0.15);
+  --secondary: #ec4899; /* Pink */
+  --secondary-glow: rgba(236, 72, 153, 0.15);
+  --accent: #06b6d4; /* Cyan */
 
-  --text-primary: #f8fafc;
+  --text-primary: #ffffff;
   --text-secondary: #94a3b8;
+  --text-dimmed: #64748b;
 
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
 
-  --font-display: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, inherit;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s ease;
 }
 
 * {
@@ -76,45 +78,80 @@ a {
 
 /* Background Effects */
 .bg-glow {
-  position: absolute;
+  position: fixed;
   border-radius: 50%;
   filter: blur(120px);
-  opacity: 0.15;
+  opacity: 0.12;
   z-index: -1;
   pointer-events: none;
+  animation: pulse 10s ease-in-out infinite alternate;
 }
 
 .bg-glow-1 {
   top: -10%;
   left: -5%;
-  width: 600px;
-  height: 600px;
+  width: 800px;
+  height: 800px;
   background: var(--primary);
 }
 
 .bg-glow-2 {
-  top: 40%;
-  right: -10%;
-  width: 500px;
-  height: 500px;
+  bottom: -10%;
+  right: -5%;
+  width: 700px;
+  height: 700px;
   background: var(--secondary);
+}
+
+.bg-glow-3 {
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: var(--accent);
+  opacity: 0.08;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.1; }
+  100% { transform: scale(1.1) translate(20px, 20px); opacity: 0.15; }
 }
 
 /* Glassmorphism Classes */
 .glass-panel {
-  background: var(--bg-surface);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  border-radius: 20px;
+  border-radius: 24px;
   transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
 .glass-panel:hover {
-  background: var(--bg-surface-hover);
-  transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.1);
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: 0.6s;
+}
+
+.glass-panel:hover::before {
+  transform: translateX(100%);
 }
 
 /* Buttons */
@@ -255,9 +292,11 @@ a {
 }
 
 .hero-title {
-  font-size: clamp(3rem, 5vw, 4.5rem);
-  margin-bottom: 1.5rem;
-  letter-spacing: -1px;
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  margin-bottom: 2rem;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  font-weight: 700;
 }
 
 .hero-subtitle {
