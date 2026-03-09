@@ -28,12 +28,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content Pages
 
-- [ ] **TEAM-01**: Team page with member profiles (photo, name, role, short bio)
+- [x] **TEAM-01**: Team page with member profiles (photo, name, role, short bio)
 - [x] **TEAM-02**: Team data driven by config file (YAML/JSON), not hardcoded HTML
-- [ ] **TEST-01**: Testimonials section on homepage with client quotes, name, role, and company
+- [x] **TEST-01**: Testimonials section on homepage with client quotes, name, role, and company
 - [x] **TEST-02**: Testimonials data driven by config file
-- [ ] **PRIC-01**: Pricing page with 3 service tiers (Starter/Growth/Enterprise or similar)
-- [ ] **PRIC-02**: Each tier shows included services, starting price, and CTA
+- [x] **PRIC-01**: Pricing page with 3 service tiers (Starter/Growth/Enterprise or similar)
+- [x] **PRIC-02**: Each tier shows included services, starting price, and CTA
 - [x] **PRIC-03**: Pricing data driven by config file
 - [x] **BLOG-01**: Blog listing page showing all posts with title, date, excerpt, and read time
 - [x] **BLOG-02**: Individual blog post pages rendered from Markdown files with YAML frontmatter
@@ -117,12 +117,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PORT-04 | Phase 2 | Pending |
 | PORT-05 | Phase 2 | Pending |
 | PORT-06 | Phase 2 | Complete |
-| TEAM-01 | Phase 2 | Pending |
+| TEAM-01 | Phase 2 | Complete |
 | TEAM-02 | Phase 2 | Complete |
-| TEST-01 | Phase 2 | Pending |
+| TEST-01 | Phase 2 | Complete |
 | TEST-02 | Phase 2 | Complete |
-| PRIC-01 | Phase 2 | Pending |
-| PRIC-02 | Phase 2 | Pending |
+| PRIC-01 | Phase 2 | Complete |
+| PRIC-02 | Phase 2 | Complete |
 | PRIC-03 | Phase 2 | Complete |
 | BLOG-01 | Phase 2 | Complete |
 | BLOG-02 | Phase 2 | Complete |
