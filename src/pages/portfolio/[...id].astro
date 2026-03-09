@@ -1,0 +1,43 @@
+---
+import type { GetStaticPathsResult } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  const caseStudies = await getCollection('portfolioCaseStudies');
+  return caseStudies.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, client, industry, duration, techStack } = entry.data;
+---
+
+<BaseLayout title={title} description={`${title} - Case Study by SyncTexts`}>
+  <article class="case-study-page container">
+    <header class="case-study-header">
+      <h1>{title}</h1>
+      <div class="case-study-meta">
+        <span><strong>Client:</strong> {client}</span>
+        <span><strong>Industry:</strong> {industry}</span>
+        <span><strong>Duration:</strong> {duration}</span>
+      </div>
+      <div class="case-study-tags">
+        {techStack.map((tech) => (
+          <span class="tech-tag">{tech}</span>
+        ))}
+      </div>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="case-study-footer">
+      <a href="/portfolio" class="back-to-portfolio">&larr; Back to Portfolio</a>
+    </footer>
+  </article>
+</BaseLayout>

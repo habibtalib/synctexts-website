@@ -159,4 +159,16 @@ const portfolio = defineCollection({
   }),
 });
 
-export const collections = { blog, team, testimonials, pricing, portfolio };
+// Portfolio Case Studies - Markdown files with project details
+const portfolioCaseStudies = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/data/portfolio' }),
+  schema: z.object({
+    title: z.string(),
+    client: z.string(),
+    industry: z.string(),
+    duration: z.string(),
+    techStack: z.array(z.string()),
+  }),
+});
+
+export const collections = { blog, team, testimonials, pricing, portfolio, portfolioCaseStudies };
