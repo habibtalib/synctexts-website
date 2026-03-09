@@ -6,6 +6,7 @@ import TechGrid from '../components/TechGrid.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import ContactCTA from '../components/ContactCTA.astro';
+import { getCollection } from 'astro:content';
 
 const projects = [
   {
@@ -28,29 +29,7 @@ const projects = [
   },
 ];
 
-const testimonials = [
-  {
-    quote: 'SyncTexts transformed our legacy system into a modern, scalable platform. Their DevOps expertise cut our deployment time from hours to minutes.',
-    name: 'Sarah Mitchell',
-    role: 'CTO',
-    company: 'CloudBridge Solutions',
-    delay: '0.1s',
-  },
-  {
-    quote: 'The team delivered our Flutter app ahead of schedule with exceptional quality. Their attention to UX detail and performance optimization was outstanding.',
-    name: 'James Rodriguez',
-    role: 'Product Director',
-    company: 'PayFlow Inc.',
-    delay: '0.2s',
-  },
-  {
-    quote: 'Their analytics implementation gave us visibility we never had before. We now make data-driven decisions that have increased conversion by 40%.',
-    name: 'Emily Chen',
-    role: 'VP of Marketing',
-    company: 'Nextera Digital',
-    delay: '0.3s',
-  },
-];
+const testimonials = await getCollection('testimonials');
 ---
 
 <BaseLayout title="Premium Web & DevOps Agency">
@@ -91,13 +70,13 @@ const testimonials = [
     </div>
 
     <div class="testimonials-grid">
-      {testimonials.map((testimonial) => (
+      {testimonials.map((t, i) => (
         <TestimonialCard
-          quote={testimonial.quote}
-          name={testimonial.name}
-          role={testimonial.role}
-          company={testimonial.company}
-          delay={testimonial.delay}
+          quote={t.data.quote}
+          name={t.data.name}
+          role={t.data.role}
+          company={t.data.company}
+          delay={`${(i + 1) * 0.1}s`}
         />
       ))}
     </div>

@@ -840,6 +840,13 @@ a {
   transform: translateY(0);
 }
 
+/* Team Grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .contact-wrapper {
@@ -879,6 +886,10 @@ a {
   }
 
   .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-grid {
     grid-template-columns: 1fr;
   }
 

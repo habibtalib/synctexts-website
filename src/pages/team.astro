@@ -1,11 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
+import TeamMemberCard from '../components/TeamMemberCard.astro';
+import { getCollection } from 'astro:content';
+
+const members = (await getCollection('team')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title="Our Team" description="Meet the engineers behind SyncTexts.">
   <PageHeader title="Our Team" subtitle="The engineers behind the code" />
   <section class="container section">
-    <p class="coming-soon">Content coming soon.</p>
+    <div class="team-grid">
+      {members.map((member, i) => (
+        <TeamMemberCard
+          name={member.data.name}
+          role={member.data.role}
+          bio={member.data.bio}
+          photo={member.data.photo}
+          delay={`${(i + 1) * 0.1}s`}
+        />
+      ))}
+    </div>
   </section>
 </BaseLayout>
