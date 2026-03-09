@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<BaseLayout title="Contact" description="Get in touch with SyncTexts to start your next project.">
+  <PageHeader title="Contact" subtitle="Let's build something great together" />
+  <section class="contact container section">
+    <div class="contact-wrapper glass-panel reveal">
+      <div class="contact-info">
+        <h2>Ready to <span class="text-gradient">Accelerate</span>?</h2>
+        <p>Let's discuss how SyncTexts can elevate your next project. We are ready to tackle your toughest technical
+          challenges.</p>
+      </div>
+      <form class="contact-form">
+        <div class="form-group">
+          <input type="text" id="name" required placeholder="Name" class="glass-input">
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" required placeholder="Email Address" class="glass-input">
+        </div>
+        <div class="form-group">
+          <textarea id="message" required placeholder="Project Details" class="glass-input" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
