@@ -19,11 +19,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Portfolio
 
-- [ ] **PORT-01**: Portfolio page displays 5-10 curated projects from GitHub private repos via API
-- [ ] **PORT-02**: Each portfolio card shows repo name, description, primary languages, and last updated date
+- [x] **PORT-01**: Portfolio page displays 5-10 curated projects from GitHub private repos via API
+- [x] **PORT-02**: Each portfolio card shows repo name, description, primary languages, and last updated date
 - [x] **PORT-03**: Config file defines which repos to display (repo slugs + GitHub PAT in env var)
-- [ ] **PORT-04**: Manual override capability per project (custom title, description, screenshots, tech tags)
-- [ ] **PORT-05**: Individual project detail pages with full case study content
+- [x] **PORT-04**: Manual override capability per project (custom title, description, screenshots, tech tags)
+- [x] **PORT-05**: Individual project detail pages with full case study content
 - [x] **PORT-06**: GitHub API data fetched at build time only (PAT never exposed to client)
 
 ### Content Pages
@@ -111,11 +111,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-05 | Phase 1 | Complete |
 | FOUND-06 | Phase 1 | Complete |
 | FOUND-07 | Phase 1 | Complete |
-| PORT-01 | Phase 2 | Pending |
-| PORT-02 | Phase 2 | Pending |
+| PORT-01 | Phase 2 | Complete |
+| PORT-02 | Phase 2 | Complete |
 | PORT-03 | Phase 2 | Complete |
-| PORT-04 | Phase 2 | Pending |
-| PORT-05 | Phase 2 | Pending |
+| PORT-04 | Phase 2 | Complete |
+| PORT-05 | Phase 2 | Complete |
 | PORT-06 | Phase 2 | Complete |
 | TEAM-01 | Phase 2 | Complete |
 | TEAM-02 | Phase 2 | Complete |

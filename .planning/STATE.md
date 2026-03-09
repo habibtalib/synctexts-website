@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-09T09:13:03.210Z"
-last_activity: 2026-03-09 -- Completed Plan 02-03 (Blog system)
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-09T09:14:37Z"
+last_activity: 2026-03-09 -- Completed Plan 02-04 (Portfolio pages)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 7
-  completed_plans: 5
-  percent: 71
+  completed_plans: 6
+  percent: 86
 ---
 
 # Project State
@@ -26,25 +26,25 @@ See: .planning/PROJECT.md (updated 2026-03-08)
 ## Current Position
 
 Phase: 2 of 4 (Content & Portfolio)
-Plan: 3 of 3 in current phase -- COMPLETE
+Plan: 4 of 5 in current phase -- COMPLETE
 Status: In Progress
-Last activity: 2026-03-09 -- Completed Plan 02-03 (Blog system)
+Last activity: 2026-03-09 -- Completed Plan 02-04 (Portfolio pages)
 
-Progress: [███████░░░] 71%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 9 min
-- Total execution time: 0.63 hours
+- Total plans completed: 6
+- Average duration: 8 min
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-migration | 2 | 18 min | 9 min |
-| 02-content-portfolio | 3 | 19 min | 6 min |
+| 02-content-portfolio | 4 | 26 min | 7 min |
 
 **Recent Trend:**
 - Last 5 plans: -
@@ -77,6 +77,9 @@ Recent decisions affecting current work:
 - [02-03]: Prose code block styles use !important on background for Shiki dark theme
 - [02-02]: TeamMemberCard uses initials fallback when photo images are unavailable
 - [02-02]: PricingTier highlighted state uses primary color border glow and gradient badge
+- [02-04]: Added portfolioCaseStudies as separate collection since portfolio uses custom GitHub API loader
+- [02-04]: Reused prose class from blog for case study Markdown rendering
+- [02-04]: Updated ProjectCard with optional href prop for backward compatibility
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T09:13:03.207Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-09T09:14:37Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
