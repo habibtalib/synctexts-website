@@ -35,9 +35,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PRIC-01**: Pricing page with 3 service tiers (Starter/Growth/Enterprise or similar)
 - [ ] **PRIC-02**: Each tier shows included services, starting price, and CTA
 - [x] **PRIC-03**: Pricing data driven by config file
-- [ ] **BLOG-01**: Blog listing page showing all posts with title, date, excerpt, and read time
-- [ ] **BLOG-02**: Individual blog post pages rendered from Markdown files with YAML frontmatter
-- [ ] **BLOG-03**: Syntax highlighting for code blocks in blog posts
+- [x] **BLOG-01**: Blog listing page showing all posts with title, date, excerpt, and read time
+- [x] **BLOG-02**: Individual blog post pages rendered from Markdown files with YAML frontmatter
+- [x] **BLOG-03**: Syntax highlighting for code blocks in blog posts
 - [x] **BLOG-04**: Blog posts support tags for categorization
 
 ### Lead Capture
@@ -124,9 +124,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PRIC-01 | Phase 2 | Pending |
 | PRIC-02 | Phase 2 | Pending |
 | PRIC-03 | Phase 2 | Complete |
-| BLOG-01 | Phase 2 | Pending |
-| BLOG-02 | Phase 2 | Pending |
-| BLOG-03 | Phase 2 | Pending |
+| BLOG-01 | Phase 2 | Complete |
+| BLOG-02 | Phase 2 | Complete |
+| BLOG-03 | Phase 2 | Complete |
 | BLOG-04 | Phase 2 | Complete |
 | LEAD-01 | Phase 3 | Pending |
 | LEAD-02 | Phase 3 | Pending |

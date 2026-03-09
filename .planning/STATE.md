@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in-progress
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-09T17:18:41Z"
-last_activity: 2026-03-09 -- Completed Plan 02-01 (Content collections & data infrastructure)
+status: executing
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-09T09:12:00Z"
+last_activity: 2026-03-09 -- Completed Plan 02-03 (Blog system)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 7
-  completed_plans: 3
+  completed_plans: 5
   percent: 43
 ---
 
@@ -26,25 +26,25 @@ See: .planning/PROJECT.md (updated 2026-03-08)
 ## Current Position
 
 Phase: 2 of 4 (Content & Portfolio)
-Plan: 1 of 3 in current phase -- COMPLETE
+Plan: 3 of 3 in current phase -- COMPLETE
 Status: In Progress
-Last activity: 2026-03-09 -- Completed Plan 02-01 (Content collections & data infrastructure)
+Last activity: 2026-03-09 -- Completed Plan 02-03 (Blog system)
 
-Progress: [████░░░░░░] 43%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 11 min
-- Total execution time: 0.57 hours
+- Total plans completed: 5
+- Average duration: 9 min
+- Total execution time: 0.63 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-migration | 2 | 18 min | 9 min |
-| 02-content-portfolio | 1 | 16 min | 16 min |
+| 02-content-portfolio | 3 | 19 min | 6 min |
 
 **Recent Trend:**
 - Last 5 plans: -
@@ -71,6 +71,11 @@ Recent decisions affecting current work:
 - [02-01]: Used process.env.GITHUB_PAT for server-only build-time GitHub API access
 - [02-01]: Portfolio loader gracefully degrades to local-only data when PAT is missing
 - [02-01]: Testimonials YAML preserves 3 existing entries and adds 2 new ones
+- [02-03]: Read time calculated from word count / 200 wpm
+- [02-03]: Blog listing uses 2-column grid, collapses to 1-column at 768px
+- [02-03]: Prose code block styles use !important on background for Shiki dark theme
+- [02-02]: TeamMemberCard uses initials fallback when photo images are unavailable
+- [02-02]: PricingTier highlighted state uses primary color border glow and gradient badge
 
 ### Pending Todos
 
@@ -84,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T17:18:41Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-09T09:12:00Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
