@@ -45,12 +45,14 @@ Plans:
   3. Team page shows member profiles (photo, name, role, bio) driven by a config file, not hardcoded HTML
   4. Blog listing page shows all posts with title, date, excerpt, and read time; individual posts render from Markdown with syntax-highlighted code blocks and tag categorization
   5. Pricing page displays service tiers with included services and starting prices; testimonials section shows client quotes with attribution -- both driven by config files
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md — Content collections infrastructure: schemas, YAML data files, blog posts, portfolio case studies, Shiki config
+- [ ] 02-02-PLAN.md — Team page, Pricing page, and homepage testimonials driven by content collections
+- [ ] 02-03-PLAN.md — Blog listing page and individual blog post pages with syntax highlighting and tags
+- [ ] 02-04-PLAN.md — Portfolio grid page, project detail pages, and homepage projects from GitHub API collection
+- [ ] 02-05-PLAN.md — Visual verification of all content pages across viewports
 
 ### Phase 3: Lead Capture
 **Goal**: Potential clients can submit an inquiry through a working contact form that reliably delivers notifications and persists every submission
@@ -91,6 +93,6 @@ Note: Phase 3 depends only on Phase 1 and can execute in parallel with Phase 2 i
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Migration | 2/2 | Complete   | 2026-03-09 |
-| 2. Content & Portfolio | 0/3 | Not started | - |
+| 2. Content & Portfolio | 0/5 | Not started | - |
 | 3. Lead Capture | 0/1 | Not started | - |
 | 4. SEO, Analytics & Deployment | 0/2 | Not started | - |
