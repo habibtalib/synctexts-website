@@ -1,0 +1,40 @@
+{
+  "$ref": "#/definitions/portfolioCaseStudies",
+  "definitions": {
+    "portfolioCaseStudies": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "client": {
+          "type": "string"
+        },
+        "industry": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "techStack": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "client",
+        "industry",
+        "duration",
+        "techStack"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

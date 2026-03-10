@@ -1,0 +1,53 @@
+{
+  "$ref": "#/definitions/pricing",
+  "definitions": {
+    "pricing": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "highlighted": {
+            "type": "boolean",
+            "default": false
+          },
+          "cta": {
+            "type": "string",
+            "default": "Get Started"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "price",
+          "features"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
