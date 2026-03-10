@@ -42,12 +42,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Lead Capture
 
-- [ ] **LEAD-01**: Contact form with 3-4 fields (name, email, message, optional company)
-- [ ] **LEAD-02**: Form submissions send email notification via Nodemailer/SMTP
-- [ ] **LEAD-03**: Form submissions persisted to SQLite database via Drizzle ORM
-- [ ] **LEAD-04**: Honeypot field for spam prevention
-- [ ] **LEAD-05**: Server-side rate limiting on form endpoint
-- [ ] **LEAD-06**: Client-side and server-side form validation
+- [x] **LEAD-01**: Contact form with 3-4 fields (name, email, message, optional company)
+- [x] **LEAD-02**: Form submissions send email notification via Nodemailer/SMTP
+- [x] **LEAD-03**: Form submissions persisted to SQLite database via Drizzle ORM
+- [x] **LEAD-04**: Honeypot field for spam prevention
+- [x] **LEAD-05**: Server-side rate limiting on form endpoint
+- [x] **LEAD-06**: Client-side and server-side form validation
 
 ### SEO & Analytics
 
@@ -128,12 +128,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BLOG-02 | Phase 2 | Complete |
 | BLOG-03 | Phase 2 | Complete |
 | BLOG-04 | Phase 2 | Complete |
-| LEAD-01 | Phase 3 | Pending |
-| LEAD-02 | Phase 3 | Pending |
-| LEAD-03 | Phase 3 | Pending |
-| LEAD-04 | Phase 3 | Pending |
-| LEAD-05 | Phase 3 | Pending |
-| LEAD-06 | Phase 3 | Pending |
+| LEAD-01 | Phase 3 | Complete |
+| LEAD-02 | Phase 3 | Complete |
+| LEAD-03 | Phase 3 | Complete |
+| LEAD-04 | Phase 3 | Complete |
+| LEAD-05 | Phase 3 | Complete |
+| LEAD-06 | Phase 3 | Complete |
 | SEO-01 | Phase 4 | Pending |
 | SEO-02 | Phase 4 | Pending |
 | SEO-03 | Phase 4 | Pending |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-10T02:50:56.227Z"
-last_activity: 2026-03-10 -- Completed Plan 02-05 (Visual verification)
+status: in-progress
+stopped_at: Completed 03-01-PLAN.md (Contact form pipeline)
+last_updated: "2026-03-10T04:42:00Z"
+last_activity: 2026-03-10 -- Completed Plan 03-01 (Contact form pipeline)
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
-  percent: 100
+  total_plans: 9
+  completed_plans: 8
+  percent: 89
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** Phase 2 complete. Ready for Phase 3: Lead Capture
+**Current focus:** Phase 3 in progress. Plan 01 (Contact form pipeline) complete. Plan 02 (Admin submissions) next.
 
 ## Current Position
 
-Phase: 2 of 4 (Content & Portfolio) -- COMPLETE
-Plan: 5 of 5 in current phase -- COMPLETE
-Status: Phase 2 Complete
-Last activity: 2026-03-10 -- Completed Plan 02-05 (Visual verification)
+Phase: 3 of 4 (Lead Capture)
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Phase 3 In Progress
+Last activity: 2026-03-10 -- Completed Plan 03-01 (Contact form pipeline)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 7 min
-- Total execution time: 0.78 hours
+- Total plans completed: 8
+- Average duration: 9 min
+- Total execution time: 1.2 hours
 
 **By Phase:**
 
@@ -45,6 +45,7 @@ Progress: [██████████] 100%
 |-------|-------|-------|----------|
 | 01-foundation-migration | 2 | 18 min | 9 min |
 | 02-content-portfolio | 5 | 29 min | 6 min |
+| 03-lead-capture | 1 | 25 min | 25 min |
 
 **Recent Trend:**
 - Last 5 plans: -
@@ -82,6 +83,10 @@ Recent decisions affecting current work:
 - [02-04]: Updated ProjectCard with optional href prop for backward compatibility
 - [02-05]: All Phase 2 content pages visually approved by user
 - [02-05]: PAT security verified -- no GitHub token leakage in dist/ output
+- [03-01]: Used Resend instead of Nodemailer/SMTP for email delivery
+- [03-01]: Validation logic duplicated for client/server (avoid server module imports in browser)
+- [03-01]: Rate limiter uses in-memory Map (resets on restart, acceptable for low-traffic site)
+- [03-01]: Honeypot field named "website" with silent 200 rejection
 
 ### Pending Todos
 
@@ -95,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T02:50:56.223Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-lead-capture/03-CONTEXT.md
+Last session: 2026-03-10T04:42:00Z
+Stopped at: Completed 03-01-PLAN.md (Contact form pipeline)
+Resume file: .planning/phases/03-lead-capture/03-01-SUMMARY.md
