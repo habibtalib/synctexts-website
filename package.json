@@ -17,6 +17,9 @@
     "@astrojs/check": "^0.9.6",
     "@astrojs/node": "^9.5.4",
     "astro": "^5.18.0",
+    "better-sqlite3": "^11.0.0",
+    "drizzle-orm": "^0.40.0",
+    "resend": "^4.0.0",
     "yaml": "^2.8.2"
   }
 }
