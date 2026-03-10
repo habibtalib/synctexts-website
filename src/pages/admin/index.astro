@@ -1,0 +1,330 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { db } from '../../db';
+import { submissions } from '../../db/schema';
+import { desc } from 'drizzle-orm';
+
+// Basic Auth check
+const authHeader = Astro.request.headers.get('Authorization');
+let authenticated = false;
+
+if (authHeader && authHeader.startsWith('Basic ')) {
+  const decoded = atob(authHeader.slice(6));
+  const [user, pass] = decoded.split(':');
+  const expectedUser = import.meta.env.ADMIN_USER;
+  const expectedPass = import.meta.env.ADMIN_PASS;
+
+  if (expectedUser && expectedPass && user === expectedUser && pass === expectedPass) {
+    authenticated = true;
+  }
+}
+
+if (!authenticated) {
+  return new Response('Unauthorized', {
+    status: 401,
+    headers: { 'WWW-Authenticate': 'Basic realm="Admin"' },
+  });
+}
+
+// Query all submissions, newest first
+const allSubmissions = db
+  .select()
+  .from(submissions)
+  .orderBy(desc(submissions.createdAt))
+  .all();
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+---
+
+<BaseLayout title="Admin - Submissions">
+  <PageHeader title="Submissions" subtitle="Contact form submissions" />
+
+  <section class="container admin-section">
+    {allSubmissions.length === 0 ? (
+      <div class="glass-panel empty-state">
+        <p>No submissions yet.</p>
+      </div>
+    ) : (
+      <div class="submissions-list">
+        {allSubmissions.map((sub) => (
+          <div
+            class={`glass-panel submission-card ${!sub.read ? 'unread' : ''}`}
+            data-id={sub.id}
+          >
+            <div class="submission-header">
+              <div class="submission-meta">
+                <span class="submission-date">{formatDate(sub.createdAt)}</span>
+                {sub.rateLimited && (
+                  <span class="badge-rate-limited">Rate Limited</span>
+                )}
+                <span class={`read-indicator ${sub.read ? 'read' : 'unread'}`}>
+                  {sub.read ? 'Read' : 'Unread'}
+                </span>
+              </div>
+              <button
+                class="btn btn-toggle-read"
+                data-id={sub.id}
+                data-read={sub.read ? 'true' : 'false'}
+              >
+                Mark as {sub.read ? 'Unread' : 'Read'}
+              </button>
+            </div>
+
+            <div class="submission-contact">
+              <strong>{sub.name}</strong>
+              <a href={`mailto:${sub.email}`} class="submission-email">{sub.email}</a>
+              {sub.company && <span class="submission-company">{sub.company}</span>}
+            </div>
+
+            <div class="submission-message">
+              <p>{sub.message}</p>
+            </div>
+
+            <div class="submission-footer-meta">
+              {sub.ip && <span class="submission-ip">IP: {sub.ip}</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      document.querySelectorAll('.btn-toggle-read').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = Number(btn.getAttribute('data-id'));
+          if (!id) return;
+
+          try {
+            const res = await fetch('/api/admin/toggle-read', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id }),
+            });
+
+            if (res.status === 401) {
+              // Re-auth needed - reload triggers Basic Auth dialog
+              window.location.reload();
+              return;
+            }
+
+            const data = await res.json();
+            if (data.success) {
+              // Update UI in place
+              const card = btn.closest('.submission-card') as HTMLElement;
+              const indicator = card.querySelector('.read-indicator') as HTMLElement;
+
+              if (data.read) {
+                card.classList.remove('unread');
+                indicator.classList.remove('unread');
+                indicator.classList.add('read');
+                indicator.textContent = 'Read';
+                btn.textContent = 'Mark as Unread';
+                btn.setAttribute('data-read', 'true');
+              } else {
+                card.classList.add('unread');
+                indicator.classList.add('unread');
+                indicator.classList.remove('read');
+                indicator.textContent = 'Unread';
+                btn.textContent = 'Mark as Read';
+                btn.setAttribute('data-read', 'false');
+              }
+            }
+          } catch (err) {
+            console.error('Toggle failed:', err);
+          }
+        });
+      });
+    });
+  </script>
+
+  <style>
+    .admin-section {
+      padding-bottom: 6rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-dimmed);
+      font-size: 1.1rem;
+    }
+
+    .submissions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .submission-card {
+      padding: 2rem;
+      border-radius: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .submission-card:hover {
+      transform: none;
+    }
+
+    .submission-card.unread {
+      border-left: 3px solid var(--primary);
+    }
+
+    .submission-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .submission-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .submission-date {
+      font-size: 0.85rem;
+      color: var(--text-dimmed);
+    }
+
+    .badge-rate-limited {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .read-indicator {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .read-indicator.unread {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .read-indicator.read {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dimmed);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-toggle-read {
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: var(--transition-fast);
+    }
+
+    .btn-toggle-read:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    .submission-contact {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .submission-contact strong {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .submission-email {
+      color: var(--primary);
+      font-size: 0.95rem;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .submission-email:hover {
+      color: #818cf8;
+    }
+
+    .submission-company {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      padding: 0.15rem 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    .submission-message {
+      margin-bottom: 1rem;
+    }
+
+    .submission-message p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .submission-footer-meta {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .submission-ip {
+      font-size: 0.75rem;
+      color: var(--text-dimmed);
+      font-family: monospace;
+    }
+
+    @media (max-width: 768px) {
+      .submission-card {
+        padding: 1.5rem;
+      }
+
+      .submission-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .submission-contact {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</BaseLayout>
