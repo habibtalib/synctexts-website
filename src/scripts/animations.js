@@ -51,40 +51,5 @@ document.addEventListener('astro:page-load', () => {
   const revealElements = document.querySelectorAll('.reveal');
   revealElements.forEach((el) => observer.observe(el));
 
-  // 4. Contact Form Handling (simulated)
-  const contactForm = document.querySelector('.contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const btn = contactForm.querySelector('button');
-      const originalText = btn.innerHTML;
-
-      // Loading state
-      btn.disabled = true;
-      btn.innerHTML = '<span class="loading-spinner"></span> Sending...';
-      btn.style.opacity = '0.9';
-
-      // Simulate API call
-      setTimeout(() => {
-        btn.innerHTML = 'Message Sent Successfully';
-        btn.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
-        btn.style.opacity = '1';
-
-        const successNotice = document.createElement('div');
-        successNotice.className = 'success-message reveal active';
-        successNotice.innerHTML =
-          '<p>Thank you! Our engineers will review your request and get back to you within 24 hours.</p>';
-        successNotice.style.marginTop = '2rem';
-        successNotice.style.color = '#10b981';
-        successNotice.style.textAlign = 'center';
-
-        contactForm.style.display = 'none';
-        contactForm.parentNode.appendChild(successNotice);
-
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'form_submission', { event_category: 'contact' });
-        }
-      }, 1800);
-    });
-  }
+  // Contact form handling moved to src/scripts/contact-form.ts (real API submission)
 });
