@@ -12,18 +12,114 @@ import PageHeader from '../components/PageHeader.astro';
         <p>Let's discuss how SyncTexts can elevate your next project. We are ready to tackle your toughest technical
           challenges.</p>
       </div>
-      <form class="contact-form">
+      <div class="form-errors" id="form-errors" role="alert"></div>
+      <form class="contact-form" id="contact-form">
         <div class="form-group">
-          <input type="text" id="name" required placeholder="Name" class="glass-input">
+          <input type="text" id="name" name="name" required placeholder="Name" class="glass-input">
+          <span class="field-error" id="name-error"></span>
         </div>
         <div class="form-group">
-          <input type="email" id="email" required placeholder="Email Address" class="glass-input">
+          <input type="text" id="company" name="company" placeholder="Company (optional)" class="glass-input">
         </div>
         <div class="form-group">
-          <textarea id="message" required placeholder="Project Details" class="glass-input" rows="4"></textarea>
+          <input type="email" id="email" name="email" required placeholder="Email Address" class="glass-input">
+          <span class="field-error" id="email-error"></span>
+        </div>
+        <div class="form-group">
+          <textarea id="message" name="message" required placeholder="Project Details" class="glass-input" rows="4"></textarea>
+          <span class="field-error" id="message-error"></span>
+        </div>
+        <!-- Honeypot field - hidden from humans -->
+        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
         </div>
         <button type="submit" class="btn btn-primary btn-block">Send Message</button>
       </form>
     </div>
   </section>
 </BaseLayout>
+
+<script src="../scripts/contact-form.ts"></script>
+
+<style>
+  .field-error {
+    display: none;
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+
+  .form-errors {
+    display: none;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    color: #ef4444;
+    font-size: 0.875rem;
+  }
+
+  .form-errors ul {
+    margin: 0.25rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .form-errors li {
+    margin: 0.15rem 0;
+  }
+
+  .input-error {
+    border-color: rgba(239, 68, 68, 0.5) !important;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.4rem;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .success-panel {
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+
+  .success-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .success-panel h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .success-panel p {
+    color: var(--text-secondary, #94a3b8);
+  }
+
+  button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+</style>
