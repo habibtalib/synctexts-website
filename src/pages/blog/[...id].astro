@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import JsonLdBlogPost from '../../components/SEO/JsonLdBlogPost.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -23,7 +24,13 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={post.data.title} description={post.data.excerpt}>
+<BaseLayout title={post.data.title} description={post.data.excerpt} type="article">
+  <JsonLdBlogPost
+    title={post.data.title}
+    description={post.data.excerpt}
+    date={post.data.date}
+    url={new URL(`/blog/${post.id}`, Astro.site).href}
+  />
   <article class="blog-post-page container">
     <header class="blog-post-header">
       <div class="blog-post-meta">
