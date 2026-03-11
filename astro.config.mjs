@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 
 import node from '@astrojs/node';
 
+import sitemap from '@astrojs/sitemap';
+
 export default defineConfig({
   site: 'https://synctexts.com',
 
@@ -14,4 +16,10 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone',
   }),
+
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/admin') && !page.includes('/api'),
+    }),
+  ],
 });

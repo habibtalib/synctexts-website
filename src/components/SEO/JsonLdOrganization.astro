@@ -1,0 +1,17 @@
+---
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'SyncTexts',
+  url: 'https://synctexts.com',
+  logo: 'https://synctexts.com/favicon.svg',
+  description:
+    'SyncTexts is a leading tech agency specializing in Web Development, DevOps, and Data Analytics.',
+  sameAs: [
+    'https://github.com/synctexts',
+    'https://linkedin.com/company/synctexts',
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
