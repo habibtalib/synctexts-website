@@ -61,10 +61,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deployment
 
-- [ ] **DEPL-01**: Dockerfile for production deployment (multi-stage Node.js build)
-- [ ] **DEPL-02**: docker-compose.yml with Astro app + reverse proxy
-- [ ] **DEPL-03**: SSL/HTTPS automation via Caddy or Certbot
-- [ ] **DEPL-04**: Health check endpoint for container monitoring
+- [x] **DEPL-01**: Dockerfile for production deployment (multi-stage Node.js build)
+- [x] **DEPL-02**: docker-compose.yml with Astro app + reverse proxy
+- [x] **DEPL-03**: SSL/HTTPS automation via Caddy or Certbot
+- [x] **DEPL-04**: Health check endpoint for container monitoring
 
 ## v2 Requirements
 
@@ -141,10 +141,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-05 | Phase 4 | Pending |
 | SEO-06 | Phase 4 | Pending |
 | SEO-07 | Phase 4 | Pending |
-| DEPL-01 | Phase 4 | Pending |
-| DEPL-02 | Phase 4 | Pending |
-| DEPL-03 | Phase 4 | Pending |
-| DEPL-04 | Phase 4 | Pending |
+| DEPL-01 | Phase 4 | Complete |
+| DEPL-02 | Phase 4 | Complete |
+| DEPL-03 | Phase 4 | Complete |
+| DEPL-04 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 41 total
