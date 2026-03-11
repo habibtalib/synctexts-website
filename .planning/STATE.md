@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
-status: defining_requirements
+status: ready_to_plan
 stopped_at: null
 last_updated: "2026-03-11T19:30:00+08:00"
-last_activity: 2026-03-11 -- Milestone v1.1 started
+last_activity: 2026-03-11 -- Roadmap created for v1.1 (6 phases, 31 requirements mapped)
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** v1.1 Lead Conversion Engine
+**Current focus:** Phase 5 — Database Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-11 — Milestone v1.1 started
+Phase: 5 of 10 (Phase 5: Database Foundation)
+Plan: — of — in current phase
+Status: Ready to plan
+Last activity: 2026-03-11 — v1.1 roadmap created, 31 requirements mapped across 6 phases
 
 Progress: ░░░░░░░░░░ 0%
 
@@ -39,22 +39,29 @@ Progress: ░░░░░░░░░░ 0%
 - Average duration: 8 min
 - Total execution time: 1.4 hours
 
+**v1.1 plans:** Not started
+
 ## Accumulated Context
 
 ### Decisions
 
 All v1.0 decisions documented in PROJECT.md Key Decisions table.
 
+v1.1 decisions pending — will be logged as phases execute.
+
+### Critical Risks (from research)
+
+- [Phase 5]: NEVER run `drizzle-kit push` on production — use generate + migrate only; back up `data/submissions.db` before every migration
+- [Phase 7]: HubSpot sync must be fire-and-forget — return success after DB write regardless of HubSpot outcome
+- [Phase 9]: Cal.com `lead_id` round-trip via prefill notes is a workaround, not a documented feature — test in sandbox before committing; have email-match fallback ready
+- [Phase 7]: Verify HubSpot v13.4.0 POST-then-PATCH upsert workaround is still current before implementing
+
 ### Pending Todos
-
-None.
-
-### Blockers/Concerns
 
 None.
 
 ## Session Continuity
 
 Last session: 2026-03-11
-Stopped at: Defining v1.1 requirements
-Next action: Complete requirements and roadmap
+Stopped at: Roadmap creation complete
+Next action: Run `/gsd:plan-phase 5` to plan Phase 5: Database Foundation
