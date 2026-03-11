@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed Plan 04-03 (Docker deployment)
-last_updated: "2026-03-11T04:16:14.042Z"
-last_activity: 2026-03-11 -- Completed Plan 04-03 (Docker deployment)
+stopped_at: Completed Plan 04-01 (SEO foundation)
+last_updated: "2026-03-11T04:17:23Z"
+last_activity: 2026-03-11 -- Completed Plan 04-01 (SEO foundation)
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 12
-  completed_plans: 10
-  percent: 83
+  completed_plans: 11
+  percent: 92
 ---
 
 # Project State
@@ -21,21 +21,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** Phase 4 in progress. Docker deployment (Plan 03) complete. SEO and Analytics plans remaining.
+**Current focus:** Phase 4 in progress. SEO foundation (Plan 01) and Docker deployment (Plan 03) complete. Analytics plan remaining.
 
 ## Current Position
 
 Phase: 4 of 4 (SEO, Analytics, Deployment)
-Plan: 3 of 3 in current phase -- Plan 03 COMPLETE
+Plan: 2 of 3 in current phase -- Plans 01 and 03 COMPLETE
 Status: Phase 4 in progress
-Last activity: 2026-03-11 -- Completed Plan 04-03 (Docker deployment)
+Last activity: 2026-03-11 -- Completed Plan 04-01 (SEO foundation)
 
-Progress: [████████░░] 83%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 9 min
 - Total execution time: 1.4 hours
 
@@ -46,7 +46,7 @@ Progress: [████████░░] 83%
 | 01-foundation-migration | 2 | 18 min | 9 min |
 | 02-content-portfolio | 5 | 29 min | 6 min |
 | 03-lead-capture | 2 | 35 min | 18 min |
-| 04-seo-analytics-deployment | 1 | 1 min | 1 min |
+| 04-seo-analytics-deployment | 2 | 4 min | 2 min |
 
 **Recent Trend:**
 - Last 5 plans: -
@@ -92,6 +92,9 @@ Recent decisions affecting current work:
 - [03-02]: Toggle endpoint uses GET redirect to reload page, leveraging browser-cached Basic Auth credentials
 - [04-03]: Replaced old nginx/Traefik Docker setup with Caddy for simpler automatic HTTPS
 - [04-03]: Caddy depends_on app with service_healthy condition for startup ordering
+- [04-01]: JSON-LD rendered in page body (valid per schema.org spec, simpler Astro component composition)
+- [04-01]: OG image defaults to /og-default.png placeholder; overridable per-page via image prop
+- [04-01]: Sitemap filter excludes /admin and /api routes
 
 ### Pending Todos
 
@@ -105,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T04:15:32Z
-Stopped at: Completed 04-03-PLAN.md
-Resume file: .planning/phases/04-seo-analytics-deployment/04-03-SUMMARY.md
+Last session: 2026-03-11T04:17:23Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: .planning/phases/04-seo-analytics-deployment/04-01-SUMMARY.md
