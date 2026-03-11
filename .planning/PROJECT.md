@@ -40,9 +40,24 @@ Potential clients can see SyncTexts' real project portfolio and expertise, then 
 
 ### Active
 
-<!-- Next milestone scope. -->
+<!-- Current scope: v1.1 Lead Conversion Engine -->
 
-(None yet — define with `/gsd:new-milestone`)
+- [ ] Multi-step contact forms with service-specific paths (web dev, DevOps, analytics)
+- [ ] Cal.com embedded scheduling widget for direct call booking
+- [ ] Lead scoring from form data (service type, budget) + behavioral signals (page visits, engagement)
+- [ ] Built-in lead management dashboard (scores, statuses, notes, filtering)
+- [ ] HubSpot CRM integration via API for lead sync
+
+## Current Milestone: v1.1 Lead Conversion Engine
+
+**Goal:** Transform the website from a passive lead capture form into an active conversion engine with intelligent scoring, scheduling, and CRM integration.
+
+**Target features:**
+- Multi-step, service-specific contact forms
+- Cal.com embedded call scheduling
+- Composite lead scoring (form data + behavioral signals)
+- Lead management dashboard (upgrade from basic admin)
+- HubSpot CRM sync
 
 ### Out of Scope
 
@@ -96,4 +111,4 @@ Shipped v1.0 with 3,711 LOC across Astro, TypeScript, CSS, and JavaScript.
 | Basic Auth for admin | Simple, no user management needed for single admin | ⚠️ Revisit if multiple admins needed |
 
 ---
-*Last updated: 2026-03-11 after v1.0 milestone*
+*Last updated: 2026-03-11 after v1.1 milestone started*
