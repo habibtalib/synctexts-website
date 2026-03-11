@@ -1,6 +1,12 @@
 // Client-side contact form validation and submission
 // Validation rules duplicated from server (src/lib/validation.ts) for client-side use
 
+declare global {
+  interface Window {
+    dataLayer: Record<string, unknown>[];
+  }
+}
+
 interface FieldErrors {
   name?: string;
   email?: string;
@@ -161,6 +167,13 @@ function initContactForm(): void {
       const result = await response.json();
 
       if (response.ok && result.success) {
+        // Track successful form submission
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'contact_form_submit',
+          form_status: 'success',
+        });
+
         // Replace form with success message
         const wrapper = form.closest('.contact-wrapper');
         if (wrapper) {
@@ -173,16 +186,37 @@ function initContactForm(): void {
           `;
         }
       } else if (result.errors) {
+        // Track failed form submission
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'contact_form_submit',
+          form_status: 'error',
+        });
+
         // Server validation errors
         for (const fieldId of validatedFields) {
           showFieldError(fieldId, result.errors[fieldId] || null);
         }
         showErrorSummary(result.errors);
       } else {
+        // Track failed form submission
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'contact_form_submit',
+          form_status: 'error',
+        });
+
         // Generic server error
         showErrorSummary({ name: result.message || 'Something went wrong. Please try again later.' });
       }
     } catch {
+      // Track failed form submission
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'contact_form_submit',
+        form_status: 'error',
+      });
+
       // Network error
       showErrorSummary({ name: 'Network error. Please check your connection and try again.' });
     } finally {
