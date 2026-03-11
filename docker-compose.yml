@@ -1,26 +1,28 @@
 services:
-  synctexts-website:
-    container_name: synctexts-website
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: synctexts-website:latest
+  app:
+    build: .
     restart: unless-stopped
-    networks:
-      - stack_web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=stack_web"
-      - "traefik.http.services.synctexts-website.loadbalancer.server.port=80"
-      - "traefik.http.routers.synctexts-website-http.rule=Host(`synctexts.com`) || Host(`www.synctexts.com`)"
-      - "traefik.http.routers.synctexts-website-http.entrypoints=web"
-      - "traefik.http.routers.synctexts-website-http.middlewares=synctexts-website-https-redirect"
-      - "traefik.http.middlewares.synctexts-website-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.synctexts-website-https.rule=Host(`synctexts.com`) || Host(`www.synctexts.com`)"
-      - "traefik.http.routers.synctexts-website-https.entrypoints=websecure"
-      - "traefik.http.routers.synctexts-website-https.tls=true"
-      - "traefik.http.routers.synctexts-website-https.tls.certresolver=le"
+    env_file: .env
+    volumes:
+      - app-data:/app/data
+    expose:
+      - "4321"
 
-networks:
-  stack_web:
-    external: true
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+
+volumes:
+  app-data:
+  caddy-data:
+  caddy-config:
