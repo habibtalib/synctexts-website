@@ -79,11 +79,12 @@ Plans:
   3. GA4 tracks page views on every page and GTM container is loaded for flexible tag management
   4. Site runs inside a Docker container behind a reverse proxy with automatic SSL certificate renewal, accessible at synctexts.com over HTTPS
   5. All pages use semantic HTML with proper heading hierarchy and landmark elements
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — SEO foundation: meta tags, OG tags, canonical URLs, JSON-LD structured data, sitemap, semantic HTML audit
+- [ ] 04-02-PLAN.md — GTM/GA4 analytics integration with custom events for contact form and CTA clicks
+- [ ] 04-03-PLAN.md — Docker deployment: Dockerfile, docker-compose, Caddy reverse proxy, health check endpoint
 
 ## Progress
 
@@ -96,4 +97,4 @@ Note: Phase 3 depends only on Phase 1 and can execute in parallel with Phase 2 i
 | 1. Foundation & Migration | 2/2 | Complete   | 2026-03-09 |
 | 2. Content & Portfolio | 5/5 | Complete | 2026-03-10 |
 | 3. Lead Capture | 2/2 | Complete   | 2026-03-10 |
-| 4. SEO, Analytics & Deployment | 0/2 | Not started | - |
+| 4. SEO, Analytics & Deployment | 0/3 | Not started | - |
