@@ -1,210 +1,307 @@
 # Feature Research
 
-**Domain:** Tech agency marketing website (lead generation)
-**Researched:** 2026-03-08
+**Domain:** Lead conversion engine for tech agency website (v1.1)
+**Researched:** 2026-03-11
 **Confidence:** HIGH
+
+> **Scope note:** This file covers ONLY the v1.1 features — multi-step forms, Cal.com scheduling, lead scoring, lead management dashboard, and HubSpot CRM integration. The v1.0 baseline (contact form, admin page, GTM/GA4, SQLite persistence) is shipped and not re-researched here.
+
+---
 
 ## Feature Landscape
 
 ### Table Stakes (Users Expect These)
 
-Features prospects assume exist. Missing these makes the agency look unprofessional or incomplete.
+Features that, once the v1.1 scope is committed to, users and team expect to work correctly. Missing these makes the feature feel broken or half-done.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| **Multi-page navigation** | Single-page sites feel amateur for agencies; prospects expect dedicated pages for services, portfolio, about/team, contact | MEDIUM | 5-6 pages: Home, Portfolio, Team, Blog, Pricing, Contact. Keep nav to 4-6 items max (research shows this is optimal). Sticky header with CTA button. |
-| **Services overview with detail** | Prospects need to know what you do in under 5 seconds. Service pages are "the workhorse of lead generation" | LOW | Already partially exists. Expand each service into its own section or sub-page with specifics, process description, and relevant tech stack. |
-| **Portfolio / case studies page** | 66% of B2B marketers cite case studies as top-3 most effective content for lead generation. Prospects evaluate past work before contacting. | HIGH | Pull from GitHub API (private repos via PAT). Need 5-10 curated projects. Each needs: title, description, tech tags, screenshots, and optionally a "View Details" link. Manual override config for custom descriptions/images since auto-pulled GitHub data alone is insufficient. |
-| **Working contact form** | A simulated form signals "this site is a demo, not a business." Broken or fake forms actively lose leads. | MEDIUM | Keep to 3-4 fields max (name, email, message + optional company/budget). Must send email notification AND persist to database so leads are never lost. Add clear CTA copy ("Start Your Project" beats "Submit"). |
-| **Responsive design** | Over 60% of web traffic is mobile. Non-responsive = immediate bounce. | LOW | Already exists. Verify it extends properly to all new pages. |
-| **Fast load times** | Core Web Vitals are a Google ranking factor. Slow agency sites signal "they can't even build their own site well." | LOW | Static site or SSG approach inherently fast. Optimize images (WebP), minimize JS bundles. Target <2s LCP. |
-| **SEO fundamentals** | Agency websites compete for "[city] web development agency" and similar queries. No SEO = invisible. | MEDIUM | Proper meta tags, Open Graph, structured data (JSON-LD for Organization, LocalBusiness), sitemap.xml, semantic HTML. Each page needs unique title/description. Blog content drives long-tail SEO. |
-| **About / Team page** | Prospects hire people, not logos. Missing team page reduces trust significantly. | LOW | Member profiles with photo, name, role, short bio. No need for social links unless team wants them. Keep it authentic -- real photos, not stock. |
-| **Footer with contact details** | The footer answers logistical questions: where you work, how to reach you. Missing footer info looks sketchy. | LOW | Email, location (city/country), copyright, nav links, possibly social icons. |
-| **SSL / HTTPS** | Browser warnings on non-HTTPS sites destroy trust instantly. | LOW | Infrastructure concern, not code. Self-hosted = set up via Let's Encrypt / Caddy auto-TLS. |
+| **Progress indicator on multi-step form** | Standard UX contract for wizard-style forms. Users feel lost without knowing how many steps remain. Completion rates drop measurably without it. | LOW | Simple step counter ("Step 2 of 4") or progress bar. Keep to 3-5 steps max. Agency forms rarely need more. |
+| **Back navigation between form steps** | Users expect to correct earlier answers. No back button = abandonment. Industry data: users who can't go back quit in frustration. | LOW | Client-side state machine. Previous inputs must be preserved on back. No re-fetch, no data loss. |
+| **Client-side validation per step** | Validate before advancing to next step. Showing errors after all steps wastes user effort. | LOW | Inline error messages per field. Validate on blur and on "Next" click. Do not block typing. |
+| **Form state persistence (in-session)** | If user accidentally refreshes or navigates away mid-form, losing all answers is a conversion killer. | MEDIUM | sessionStorage is sufficient. Do not need permanent persistence — just survive page refreshes within the tab. |
+| **Cal.com calendar embed loads correctly** | Scheduling widget must render inline or open as modal. If it fails silently, leads are lost. | LOW | Script-tag embed from Cal.com CDN. Four embed types available: inline, popup on element click, floating button, or link. Vanilla JS snippet works without a framework. |
+| **Cal.com prefill from form data** | If user already filled name/email in the contact form before clicking "Book a Call," those fields should be pre-populated in the Cal.com embed. | LOW | Cal.com supports URL query params for prefill: `?name=...&email=...`. Pass collected form data as params when initiating the Cal embed. |
+| **Lead scores visible in admin dashboard** | If scoring is built, the admin page must surface scores. Hidden scores provide zero value. | LOW | Add score column to leads table. Sort by score descending by default. Show badge color coding (hot/warm/cold). |
+| **Lead status workflow** | Admins need to move leads through states (new → contacted → qualified → won/lost). Read/unread toggle from v1.0 is insufficient for this. | LOW | Status enum: `new`, `contacted`, `qualified`, `proposal_sent`, `won`, `lost`. Dropdown select in dashboard. No complex workflow engine needed — just a status field with manual transitions. |
+| **Admin notes on leads** | When admins call or email a lead, they need to log what happened. Contextless lead lists become useless quickly. | LOW | Text area per lead for freeform notes. Single note field is fine for MVP — not a full comment thread. |
+| **HubSpot sync failure handling** | If HubSpot API call fails, the lead must not be silently dropped. Local persistence is already in SQLite. The CRM sync is secondary. | MEDIUM | Fire-and-forget with retry. On failure: log error, store `hubspot_synced = false` in SQLite, retry on next admin page load or via background job. Never block form submission waiting on HubSpot. |
 
 ### Differentiators (Competitive Advantage)
 
-Features that set SyncTexts apart. Not expected, but make the agency memorable and build trust.
+Features that make the v1.1 implementation meaningfully better than a naive CRM form + Calendly link approach.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| **Live GitHub portfolio integration** | Most agencies use static screenshots. Pulling real repo data (languages, commit activity, descriptions) proves technical credibility in a way competitors cannot fake. | HIGH | Use GitHub REST API with PAT for private repos. Show: repo name, description, primary languages, last updated. Config file defines which repos to display + manual overrides for descriptions/screenshots. Cache API responses (rebuild on deploy or periodic refresh). |
-| **Technical blog (Markdown-powered)** | Positions agency as thought leaders. Drives organic SEO traffic. Markdown in-repo means developer-friendly workflow with version control -- no CMS dependency. | MEDIUM | Markdown files with YAML frontmatter (title, date, author, tags, description). Need: listing page with pagination, individual post pages, tag filtering, syntax highlighting for code blocks, estimated read time. RSS feed is a bonus. |
-| **Client testimonials with context** | Social proof with specific outcomes ("reduced deploy time by 80%") converts far better than generic praise. Placed strategically near CTAs. | LOW | Start with 3-5 curated testimonials. Each needs: quote, client name, role, company, optionally a photo/logo. Carousel or grid layout. Place on homepage AND as standalone section. Data in config file, not hardcoded. |
-| **Transparent pricing tiers** | Most agencies hide pricing ("contact us for a quote"). Showing ballpark tiers filters leads and builds trust. Signals confidence. | LOW | 3 tiers is standard (Starter/Growth/Enterprise or similar). Show what's included, starting price, and CTA per tier. Add "Custom" option for enterprise. Data-driven from config file. |
-| **Scroll-triggered animations** | Creates a polished, modern feel. Already partially implemented. Extending to new pages maintains the premium aesthetic. | LOW | Already exists with IntersectionObserver. Extend to new sections. Keep subtle -- animations should enhance, not distract. |
-| **Dark glassmorphism design system** | Distinctive visual identity. Most agency sites use light themes. Dark + glassmorphism feels premium and technical. | LOW | Already established. Extend consistently to new pages. Document the design tokens (colors, blur values, border styles) for consistency. |
-| **Analytics dashboard integration** | GA4 + GTM demonstrates the agency practices what it preaches. Track form submissions, page views, scroll depth. | LOW | Drop in GA4 snippet + GTM container. Set up conversion tracking for form submissions. This is table stakes for the agency's analytics service offering -- "we use what we sell." |
-| **Structured data / rich snippets** | JSON-LD markup for Organization, LocalBusiness, and BlogPosting enables rich results in Google (star ratings, article previews, business info). Competitors rarely bother. | MEDIUM | Add JSON-LD to relevant pages. Organization schema on all pages, BlogPosting on blog posts, FAQ schema if applicable. |
+| **Service-specific form branching** | User selects "DevOps" and subsequent questions are DevOps-specific (infrastructure scale, cloud provider, current setup). Web Dev path asks about tech stack preferences. Analytics path asks about current tooling. Relevant questions = higher quality leads. | MEDIUM | Conditional step logic based on service selection in Step 1. Client-side routing between step configurations. Three paths: web-dev, devops, analytics. Each path has 2-3 unique questions plus shared closing step (budget, timeline, contact). |
+| **Composite lead score surfaced in dashboard** | Score built from two signal types: form data (explicit) + behavioral (implicit). Explicit: service type selected, budget range, timeline urgency. Implicit: pages visited, time on site, pricing page viewed. Combined score (0-100) lets admin prioritize outreach. | HIGH | Explicit score computed server-side at form submission. Behavioral score requires GA4 custom dimensions or a cookie-based visit counter (simpler). Store composite score in SQLite. Recalculate never needed — set at submission time. |
+| **Lead scoring logic is configurable** | Hardcoded scoring weights become wrong over time. Keeping weights in a config object (not scattered through code) makes tuning possible without touching form logic. | LOW | Single `SCORING_CONFIG` object in a server-side module. Admin doesn't need a UI to change weights — developer edits the config file. Document the weights clearly. |
+| **Scheduling embedded inline (not redirect)** | Redirecting to cal.com to book = context loss, drop-off. Inline embed keeps user on the agency's branded page throughout. | LOW | Use Cal.com inline embed type. Wrap in a section matching the glassmorphism design. Cal.com embed supports `theme=dark` parameter. |
+| **Lead dashboard filtering and sorting** | As lead volume grows, flat list becomes unworkable. Filtering by score range, service type, and status; sorting by score or submission date. | MEDIUM | Server-rendered filter controls. URL query params drive filter state (e.g., `?status=new&service=devops&sort=score`). No client-side JS framework needed — Astro server endpoints handle filtered queries. |
+| **HubSpot contact enrichment via custom properties** | Basic HubSpot sync pushes name/email. Enriched sync includes score, service type, budget, source page, and form step completion. HubSpot deal pipeline becomes actually useful. | MEDIUM | Map form fields and score to HubSpot contact properties. Create custom properties in HubSpot (score, service_type, budget_range, source_page). Use `PATCH /crm/v3/objects/contacts/{id}` with `idProperty=email` for upsert. |
+| **Post-submission scheduling CTA** | After contact form submit, show a "Book a 30-minute discovery call" prompt with the Cal.com embed. Converts warm leads immediately rather than waiting for email follow-up. | LOW | Trigger Cal.com popup on form success state. Pass name/email from form to Cal prefill params. High leverage, low effort. |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem good but create problems for this specific project.
-
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| **Headless CMS (Contentful, Strapi, etc.)** | "We need easy content editing" | Adds external dependency, hosting cost, API complexity, and auth management. For a small agency site with infrequent updates, it is massive overkill. | Markdown files in the repo + config JSON/YAML for structured data (testimonials, pricing, team). Developers edit directly; non-devs can use GitHub's web editor. |
-| **User authentication / client portal** | "Clients could log in to see project status" | Adds auth system, session management, security surface area, and ongoing maintenance for a feature almost no prospects will use on a marketing site. | Link to external project management tools (Linear, Notion) if needed. The website's job is lead generation, not project management. |
-| **Live chat widget** | "Instant support improves conversion" | Requires someone to actually respond in real-time, or it becomes a worse experience than no chat. Third-party widgets (Intercom, Drift) add 200-500KB of JS, hurt performance, and look spammy. | Contact form with clear response time expectation ("We reply within 24 hours"). Add WhatsApp/Telegram link if instant messaging is desired. |
-| **E-commerce / online payments** | "Let clients pay for packages online" | Adds payment processing (Stripe integration), invoicing, tax handling, and legal complexity. Pricing page is informational -- actual projects need scoping calls first. | "Start Your Project" CTA that leads to contact form. Handle payments through invoicing tools (Paddle, Xero) after scoping. |
-| **AI chatbot** | "Everyone's adding AI in 2026" | Novelty that adds complexity without clear ROI for a small agency site. Can give wrong answers about services/pricing. Maintenance burden for prompt engineering. | Well-structured FAQ section or service pages that answer common questions. The content itself should be the "chatbot." |
-| **Internationalization (i18n)** | "We want to reach global clients" | Multiplies content maintenance by N languages. Translation quality issues. Most tech agencies operate in English regardless of location. | Write all content in English. Add a single "We work with clients worldwide" statement. |
-| **Real-time notifications / WebSockets** | "Show live project activity" | Over-engineered for a marketing site. Adds infrastructure complexity (WebSocket server, connection management). | Static "Recent Activity" section updated on build/deploy showing latest blog posts or GitHub activity. |
-| **Complex multi-step contact form** | "Qualify leads better with more fields" | Each additional field reduces form completion by 5-10%. Agency-side qualification happens on the sales call, not the form. | 3-4 fields maximum. Add an optional "Budget range" dropdown if lead qualification is critical. Keep friction low. |
+| **AI-powered lead scoring** | "Machine learning will find the best leads" | Requires training data volume (hundreds of closed deals) the agency doesn't have. Adds model hosting, retraining pipeline, and explainability debt. Black-box scores lose admin trust fast. | Rule-based scoring with clearly documented weights. Transparent, auditable, tunable by a developer in 5 minutes. |
+| **Real-time HubSpot webhook sync** | "Keep CRM always in sync" | Webhook infrastructure, signature verification, retry queues, and idempotency handling for what is, at this scale, a few leads per day. Massive overengineering. | Async fire-and-forget POST on form submission. If it fails, a `synced=false` flag and a manual "Sync Now" button in the dashboard is sufficient. |
+| **Multi-admin user management** | "Different team members need different access" | Adds user auth system, role definitions, session management, and audit logs to what is currently a single Basic Auth password. | Keep Basic Auth for now. Document in PROJECT.md that multi-admin is the trigger for upgrading auth. One password change is simpler than a full auth system. |
+| **Automated email sequences from dashboard** | "Trigger follow-up emails from the lead list" | Email sequence tooling (drip campaigns, open tracking, unsubscribe management) is HubSpot's job. Building it in a custom admin page duplicates CRM functionality badly. | Use HubSpot workflows triggered on contact creation/score threshold. That's why we're integrating HubSpot. |
+| **Form A/B testing** | "Test which form path converts better" | Requires split traffic, variant tracking, statistical significance tracking (hundreds of impressions minimum), and a testing harness. Premature at this traffic level. | Ship one well-researched form, instrument with GTM events per step, analyze drop-off manually after 4-6 weeks of data. |
+| **Cal.com custom Atoms integration** | "Full white-label booking UI" | Cal Atoms (their headless component API) are React-only and require significant UI rebuild of the booking flow. The standard embed already supports dark theme. | Use the standard Cal.com embed with `theme=dark` parameter. Matches glassmorphism aesthetic well enough. |
+| **Zapier/Make as HubSpot middleware** | "No-code is faster to set up" | Adds a third-party service dependency with its own pricing, rate limits, and failure modes. The HubSpot Contacts API v3 is straightforward for a developer. | Direct API call from Astro server endpoint using a private app token. Fewer moving parts, no recurring middleware cost. |
+| **Lead deduplication logic beyond email** | "What if same person uses different email?" | Fuzzy name matching and phone deduplication create false positives and require manual resolution UI. For an agency with low lead volume, this is noise. | Email is the deduplication key. HubSpot handles this natively. Document the assumption. |
+
+---
 
 ## Feature Dependencies
 
 ```
-[Multi-page site structure]
+[Multi-step form (service-specific)]
     |
-    +--requires--> [Navigation / routing system]
-    |                  |
-    |                  +--requires--> [Framework or static site generator]
+    +--requires--> [Form state management (client-side)]
+    |                  +--requires--> [Step router component]
+    |                  +--requires--> [sessionStorage persistence]
     |
-    +--enables--> [Portfolio page]
-    |                 |
-    |                 +--requires--> [GitHub API integration]
-    |                 +--enhanced-by--> [Manual override config]
-    |                 +--enhanced-by--> [Project detail pages]
+    +--requires--> [Astro API endpoint (form submission)]
+    |                  +--already-exists--> [SQLite + Drizzle]
+    |                  +--already-exists--> [Resend email notification]
+    |                  +--already-exists--> [Honeypot + rate limiting]
     |
-    +--enables--> [Blog]
-    |                 |
-    |                 +--requires--> [Markdown processing pipeline]
-    |                 +--requires--> [Frontmatter parsing]
-    |                 +--enhanced-by--> [Syntax highlighting]
-    |                 +--enhanced-by--> [RSS feed]
-    |                 +--enhanced-by--> [Tag filtering]
+    +--feeds--> [Lead scoring (explicit signals)]
+    |               +--requires--> [Score schema in SQLite]
+    |               +--enhanced-by--> [Behavioral signals (page visits)]
     |
-    +--enables--> [Team page]
-    |                 +--requires--> [Team data config file]
-    |
-    +--enables--> [Pricing page]
-    |                 +--requires--> [Pricing data config file]
-    |
-    +--enables--> [Testimonials section]
-                      +--requires--> [Testimonials data config file]
+    +--feeds--> [HubSpot CRM sync]
+                    +--requires--> [HubSpot private app token]
+                    +--requires--> [Custom contact properties in HubSpot]
 
-[Contact form (frontend)]
-    +--requires--> [Backend / API endpoint]
-    +--requires--> [Email sending service]
-    +--enhanced-by--> [Database persistence]
-    +--enhanced-by--> [Form validation (client + server)]
-    +--enhanced-by--> [Spam protection (honeypot / reCAPTCHA)]
+[Cal.com scheduling embed]
+    +--independent--> (script tag, no server-side code needed)
+    +--enhanced-by--> [Multi-step form] (prefill from collected data)
+    +--enhanced-by--> [Post-submission hook] (trigger after form success)
 
-[SEO fundamentals]
-    +--requires--> [Per-page meta tags]
-    +--requires--> [Sitemap generation]
-    +--enhanced-by--> [Structured data / JSON-LD]
-    +--enhanced-by--> [Blog content (long-tail SEO)]
-    +--enhanced-by--> [Open Graph tags]
+[Lead scoring]
+    +--requires--> [Multi-step form] (explicit signals: service, budget, timeline)
+    +--requires--> [Score column in SQLite leads table]
+    +--enhanced-by--> [Behavioral signals] (page visit counter via cookie/session)
+    +--feeds--> [Lead management dashboard] (sorted by score)
+    +--feeds--> [HubSpot sync] (score as custom property)
 
-[Analytics integration]
-    +--independent--> (can be added at any phase)
+[Lead management dashboard]
+    +--requires--> [Score column in SQLite]
+    +--requires--> [Status enum column in SQLite]
+    +--requires--> [Notes column in SQLite]
+    +--already-exists--> [Basic Auth admin page]
+    +--enhanced-by--> [Filtering + sorting via URL params]
 
-[Design system extension]
-    +--requires--> [Existing glassmorphism tokens documented]
-    +--enables--> [Consistent styling across all new pages]
+[HubSpot CRM sync]
+    +--requires--> [Multi-step form data] (richer than v1.0 form)
+    +--requires--> [Lead score] (custom property)
+    +--requires--> [HubSpot private app token] (no OAuth needed for server-to-server)
+    +--independent-from--> [Cal.com] (separate integration)
 ```
 
 ### Dependency Notes
 
-- **Multi-page structure requires framework/SSG:** The current vanilla HTML cannot scale to 6+ pages with shared layouts, markdown processing, and dynamic data. This is the foundational dependency -- everything else builds on top of the framework choice.
-- **Portfolio requires GitHub API integration:** The portfolio page's core differentiator is live GitHub data. The API integration must work before the portfolio page can be built beyond static mockups.
-- **Blog requires Markdown pipeline:** Frontmatter parsing, Markdown-to-HTML conversion, and listing/detail page generation are prerequisites. The SSG/framework choice directly impacts how this works.
-- **Contact form requires backend:** Even a minimal backend (serverless function, small API server, or SSG form handler) is needed. This is the only feature requiring server-side code beyond build-time processing.
-- **Analytics is independent:** GA4/GTM can be dropped in at any phase with a script tag. No dependencies.
+- **Multi-step form is the foundation:** Every other v1.1 feature depends on richer form data. Lead scoring needs service type, budget, and timeline from the form. HubSpot sync is meaningless without these signals. Build the multi-step form first.
+- **Lead scoring requires schema changes before dashboard:** The SQLite `submissions` table needs `score`, `status`, and `notes` columns before the dashboard can display them. Schema migration comes before UI.
+- **Cal.com is genuinely independent:** No server-side code needed. A script tag and a div (or a button trigger) are sufficient. Can be shipped in any phase without blocking other features.
+- **HubSpot sync must not block form submission:** The sync is a side-effect. Form → SQLite is the primary path. HubSpot is async, best-effort. This is not just a preference — it protects against CRM downtime causing lost leads.
+- **Behavioral scoring is optional enhancement:** Explicit score (from form data alone) delivers 80% of the value. Behavioral signals (page visits) require a tracking mechanism (cookie counter or GA4 custom dimension readback) and add complexity. Treat as enhancement, not blocker.
+
+---
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (v1.1 core)
 
-Minimum to replace the current single-page site with something that generates leads.
+Minimum to meaningfully upgrade lead conversion beyond v1.0.
 
-- [ ] **Multi-page structure with navigation** -- foundation for everything else
-- [ ] **Refined homepage** (hero, services, tech stack, testimonials preview, CTA) -- first impression
-- [ ] **Portfolio page with GitHub integration** -- the primary differentiator; proves credibility
-- [ ] **Working contact form with email delivery** -- converts visitors to leads (the site's core purpose)
-- [ ] **Team page** -- builds trust; low complexity
-- [ ] **SEO fundamentals** (meta tags, sitemap, semantic HTML) -- ensures discoverability
-- [ ] **Analytics integration** (GA4 + GTM) -- measures what matters from day one
+- [ ] **Multi-step form with service branching** — replaces single-step form; 3 paths (web dev, DevOps, analytics); shared closing step for budget/timeline/contact
+- [ ] **Progress indicator + back navigation** — without these, multi-step form degrades the UX rather than improving it
+- [ ] **Explicit lead scoring on submission** — score computed from service type, budget range, timeline; stored in SQLite; visible in dashboard
+- [ ] **Upgraded admin dashboard** — score badge, status dropdown, notes field, sort by score; replaces basic submission list
+- [ ] **Cal.com inline embed on Contact page** — with post-form-submit CTA trigger and prefill from form data
+- [ ] **HubSpot contact sync** — async POST on form submission; upsert by email; include score and service type as custom properties
 
-### Add After Validation (v1.x)
+### Add After Validation (v1.1 enhancements)
 
-Features to add once the core site is live and generating traffic.
-
-- [ ] **Blog with Markdown** -- add when ready to invest in content creation; drives organic traffic over time
-- [ ] **Pricing page** -- add when service tiers are finalized and the team is ready to publish rates
-- [ ] **Testimonials as dedicated section** -- add when 3+ real client testimonials are collected (can show on homepage first)
-- [ ] **Structured data / JSON-LD** -- add after core pages exist to enhance search presence
-- [ ] **RSS feed for blog** -- add after blog has 5+ posts
-- [ ] **Contact form database persistence** -- add after email delivery is confirmed working; prevents lead loss
+- [ ] **Behavioral scoring signals** — add only after seeing real lead data; determines if page-visit weighting is actually predictive
+- [ ] **Dashboard filtering + sorting by URL params** — add when lead volume exceeds ~20/month; premature before that
+- [ ] **HubSpot retry queue** — add if CRM sync failure rate exceeds 5%; manual "Sync" button in dashboard is sufficient initially
 
 ### Future Consideration (v2+)
 
-Features to defer until the site is established and traffic warrants investment.
+- [ ] **Multi-admin auth** — trigger: second team member needs dashboard access
+- [ ] **Form analytics per step** — track drop-off rate per step via GTM; needs 50+ form starts to be meaningful data
+- [ ] **Calendly/Cal.com round-robin routing** — trigger: multiple team members doing sales calls
 
-- [ ] **Project detail pages** (individual case study pages per portfolio item) -- defer until there is enough content per project to justify standalone pages
-- [ ] **Blog tag/category filtering** -- defer until blog has 15+ posts; premature taxonomy is wasted effort
-- [ ] **Newsletter signup** -- defer until blog has consistent publishing cadence
-- [ ] **Client logo bar** -- defer until 5+ recognizable client logos are available with permission
+---
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Multi-page structure + nav | HIGH | HIGH | P1 |
-| Refined homepage sections | HIGH | MEDIUM | P1 |
-| Portfolio (GitHub API) | HIGH | HIGH | P1 |
-| Working contact form (email) | HIGH | MEDIUM | P1 |
-| Team page | MEDIUM | LOW | P1 |
-| SEO fundamentals | HIGH | MEDIUM | P1 |
-| GA4 + GTM integration | MEDIUM | LOW | P1 |
-| Responsive design (new pages) | HIGH | LOW | P1 |
-| Blog (Markdown) | HIGH | MEDIUM | P2 |
-| Pricing page | MEDIUM | LOW | P2 |
-| Testimonials section | MEDIUM | LOW | P2 |
-| Contact form (DB persistence) | MEDIUM | MEDIUM | P2 |
-| Spam protection | MEDIUM | LOW | P2 |
-| Structured data / JSON-LD | MEDIUM | MEDIUM | P2 |
-| Open Graph / social sharing | LOW | LOW | P2 |
-| RSS feed | LOW | LOW | P3 |
-| Project detail pages | MEDIUM | HIGH | P3 |
-| Blog tag filtering | LOW | MEDIUM | P3 |
-| Newsletter signup | LOW | MEDIUM | P3 |
-| Client logo bar | LOW | LOW | P3 |
+| Multi-step form (3 service paths) | HIGH | MEDIUM | P1 |
+| Progress indicator + back nav | HIGH | LOW | P1 |
+| Explicit lead scoring | HIGH | LOW | P1 |
+| Upgraded admin dashboard (score, status, notes) | HIGH | MEDIUM | P1 |
+| Cal.com embed + post-form CTA | HIGH | LOW | P1 |
+| HubSpot contact sync (async, upsert) | MEDIUM | MEDIUM | P1 |
+| sessionStorage form state persistence | MEDIUM | LOW | P1 |
+| Service-specific question branching | HIGH | MEDIUM | P1 |
+| Dashboard sorting by score | MEDIUM | LOW | P2 |
+| Cal.com prefill from form data | MEDIUM | LOW | P2 |
+| HubSpot custom properties (score, service type) | MEDIUM | LOW | P2 |
+| Behavioral scoring signals | LOW | HIGH | P3 |
+| Dashboard filtering by status/service/score | LOW | MEDIUM | P3 |
+| HubSpot retry queue | LOW | MEDIUM | P3 |
 
 **Priority key:**
-- P1: Must have for launch -- the site cannot function as a lead generation tool without these
-- P2: Should have, add within first month -- enhances credibility and SEO
-- P3: Nice to have, future consideration -- only valuable at scale
+- P1: Must ship in v1.1 for the milestone to be meaningful
+- P2: Ship in v1.1 if time allows, otherwise first iteration after
+- P3: Only add when data justifies the investment
 
-## Competitor Feature Analysis
+---
 
-| Feature | Typical Small Agency | Top-Tier Agency | SyncTexts Approach |
-|---------|---------------------|-----------------|-------------------|
-| Portfolio | Static screenshots with descriptions | Interactive case studies with metrics, client testimonials per project, filterable by industry/tech | GitHub API-driven with manual overrides. Start simple (card grid), evolve to case studies. Unique angle: live repo data proves real work. |
-| Blog | WordPress blog, often neglected | Regular technical content, SEO-optimized, multiple authors | Markdown in repo. Developer-friendly workflow. Focus on technical depth (Laravel, K8s, Terraform content) for SEO. |
-| Contact | Basic form or just an email link | Multi-step qualification form, meeting scheduler (Calendly), live chat | Simple 3-4 field form with email + DB. Clear response time. Optional: add Calendly link alongside form. |
-| Pricing | Hidden ("Contact us") | Transparent tiers or "Starting at" ranges | Transparent tiers. This is a differentiator -- most agencies hide pricing. |
-| Team | Stock photos or no team page | Real photos, personality, social links, individual specialties | Real photos, roles, short bios. Keep authentic. |
-| Design | Template-based, generic | Custom design system, animations, dark/light modes | Dark glassmorphism (already established). Distinctive and memorable. Extend consistently. |
-| Performance | Often slow (WordPress, heavy plugins) | Fast, optimized, high Lighthouse scores | Static/SSG approach = inherently fast. Lighthouse 90+ target. Agency that builds fast sites should have a fast site. |
-| SEO | Basic meta tags at best | Full technical SEO (structured data, sitemap, canonical URLs, blog strategy) | Full technical SEO. Blog drives long-tail. Structured data for rich snippets. |
+## Implementation Behavior Reference
+
+### Multi-Step Form: Expected UX Flow
+
+```
+Step 1: Service selection (radio: Web Dev / DevOps / Analytics)
+         |
+         +-- Web Dev path:
+         |     Step 2: Current site? (WordPress/Laravel/None/Other) + Tech stack preferences
+         |     Step 3: Project scope (new build / redesign / ongoing) + timeline
+         |
+         +-- DevOps path:
+         |     Step 2: Current infra (AWS/GCP/Azure/Self-hosted/None) + scale (traffic estimate)
+         |     Step 3: Pain point (cost / reliability / automation / security)
+         |
+         +-- Analytics path:
+               Step 2: Current tools (GA4/None/Adobe/Other) + data maturity level
+               Step 3: Primary goal (conversion tracking / reporting / attribution)
+
+Step N (shared): Budget range + contact info (name, email, company optional)
+Step N+1: Success state → "Thank you" + Cal.com booking CTA
+```
+
+- Start with service selection (low friction, positions as tailored conversation)
+- Back button always available on steps 2+
+- Step counter: "Step X of Y" (Y varies by path: 3 or 4 steps)
+- Animate step transition (slide or fade — keep subtle, consistent with existing reveal animations)
+
+### Lead Scoring: Point Model Reference
+
+Explicit signals (form data, max 70 points):
+- Budget: `< $5K` = 5 pts, `$5K-$15K` = 15 pts, `$15K-$50K` = 30 pts, `$50K+` = 40 pts
+- Timeline: `just exploring` = 5 pts, `3-6 months` = 15 pts, `1-3 months` = 25 pts, `ASAP` = 30 pts
+- Service: `web dev` = 10 pts, `devops` = 10 pts, `analytics` = 10 pts (equal; adjust after real data)
+
+Behavioral signals (implicit, max 30 points — optional/phase 2):
+- Pricing page visited: +15 pts
+- Portfolio page visited: +5 pts
+- >3 pages viewed in session: +5 pts
+- Return visit (second session): +5 pts
+
+Score interpretation:
+- 0-30: Cold (no badge / grey)
+- 31-60: Warm (yellow badge)
+- 61-100: Hot (red/orange badge)
+
+### Cal.com Integration: Technical Pattern
+
+```html
+<!-- 1. Load embed script once (ideally in <head>) -->
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments;
+      if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
+      if (ar[0] === L) { const api = function () { p(api, arguments); };
+        const namespace = ar[1]; api.q = api.q || [];
+        typeof namespace === "string" ? (cal.ns[namespace] = api) && p(api, ar) : p(cal, ar); return; }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", { origin: "https://cal.com" });
+</script>
+
+<!-- 2a. Inline embed -->
+<div style="width:100%;height:100%;overflow:scroll" id="cal-booking"></div>
+<script>
+  Cal("inline", { elementOrSelector: "#cal-booking", calLink: "your-username/30min" });
+</script>
+
+<!-- 2b. Popup on button click (post-form success) -->
+<button data-cal-link="your-username/30min" data-cal-config='{"theme":"dark"}'>
+  Book a Discovery Call
+</button>
+```
+
+Prefill pattern (from form data):
+```javascript
+Cal("ui", {
+  prefill: { name: formData.name, email: formData.email },
+  theme: "dark"
+});
+```
+
+### HubSpot API: Integration Pattern
+
+Authentication: HubSpot private app token (not OAuth). Create in HubSpot > Settings > Integrations > Private Apps. Scope needed: `crm.objects.contacts.write`.
+
+Upsert endpoint (create or update by email):
+```
+POST https://api.hubapi.com/crm/v3/objects/contacts/batch/upsert
+Authorization: Bearer {PRIVATE_APP_TOKEN}
+Content-Type: application/json
+
+{
+  "inputs": [{
+    "idProperty": "email",
+    "id": "lead@example.com",
+    "properties": {
+      "email": "lead@example.com",
+      "firstname": "Jane",
+      "lastname": "Doe",
+      "hs_lead_status": "NEW",
+      "synctexts_score": "75",
+      "synctexts_service": "devops",
+      "synctexts_budget": "$15K-$50K",
+      "synctexts_source": "/contact"
+    }
+  }]
+}
+```
+
+Custom properties (`synctexts_score`, `synctexts_service`, `synctexts_budget`, `synctexts_source`) must be created manually in HubSpot UI before first sync. Rate limits (free tier): 100 requests/10 seconds, 250K/day — far above what an agency site needs.
+
+---
 
 ## Sources
 
-- [Orbit Media Studios - Lead Generation Best Practices](https://www.orbitmedia.com/blog/lead-generation-website-practices/)
-- [New Media Campaigns - Writing Case Studies for Agency Websites](https://www.newmediacampaigns.com/blog/tips-for-writing-agency-website-case-studies)
-- [Webflow Blog - How to Write the Perfect Web Design Case Study](https://webflow.com/blog/write-the-perfect-case-study)
-- [Monday.com - Lead Generation Forms Best Practices 2026](https://monday.com/blog/crm-and-sales/lead-generation-forms/)
-- [Venture Harbour - Best Contact Form Design Examples 2026](https://ventureharbour.com/15-contact-form-examples-help-design-ultimate-contact-page/)
-- [FuturMedia - Best Digital Agency Websites 2026](https://futurmedia.co.uk/blog/best-digital-agency-websites)
-- [Grafit Agency - B2B Website Best Practices 2026](https://www.grafit.agency/blog/best-practices-for-building-a-high-performing-b2b-website-in-2026)
-- [Orbit Media - Social Proof Web Design](https://www.orbitmedia.com/blog/social-proof-web-design/)
-- [Hosted.md - How to Optimize Markdown Blog Posts for SEO](https://hosted.md/blog/how-to-optimize-markdown-blog-posts-for-seo)
-- [Hygraph - Top 12 Static Site Generators 2026](https://hygraph.com/blog/top-12-ssgs)
+- [Smashing Magazine — Creating an Effective Multistep Form (Dec 2024)](https://www.smashingmagazine.com/2024/12/creating-effective-multistep-form-better-user-experience/)
+- [Webstacks — 8 Best Multi-Step Form Examples 2025](https://www.webstacks.com/blog/multi-step-form)
+- [FormAssembly — Multi-Step Form Best Practices](https://www.formassembly.com/blog/multi-step-form-best-practices/)
+- [Growform — Multi-Step Form UX Best Practices](https://www.growform.co/must-follow-ux-best-practices-when-designing-a-multi-step-form/)
+- [FormAssembly — Conditional Logic in Forms](https://www.formassembly.com/blog/multi-step-form-conditional-logic/)
+- [Cal.com Embed Help — Adding Embed to Your Webpage](https://cal.com/help/embedding/adding-embed)
+- [Cal.com — Embed Features Overview](https://cal.com/features/embed)
+- [HubSpot Developers — CRM Contacts API v3 Guide](https://developers.hubspot.com/docs/api-reference/crm-contacts-v3/guide)
+- [HubSpot Developers — API Usage Guidelines and Limits](https://developers.hubspot.com/docs/developer-tooling/platform/usage-guidelines)
+- [Salespanel — Lead Scoring Best Practices](https://salespanel.io/blog/marketing/lead-scoring-best-practices/)
+- [HubSpot Blog — Lead Scoring Instructions](https://blog.hubspot.com/marketing/lead-scoring-instructions)
+- [Lead411 — Leveraging Behavioral Data for Lead Scoring 2025](https://www.lead411.com/blog/leveraging-behavioral-data-for-predictive-lead-scoring-in-2025-lead411/)
+- [Chift — Best Practices for HubSpot API Integration](https://www.chift.eu/blog/best-practices-for-a-smooth-hubspot-api-integration)
+- [Aufait UX — CRM UX Design Best Practices](https://www.aufaitux.com/blog/crm-ux-design-best-practices/)
 
 ---
-*Feature research for: SyncTexts tech agency website*
-*Researched: 2026-03-08*
+*Feature research for: SyncTexts v1.1 Lead Conversion Engine*
+*Researched: 2026-03-11*

@@ -1,181 +1,203 @@
-# Technology Stack
+# Stack Research
 
-**Project:** SyncTexts Agency Website
-**Researched:** 2026-03-08
+**Domain:** Agency website — lead conversion engine (v1.1 additions)
+**Researched:** 2026-03-11
+**Confidence:** MEDIUM-HIGH
 
-## Recommended Stack
+> This file extends the v1.0 stack. All previously validated technologies (Astro 5.x, @astrojs/node, Drizzle ORM, better-sqlite3, Resend, Docker/Caddy) are NOT re-researched here. Only additions and changes for v1.1 are documented.
 
-### Core Framework
+---
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| Astro | 5.18.x | Site framework, routing, build | Content-first framework built for exactly this use case: marketing sites with markdown blogs. Hybrid rendering (static pages + server endpoints) means the portfolio page, blog, and pricing are pre-rendered for SEO while the contact form endpoint runs server-side. Already uses Vite under the hood, so existing CSS/JS patterns carry over. | HIGH |
-| @astrojs/node | 9.x | Server adapter | Enables self-hosted deployment on own server via standalone Node.js process. Required for SSR endpoints (contact form API). Docker-friendly with Alpine images under 200MB. | HIGH |
+## New Stack Additions for v1.1
 
-### Content & Blog
+### Multi-Step Forms
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| Astro Content Collections | built-in | Markdown blog engine | First-class Astro feature. Zod-validated frontmatter schemas, type-safe queries, automatic slug generation. No plugin needed -- it is the standard way to do markdown blogs in Astro. Supports MDX if needed later. | HIGH |
-| @astrojs/mdx | 4.x | MDX support (optional) | Only add if blog posts need interactive components. Plain markdown works out of the box without this. | MEDIUM |
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Astro Actions | built-in (Astro 4.15+, stable in 5.x) | Server-side form handling with type-safe validation | Already in the stack. Actions accept `z.discriminatedUnion()` to route multi-step submissions by step identifier. No new library. Each step posts to the same action with a `step` discriminator field. Server returns next step data or final success. Progressive enhancement works natively. | HIGH |
+| Vanilla JS (existing) | — | Client-side step progression, field show/hide | CSS class toggling per step with `data-step` attributes. No framework needed. The existing scroll animation pattern (`IntersectionObserver` + class toggling) applies directly. Steps are hidden/shown with a single JS function. | HIGH |
+| Zod (via `astro:actions`) | bundled with Astro 5.x | Schema validation per form step | Already used in content collections. `z.discriminatedUnion('step', [...])` creates one schema that validates differently based on which step was submitted. No separate install. | HIGH |
 
-### Database
+**Pattern:** Each form step is a `<fieldset>` rendered server-side, hidden with CSS. JS shows one step at a time. On "Next", JS collects the current step's fields and calls the Astro Action. The action validates the step and returns either errors (shown inline) or a success token allowing the next step to render. Final step submits all accumulated data as a single lead record.
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| better-sqlite3 | 11.x | Contact form lead storage | Zero-infrastructure database. Single file on disk, no separate server process, perfect for storing contact form submissions on a self-hosted server. Synchronous API is actually faster than async alternatives. Handles the write volume of a contact form (dozens/day) trivially. Self-contained -- fits the "no external dependencies" philosophy. | HIGH |
-| Drizzle ORM | 0.41.x | Type-safe database queries | Lightweight, TypeScript-first ORM. Works with better-sqlite3 driver. Provides schema definitions, migrations, and type-safe queries without the weight of Prisma. Used internally by Astro DB itself. | MEDIUM |
+**Do not use:** React Hook Form, Formik, or any headless form library. They require a UI framework (React/Vue) which is not in this stack. Astro Actions + vanilla JS handles this without framework overhead.
 
-### Email
+---
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| Nodemailer | 6.x | Contact form email notifications | Self-hosted compatible -- works with any SMTP server (agency likely has one or can use their server's sendmail). No vendor lock-in, no API key dependency on a third party. Battle-tested (15+ years, 80M+ downloads). Use with the agency's existing email infrastructure. | HIGH |
+### Cal.com Scheduling Embed
 
-### Styling
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Cal.com embed snippet (vanilla JS) | `@calcom/embed-snippet` 1.3.x | Inline scheduling widget | No npm install required for the CDN path. The embed is a small IIFE that loads `https://app.cal.com/embed/embed.js` and exposes a `Cal()` global. Works in an Astro `<script>` tag without any adapter or framework. The `Cal("inline", { elementOrSelector, calLink })` API renders the calendar inside any div container. | MEDIUM |
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| Vanilla CSS (existing) | -- | All styling | The existing glassmorphism design system uses CSS custom properties extensively. It works. Migrating to Tailwind would mean rewriting 800+ lines of carefully crafted CSS for zero benefit. Astro supports scoped `<style>` tags in components, which gives CSS modules-like isolation without any tooling. Keep what works. | HIGH |
+**Implementation approach for Astro:**
 
-### GitHub API Integration
+```astro
+<!-- In an .astro component -->
+<div id="cal-booking"></div>
+<script>
+  // Cal.com embed snippet (copy from Cal.com dashboard)
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments;
+      if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true; }
+      if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1];
+        api.q = []; if (typeof namespace === "string") { cal.ns[namespace] = api; p(api, ar); p(cal, [L, api]); }
+        else p(cal, ar); return; }
+      p(cal, ar); };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", { origin: "https://app.cal.com" });
+  Cal("inline", {
+    elementOrSelector: "#cal-booking",
+    calLink: "your-username/discovery-call",
+    config: { theme: "dark" }
+  });
+  Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+</script>
+```
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| Octokit/rest | 21.x | GitHub API client | Official GitHub SDK. Type-safe, handles auth, pagination, rate limiting. Used with a PAT (Personal Access Token) to fetch private repo metadata (name, description, language, stars). Data fetched at build time (static) so no runtime API calls or rate limit concerns. | HIGH |
+**Dark theme:** Cal.com's embed accepts `config: { theme: "dark" }` which aligns with the glassmorphism design system without CSS overrides.
 
-### Analytics
+**Prefilling from form data:** After the multi-step contact form completes, the scheduling page can pre-fill `config.name` and `config.email` from the submitted lead data, reducing friction.
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| @astrojs/partytown | 2.x | GA/GTM script isolation | Runs third-party analytics scripts in a web worker, keeping the main thread clean. Astro-native integration. Prevents Google Analytics and GTM from blocking page rendering. | MEDIUM |
+**Do not use:** `@calcom/embed-react` — requires React island setup with a framework adapter. The vanilla snippet achieves identical functionality.
 
-### Deployment
+---
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| Docker | -- | Containerized deployment | Agency does DevOps with K8s/Docker daily. Multi-stage Dockerfile: build stage (npm run build) + runtime stage (Node.js Alpine). Astro has official Docker recipe in their docs. | HIGH |
-| Docker Compose | -- | Service orchestration | Single docker-compose.yml to run the Astro server. Simple, reproducible, fits self-hosted VPS deployment. No need for K8s for a single website. | HIGH |
+### HubSpot CRM Integration
 
-### Development Tooling
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| `@hubspot/api-client` | 13.4.0 | Create/update contacts and deals in HubSpot CRM | Official HubSpot SDK for Node.js. Wraps the v3 REST API with TypeScript types. Exposes `hubspotClient.crm.contacts.basicApi.create()` and `hubspotClient.crm.deals.basicApi.create()` with association support. Rate limiting built in via Bottleneck. Used in an Astro server endpoint (runs in Node.js — same environment as the existing contact form API). | HIGH |
 
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| TypeScript | 5.x | Type safety | Astro has first-class TS support. Content collection schemas, API endpoint handlers, and Drizzle queries all benefit from types. Incremental adoption -- .astro files work with or without TS. | HIGH |
-| Vite | 6.x (bundled) | Dev server & build | Comes with Astro. No separate config needed. The existing Vite setup knowledge transfers directly. | HIGH |
+**Authentication:** HubSpot API keys were sunset in November 2022. The only supported auth method is a Private App access token — a static token generated per integration with scoped permissions. Store in `.env` as `HUBSPOT_ACCESS_TOKEN`. Required scopes: `crm.objects.contacts.write`, `crm.objects.deals.write`.
+
+**Integration point:** The existing `src/pages/api/contact.ts` endpoint (or the new Astro Action handler) calls HubSpot after writing the lead to SQLite. HubSpot is a secondary sync, not the primary store — SQLite remains the source of truth. Sync is fire-and-forget with error logging (HubSpot being down should not fail the lead capture).
+
+**Do not use:** Direct `fetch()` calls to the HubSpot REST API. The SDK handles auth headers, retries, rate limiting, and TypeScript types. No benefit to raw fetch here.
+
+---
+
+### Lead Scoring
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Custom scoring module (no library) | — | Compute composite lead score from form fields + behavioral signals | Lead scoring for an agency is a simple weighted sum, not an ML problem. A `src/lib/scoring.ts` module with a `scoreLead(formData, behaviorData)` function is sufficient and maintainable. No external library needed. Scores stored as an integer column in the existing leads SQLite table. | HIGH |
+| GTM Data Layer (existing) | — | Behavioral signals: page visits, engagement, CTA clicks | GTM is already tracking CTA clicks and form events. Behavioral data (which service pages were visited before submitting) can be passed in a hidden form field populated by JS reading the GTM data layer or sessionStorage. This avoids a separate analytics SDK. | MEDIUM |
+
+**Scoring inputs:**
+- Service type requested (web dev = 3pts, DevOps = 4pts, analytics = 3pts, mobile = 4pts)
+- Budget range (enterprise tier = 5pts, growth = 3pts, starter = 1pt)
+- Pages visited before submission (portfolio page = 2pts, pricing page = 3pts, blog = 1pt)
+- Form completion path (completed multi-step = 2pts, simple contact = 1pt)
+- Message quality proxy (message length > 100 chars = 1pt)
+
+**Do not use:** Third-party lead scoring SaaS (Clearbit, Madkudu). Overkill and costly for an agency site with dozens of leads/month, not thousands.
+
+---
+
+### Lead Management Dashboard
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Astro SSR page (existing adapter) | built-in | Server-rendered dashboard page at `/admin/leads` | Extends the existing Basic Auth admin pattern. The page queries SQLite via Drizzle and renders an HTML table server-side. No client-side data fetching needed. Astro's `export const prerender = false` on the page enables SSR. URL query params (`?status=new&sort=score_desc&page=2`) drive filtering and pagination without JS. | HIGH |
+| Vanilla JS (existing) | — | Client-side enhancements: inline status updates, note saving | A minimal script handles status dropdown `change` events and POSTs to an `/api/admin/lead-update` endpoint. No framework needed. The table is still rendered server-side; JS only handles the async update to avoid full page reload on status changes. | HIGH |
+
+**Dashboard features implementable without new libraries:**
+- Sortable columns: URL params (`?sort=score&dir=desc`)
+- Status filter: URL params (`?status=new`)
+- Pagination: URL params (`?page=2`) — Drizzle `LIMIT`/`OFFSET`
+- Inline status update: small `fetch()` POST to update endpoint
+- Lead detail view: separate SSR page at `/admin/leads/[id]`
+- Notes: `textarea` + POST to update endpoint, stored in `lead_notes` table
+
+**Do not use:** TanStack Table, AG Grid, or any client-side data grid library. Server-side rendered tables with URL params handle all required functionality without adding JS payload.
+
+---
+
+## Revised Installation Commands
+
+```bash
+# HubSpot CRM integration
+npm install @hubspot/api-client
+
+# No new installs needed for:
+# - Multi-step forms (Astro Actions already in Astro 5.x)
+# - Cal.com embed (CDN snippet, no npm install)
+# - Lead scoring (custom module)
+# - Lead management dashboard (Astro SSR + existing Drizzle)
+```
+
+---
 
 ## Alternatives Considered
 
-| Category | Recommended | Alternative | Why Not |
-|----------|-------------|-------------|---------|
-| Framework | Astro | Next.js | Overkill for a content site. React hydration overhead for pages that are 95% static HTML. Astro ships zero JS by default. Next.js App Router complexity is unnecessary for a marketing site. |
-| Framework | Astro | Nuxt/SvelteKit | Both are good but optimized for apps, not content sites. Would require learning Vue/Svelte. Astro lets you use plain HTML templates (familiar from existing codebase). |
-| Framework | Astro | 11ty (Eleventy) | No built-in server endpoints. Would need a separate backend for the contact form. Astro's hybrid mode handles both static and server in one project. |
-| Database | better-sqlite3 | PostgreSQL | Requires a separate database server process. Massive overkill for storing contact form submissions. Adds Docker Compose complexity (separate postgres container, backups, connection pooling). |
-| Database | better-sqlite3 | Node.js built-in sqlite | Still experimental/release-candidate as of early 2026. Not production-ready. API may change. better-sqlite3 is battle-tested and faster. |
-| Database | better-sqlite3 | Turso/libSQL | Turso Database rewrite is still ALPHA. The managed service adds external dependency. For a self-hosted single-server site, a local SQLite file is simpler and faster. |
-| Email | Nodemailer | Resend | Resend is cloud-only (no self-hosting). Adds vendor dependency and cost. Agency has own infrastructure -- Nodemailer with SMTP is the right choice for self-hosted. |
-| Email | Nodemailer | SendGrid/Mailgun | Same issue: external vendor dependency, monthly costs, API keys to manage. Nodemailer + local SMTP or existing email provider is simpler. |
-| ORM | Drizzle | Prisma | Prisma generates a heavy client, requires a separate generation step, and its SQLite support is less mature. Drizzle is lighter, faster, and more SQL-like. |
-| Styling | Vanilla CSS | Tailwind CSS | Existing 800+ line CSS design system would need complete rewrite. The glassmorphism aesthetic uses complex gradients, backdrop-filters, and custom properties that are easier to maintain in vanilla CSS. No benefit to migrating. |
-| Styling | Vanilla CSS | CSS-in-JS | Server-rendered site with Astro components. Scoped `<style>` in .astro files provides component isolation natively. No runtime CSS-in-JS library needed. |
+| Recommended | Alternative | When to Use Alternative |
+|-------------|-------------|-------------------------|
+| Astro Actions + vanilla JS for multi-step forms | React Hook Form / Formik | Only if you add React islands to the project. Unnecessary framework cost for vanilla Astro. |
+| Cal.com CDN embed snippet | `@calcom/embed-react` | Only if the project already uses React islands extensively. Zero benefit over the vanilla snippet for this stack. |
+| Cal.com cloud (`app.cal.com`) | Self-hosted Cal.com | Only if you need custom domain for the booking page itself, full data ownership, or white-labeling. Adding self-hosted Cal.com is a significant ops burden — a separate Docker service, Postgres DB, and Redis cache. Cloud free tier is sufficient for an agency. |
+| `@hubspot/api-client` SDK | Direct HubSpot REST fetch calls | When you want zero dependencies and are comfortable managing auth headers manually. For a one-person agency project, the SDK's types and retry handling are worth the 2MB. |
+| Custom scoring module | Clearbit Reveal / Madkudu | When you have 1000+ leads/month and need ML-based scoring with enrichment. Wrong scale for this project. |
+| SSR Astro page for dashboard | React SPA dashboard (Vite) | Only if the dashboard needs real-time updates, drag-and-drop kanban, or complex client state. A CRM for an agency with ~50 leads/month does not need a SPA. |
 
-## Architecture Decision: Hybrid Rendering
+---
 
-Astro's `output: "hybrid"` mode is the key architectural choice:
+## What NOT to Use
 
-- **Static (default):** Home, Portfolio, Team, Blog, Pricing pages are pre-rendered at build time. Fast, SEO-friendly, cacheable.
-- **Server-rendered (opt-in):** Contact form endpoint (`src/pages/api/contact.ts`) runs on the server to process form submissions, send email, and write to SQLite.
-- **Build-time data fetching:** GitHub API calls happen during `astro build`, not at runtime. No rate limiting concerns, no runtime secrets exposure.
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| `@calcom/embed-react` | Requires React adapter + islands setup. Identical result to CDN snippet with 10x more complexity. | Cal.com CDN embed snippet via `<script>` in `.astro` component |
+| HubSpot Forms SDK (`//js.hsforms.net/forms/v2.js`) | Replaces your form with HubSpot's widget — loses multi-step UX, dark theme, and custom validation. | Custom form + `@hubspot/api-client` API sync after submission |
+| React Hook Form / Formik | Requires React island. Multi-step form state can be managed with `sessionStorage` + vanilla JS. | Astro Actions with `z.discriminatedUnion()` + vanilla JS step progression |
+| Headless UI (Radix, Headless UI) | React-only. Not compatible with vanilla Astro components. | Native HTML `<details>`, `<dialog>`, CSS custom properties for interactive UI |
+| Prisma (for lead scoring persistence) | Already using Drizzle. Two ORMs in one project is unnecessary. | Add `score` and `status` columns to the existing leads table via Drizzle migration |
+| Redis / session store for multi-step form state | Overkill for a 3-step form. | `sessionStorage` for client-side step accumulation; only final submission hits the server |
 
-This means the site loads like a static site (fast, SEO-optimized) but has server capabilities where needed (contact form).
+---
 
-## Migration Path from Current Codebase
+## Stack Patterns by Variant
 
-The existing vanilla HTML/CSS/JS site maps cleanly to Astro:
+**If Cal.com is self-hosted (future decision):**
+- Change embed script src from `https://app.cal.com/embed/embed.js` to `https://your-cal-domain.com/embed/embed.js`
+- No other code changes needed — the Cal() API is identical
+- Requires separate Docker Compose service, Postgres, Redis — significant ops overhead
 
-1. `index.html` sections become Astro components (`Hero.astro`, `Services.astro`, etc.)
-2. `style.css` splits into component-scoped styles or a shared `global.css`
-3. `main.js` scroll animations move to a `<script>` tag in the layout (Astro handles this)
-4. Vite config is replaced by Astro's built-in Vite (astro.config.mjs)
-5. New pages added as `src/pages/*.astro` files
-6. Blog posts added as `src/content/blog/*.md` files
+**If HubSpot sync needs to be bidirectional (future):**
+- Add HubSpot webhook receiver endpoint (`/api/webhooks/hubspot`) to sync status updates back to SQLite
+- Requires HubSpot webhook subscription via Private App settings
+- Still no new libraries — plain Astro server endpoint with signature verification
 
-No paradigm shift required. Astro templates look like HTML with some extra syntax.
+**If lead volume exceeds ~500/month:**
+- Consider moving behavioral signals to a proper event pipeline instead of sessionStorage
+- Upgrade in-memory rate limiter to Redis-backed (already noted in v1.0 tech debt)
+- SQLite remains adequate up to ~10K leads
 
-## Installation
+---
 
-```bash
-# Initialize Astro in existing project
-npm create astro@latest -- --template minimal
+## Version Compatibility
 
-# Core
-npm install astro @astrojs/node
+| Package | Compatible With | Notes |
+|---------|-----------------|-------|
+| `@hubspot/api-client@13.4.0` | Node.js 18+, Astro 5.x (Node adapter) | Uses native `fetch` internally in newer versions. No polyfill needed with Node 18+. |
+| Cal.com embed snippet (CDN) | Any modern browser with `<script>` support | No npm version to pin — loads from `app.cal.com` CDN. Pin by specifying `?version=X` query param if needed. |
+| Astro Actions | Astro 4.15+, stable in 5.x | `defineAction`, `z` from `astro:actions` and `astro/zod`. `getActionContext()` available in middleware (Astro 5.0+). |
 
-# Database
-npm install better-sqlite3 drizzle-orm
-npm install -D drizzle-kit @types/better-sqlite3
-
-# Email
-npm install nodemailer
-npm install -D @types/nodemailer
-
-# GitHub API
-npm install @octokit/rest
-
-# Analytics (optional, add when ready)
-npm install @astrojs/partytown
-
-# TypeScript (comes with Astro, but ensure types)
-npm install -D typescript @astrojs/check
-```
-
-## Configuration Skeleton
-
-```typescript
-// astro.config.mjs
-import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
-
-export default defineConfig({
-  output: 'hybrid',        // Static by default, server where needed
-  adapter: node({
-    mode: 'standalone'      // Self-contained Node.js server
-  }),
-  server: {
-    port: 4321,
-    host: true               // Needed for Docker
-  }
-});
-```
-
-## Version Pinning Strategy
-
-Pin major versions, allow patch updates:
-
-```json
-{
-  "astro": "^5.18.0",
-  "@astrojs/node": "^9.0.0",
-  "better-sqlite3": "^11.0.0",
-  "drizzle-orm": "^0.41.0",
-  "nodemailer": "^6.9.0",
-  "@octokit/rest": "^21.0.0"
-}
-```
-
-**Note on Astro 6:** Astro 6 entered beta in January 2026 with significant improvements (new dev server, CSP support, font APIs). However, it is not yet stable. Start with Astro 5.18.x (current stable) and upgrade to 6.x when it reaches stable release. The migration should be straightforward.
+---
 
 ## Sources
 
-- [Astro Official Site](https://astro.build/) - Framework overview, current version 5.18.x
-- [Astro Content Collections Docs](https://docs.astro.build/en/guides/content-collections/) - Markdown blog setup
-- [Astro Node Adapter Docs](https://docs.astro.build/en/guides/integrations-guide/node/) - Self-hosted deployment
-- [Astro Docker Recipe](https://docs.astro.build/en/recipes/docker/) - Official Docker deployment guide
-- [Astro On-demand Rendering](https://docs.astro.build/en/guides/on-demand-rendering/) - Hybrid SSR/SSG mode
-- [better-sqlite3 on npm](https://www.npmjs.com/package/better-sqlite3) - Database library
-- [Drizzle ORM SQLite Docs](https://orm.drizzle.team/docs/get-started-sqlite) - ORM setup
-- [Nodemailer](https://nodemailer.com/) - Email sending
-- [Octokit/rest GitHub](https://github.com/octokit/rest.js) - GitHub API client
-- [Astro 6 Beta Announcement](https://astro.build/blog/astro-6-beta/) - Future upgrade path
-- [Node.js SQLite Status](https://github.com/nodejs/node/issues/57445) - Why not to use built-in sqlite yet
+- [Astro Actions Docs](https://docs.astro.build/en/guides/actions/) — Stable in Astro 5.x, `z.discriminatedUnion()` for multi-step routing — HIGH confidence
+- [Cal.com Embed Docs](https://calcom.gitbook.io/docs/core-features/embed/set-up-your-embed) — `Cal("inline", {...})` vanilla JS API — MEDIUM confidence (docs sparse, verified against GitHub discussions)
+- [Cal.com Embed Issues #15643](https://github.com/calcom/cal.com/discussions/15643) — `Cal()` API details, self-hosted vs cloud considerations — MEDIUM confidence
+- [@calcom/embed-snippet on npm](https://www.npmjs.com/package/@calcom/embed-snippet) — Version 1.3.2, confirmed package exists — MEDIUM confidence
+- [HubSpot API NodeJS GitHub](https://github.com/HubSpot/hubspot-api-nodejs) — Official SDK, v13.4.0 — HIGH confidence
+- [HubSpot Private Apps Docs](https://developers.hubspot.com/docs/api/client-libraries) — Private app access token replaces API keys (sunset Nov 2022) — HIGH confidence
+- [Astro SSR Table (GitHub)](https://github.com/tresero/astro-ssr-table) — Pattern for URL-param-driven SSR tables — MEDIUM confidence (community library, not official)
+
+---
+
+*Stack research for: SyncTexts agency website v1.1 Lead Conversion Engine*
+*Researched: 2026-03-11*

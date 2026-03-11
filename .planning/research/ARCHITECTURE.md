@@ -1,425 +1,718 @@
-# Architecture Patterns
+# Architecture Research
 
-**Domain:** Tech agency marketing website with blog, portfolio (GitHub API), lead capture, and self-hosted deployment
-**Researched:** 2026-03-08
+**Domain:** Lead conversion engine added to existing Astro + SQLite + Drizzle agency site
+**Researched:** 2026-03-11
+**Confidence:** HIGH (all integration points derived from reading actual codebase)
 
-## Recommended Architecture
-
-**Pattern: Astro Hybrid-Rendered Multi-Page Site with Server Endpoints**
-
-The site is primarily static (marketing pages, blog, portfolio) with two dynamic touch points: the contact form submission endpoint and GitHub API data fetched at build time. Astro's hybrid rendering mode handles this perfectly -- static by default, server-rendered only where needed.
-
-```
-                        +-------------------+
-                        |   Traefik Proxy   |  (existing, handles TLS + routing)
-                        +--------+----------+
-                                 |
-                        +--------v----------+
-                        |  Astro (Node.js)  |  Docker container, replaces nginx
-                        |  Hybrid Mode      |
-                        +--------+----------+
-                                 |
-              +------------------+------------------+
-              |                  |                   |
-     +--------v------+  +-------v--------+  +-------v--------+
-     | Static Pages  |  | Server         |  | Build-Time     |
-     | (pre-rendered)|  | Endpoints      |  | Data Fetching  |
-     |               |  |                |  |                |
-     | - Home        |  | POST /api/     |  | GitHub API     |
-     | - Team        |  |   contact      |  | (portfolio     |
-     | - Pricing     |  |   (email +     |  |  repos at      |
-     | - Blog/*      |  |    SQLite)     |  |  build time)   |
-     | - Portfolio/* |  |                |  |                |
-     +---------------+  +-------+--------+  +----------------+
-                                |
-                     +----------+----------+
-                     |                     |
-              +------v------+     +--------v------+
-              | Email (SMTP)|     | SQLite DB     |
-              | Transactional|    | (leads.db)    |
-              | e.g. Resend  |    | Docker volume |
-              +--------------+    +---------------+
-```
-
-### Why This Shape
-
-1. **Mostly static.** Marketing pages, blog posts, portfolio items, team bios -- none of this changes per-request. Pre-rendering at build time gives the best performance and simplest deployment.
-
-2. **One server endpoint.** The contact form is the only truly dynamic feature. Astro's hybrid mode lets you mark just the `/api/contact` endpoint as server-rendered while everything else stays static.
-
-3. **Build-time GitHub fetching.** Portfolio data from GitHub private repos should be fetched at build time via Astro's Content Layer API (custom loader), not on every page visit. This avoids rate limits, reduces latency, and means the GitHub PAT never touches the browser. A rebuild (triggered by a webhook or cron) refreshes the data.
-
-4. **SQLite over Postgres.** For a lead capture form on a marketing site, SQLite is the right database. No separate container, no connection pooling, no credentials management. A single file on a Docker volume. The volume of leads on an agency site does not justify the operational overhead of Postgres.
-
-## Component Boundaries
-
-| Component | Responsibility | Communicates With | Rendering |
-|-----------|---------------|-------------------|-----------|
-| **Layout Shell** | Global nav, footer, glassmorphism background, meta tags, analytics scripts | All pages | Static (pre-rendered) |
-| **Home Page** | Hero, services grid, featured projects teaser, testimonials, CTA | Layout, Portfolio data | Static |
-| **Portfolio Section** | Grid of curated GitHub repos with overrides (custom descriptions, screenshots) | GitHub API (build time), config file for overrides | Static |
-| **Portfolio Detail Pages** | Individual project pages with full description, tech stack, screenshots | Portfolio data | Static |
-| **Blog** | Markdown-driven article listing and detail pages | Content Collections (local `.md` files) | Static |
-| **Team Page** | Member profiles with photos, roles, bios | Config/data file | Static |
-| **Pricing Page** | Service tiers with features | Config/data file | Static |
-| **Contact Form** | Client-side form with validation, submits to API | Server endpoint | Client JS (island) |
-| **Contact API Endpoint** | `POST /api/contact` -- validates, saves to SQLite, sends email notification | SQLite, SMTP service | Server (SSR) |
-| **Analytics** | GA4 + GTM script injection | Layout Shell (head) | Static (script tags) |
-
-## Data Flow
-
-### 1. Blog Content Flow (Build Time)
-
-```
-src/content/blog/*.md
-        |
-        v
-Astro Content Collections (glob loader)
-        |
-        v
-Type-safe schema validation (Zod)
-        |
-        v
-Blog listing page (getCollection('blog'))
-Blog detail pages ([...slug].astro)
-        |
-        v
-Pre-rendered HTML
-```
-
-Blog posts are Markdown files with frontmatter (title, date, excerpt, tags, author). Astro's Content Collections with the `glob()` loader reads them at build time, validates against a Zod schema, and generates static pages. Adding a new post = commit a `.md` file and rebuild.
-
-### 2. Portfolio Data Flow (Build Time)
-
-```
-portfolio.config.ts (list of repos + overrides)
-        |
-        v
-Custom Astro Content Loader
-        |
-        v
-GitHub REST API (with PAT from env)
-  - GET /repos/{owner}/{repo}
-  - GET /repos/{owner}/{repo}/languages
-  - GET /repos/{owner}/{repo}/topics
-        |
-        v
-Merge API data + manual overrides (descriptions, screenshots, display order)
-        |
-        v
-Portfolio listing page + detail pages
-        |
-        v
-Pre-rendered HTML
-```
-
-A config file lists 5-10 curated repo slugs plus manual overrides (custom description, screenshot URLs, display order). At build time, a custom content loader fetches metadata from GitHub's API, merges it with the overrides, and Astro generates static portfolio pages. The GitHub PAT is a build-time secret only.
-
-### 3. Contact Form Flow (Runtime)
-
-```
-User fills form (client-side)
-        |
-        v
-Client-side validation (HTML5 + JS island)
-        |
-        v
-POST /api/contact (fetch request)
-        |
-        v
-Server endpoint validates input (Zod)
-        |
-   +----+----+
-   |         |
-   v         v
-SQLite    SMTP/API
-(persist  (notify via
- lead)    Resend/Nodemailer)
-   |         |
-   +----+----+
-        |
-        v
-JSON response { success: true }
-        |
-        v
-Client shows confirmation UI
-```
-
-The contact form is an Astro island -- a small interactive component hydrated on the client. On submit, it POSTs to `/api/contact.ts`, which runs server-side. The endpoint validates with Zod, writes to SQLite (via `better-sqlite3`), sends an email notification, and returns JSON. This keeps the form functional even without JavaScript (with a fallback action attribute) but provides a smooth async experience when JS is available.
-
-### 4. Analytics Flow (Client-Side)
-
-```
-Layout head
-        |
-        v
-GTM container script (loaded via <script>)
-        |
-        v
-GTM triggers GA4 tag
-        |
-        v
-Page views, events tracked automatically
-```
-
-GTM and GA4 are injected as script tags in the layout. No build-time integration needed. Configure GTM to fire GA4 on page views and specific events (form submission, CTA clicks).
-
-## Patterns to Follow
-
-### Pattern 1: Content Collections for All Structured Data
-
-**What:** Use Astro Content Collections not just for blog posts, but for all structured content -- team members, testimonials, pricing tiers, portfolio overrides.
-
-**When:** Any content that has a consistent shape and benefits from type safety.
-
-**Why:** Single source of truth, Zod validation catches errors at build time, TypeScript inference throughout.
-
-```
-src/content/
-  blog/           # Markdown files
-    my-post.md
-  team/           # JSON or YAML
-    team.json
-  testimonials/
-    testimonials.json
-  pricing/
-    pricing.json
-```
-
-### Pattern 2: Page-Level Data Loading
-
-**What:** Each `.astro` page fetches its own data in the frontmatter script section. No global state management.
-
-**When:** Always. This is an Astro fundamental.
-
-```astro
 ---
-// src/pages/blog/index.astro
-import { getCollection } from 'astro:content';
-const posts = await getCollection('blog');
-const sorted = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
----
-<BaseLayout title="Blog">
-  {sorted.map(post => <BlogCard post={post} />)}
-</BaseLayout>
+
+## Standard Architecture
+
+### System Overview (v1.1 State)
+
+```
+                        +-------------------------------+
+                        |         Caddy Proxy           |
+                        |  HTTPS termination, routing   |
+                        +-------------+-----------------+
+                                      |
+                        +-------------v-----------------+
+                        |  Astro Node.js (hybrid mode)  |
+                        |  @astrojs/node standalone     |
+                        +------+--------+-------+-------+
+                               |        |       |
+              +----------------+   +----+   +---+-----------+
+              |                    |            |
+    +---------v--------+  +--------v------+  +--v-----------+
+    | Static Pages     |  | SSR Pages     |  | API Routes   |
+    | (prerender=true) |  | (prerender=   |  | (prerender=  |
+    |                  |  |  false)       |  |  false)      |
+    | index, portfolio,|  | admin/index   |  | POST contact |
+    | team, blog,      |  | (basic auth)  |  | POST toggle- |
+    | pricing, contact |  |               |  |  read        |
+    +------------------+  +---------------+  | GET health   |
+                                             |              |
+                                             | [NEW] POST   |
+                                             |  contact-v2  |
+                                             | POST scoring |
+                                             | POST hubspot |
+                                             | GET/PATCH    |
+                                             |  leads       |
+                                             +-+--------+---+
+                                               |        |
+                          +--------------------+   +----+-----------+
+                          |                        |
+               +----------v---------+   +----------v---------+
+               | SQLite (Drizzle)   |   | External Services  |
+               | data/submissions.db|   |                    |
+               |                    |   | - Resend (email)   |
+               | [v1.0] submissions |   | - HubSpot CRM API  |
+               | [NEW]  lead_scores |   | - Cal.com (embed,  |
+               | [NEW]  lead_events |   |   client-side only)|
+               +--------------------+   +--------------------+
 ```
 
-### Pattern 3: Design Token Preservation
+### Component Responsibilities
 
-**What:** Migrate the existing CSS custom properties (indigo primary, pink secondary, dark base) into a global stylesheet that Astro loads. Do not re-implement the design system -- port it.
+| Component | Responsibility | v1.1 Change |
+|-----------|----------------|-------------|
+| `src/pages/contact.astro` | Hosts the contact form HTML shell | Replace single-form with multi-step form component |
+| `src/scripts/contact-form.ts` | Client-side form state, validation, submission | Replace with multi-step form controller |
+| `src/pages/api/contact.ts` | POST handler: validate, persist, email | Extend to accept new fields; add scoring trigger |
+| `src/db/schema.ts` | Drizzle table definitions for SQLite | Add columns to `submissions`; add new tables |
+| `src/pages/admin/index.astro` | Basic auth read-only submissions list | Upgrade to full lead management dashboard |
+| `src/pages/api/admin/toggle-read.ts` | Toggle read status | Add more admin mutation endpoints |
+| `src/lib/email.ts` | Resend email notification | No change required |
+| `src/lib/rate-limiter.ts` | In-memory rate limiter | No change required |
+| `src/lib/validation.ts` | Server-side field validation | Extend for new form fields |
 
-**When:** Phase 1 migration.
+---
 
-```css
-/* Existing tokens preserved in src/styles/global.css */
-:root {
-  --color-primary: #6366f1;
-  --color-secondary: #ec4899;
-  --color-bg: #0a0a0c;
-  /* ... rest of existing design tokens */
+## Integration Architecture: Feature by Feature
+
+### Feature 1: Multi-Step Contact Form
+
+**What changes:**
+
+The existing `contact.astro` uses a single-page HTML form submitted by `contact-form.ts`. The multi-step form needs client-side step state (current step, collected data, progress) that cannot live in static HTML alone.
+
+**Integration pattern:** Replace the inline `<form>` in `contact.astro` with a vanilla JS class or small state machine in a new script. No framework island needed — vanilla TypeScript is sufficient given the existing precedent in `contact-form.ts`. Three service-specific paths share the same API endpoint.
+
+**New files:**
+
+```
+src/scripts/multi-step-form.ts   # Replaces contact-form.ts for the new form
+src/components/forms/
+  StepIndicator.astro             # Visual step progress (static HTML, styled)
+  ServiceSelector.astro           # Step 1: which service (web dev / devops / analytics)
+```
+
+**Modified files:**
+
+```
+src/pages/contact.astro           # Replace form HTML with multi-step structure
+src/pages/api/contact.ts          # Accept service_type, budget, timeline fields
+src/lib/validation.ts             # Add validation rules for new fields
+src/db/schema.ts                  # Add service_type, budget, timeline columns
+```
+
+**Step structure:**
+
+```
+Step 1: Service type (web dev | devops | analytics | other)
+Step 2: Service-specific questions
+  web dev   → project type, budget range
+  devops    → infrastructure type, team size
+  analytics → current tools, data volume
+Step 3: Contact details (name, company, email)  ← same fields as existing
+Step 4: Confirmation + Cal.com scheduling prompt
+```
+
+**State machine (client-side, no framework):**
+
+```typescript
+// Multi-step form state lives in the script, not the DOM
+interface FormState {
+  currentStep: number;
+  totalSteps: number;
+  data: Record<string, string>;
+  serviceType: 'webdev' | 'devops' | 'analytics' | 'other' | null;
 }
 ```
 
-### Pattern 4: Astro Islands for Interactive Components
+The `data` object accumulates across steps. On final submit, the full payload goes to `POST /api/contact` (same endpoint, extended schema).
 
-**What:** Only hydrate components that need interactivity. The contact form and mobile nav toggle are the only islands on this site.
+**Backward compatibility:** The existing `/api/contact` endpoint must stay compatible. New fields (`service_type`, `budget`, `timeline`) are nullable in the DB schema so the old single-page form path (if any bookmarks or bots hit it) does not break.
 
-**When:** A component needs client-side JavaScript (event handlers, state).
+---
 
-```astro
-<!-- Only the form gets hydrated. Everything else is static HTML. -->
-<ContactForm client:visible />
+### Feature 2: Cal.com Embedded Scheduling
+
+**Integration pattern:** Pure client-side embed, no server changes.
+
+Cal.com provides a JavaScript snippet loaded from their CDN. It runs entirely in the browser. The embed can be:
+- **Inline** — renders the full booking calendar directly in the page
+- **Popup via element click** — opens a modal when a button is clicked
+
+For this site, **popup via element click** is the correct choice. After the multi-step form submits successfully, instead of just showing a success message, show a "Book a call" button that triggers the Cal.com popup.
+
+**Where it goes:**
+
+```
+src/layouts/BaseLayout.astro    # Add Cal.com loader script once, in <head>
+src/pages/contact.astro         # Add booking CTA button (shown post-submission)
+src/scripts/multi-step-form.ts  # Trigger cal.open() after successful submission
 ```
 
-## Anti-Patterns to Avoid
+**Snippet structure (from Cal.com dashboard):**
 
-### Anti-Pattern 1: Full SSR Mode
+```html
+<!-- In BaseLayout.astro <head> -->
+<script>
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar) {
+        p(cal, arguments);
+      }
+    };
+    C.Cal.ns["booking"] = C.Cal.ns["booking"] || function () {
+      p(C.Cal.ns["booking"], arguments);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "booking", { origin: "https://app.cal.com" });
+</script>
+```
 
-**What:** Setting `output: 'server'` to make every page server-rendered.
+The script tag must not be in a `<script type="module">` — Cal.com's embed expects a classic script context. BaseLayout already has GTM this way, so the pattern is established.
 
-**Why bad:** Adds latency to every page load, requires a running Node.js process for pages that never change, increases resource usage on the self-hosted server. Marketing pages do not need per-request rendering.
+**Triggering from form success handler:**
 
-**Instead:** Use `output: 'static'` (default) with `prerender = false` only on the contact API endpoint. Or use `output: 'hybrid'` if more endpoints are added later.
+```typescript
+// In multi-step-form.ts, after successful POST
+(window as any).Cal?.ns?.booking?.("ui", { styles: { branding: { brandColor: "#6366f1" } } });
+document.getElementById('book-call-btn')?.addEventListener('click', () => {
+  (window as any).Cal?.ns?.booking?.("openModal", { calLink: "synctexts/intro" });
+});
+```
 
-### Anti-Pattern 2: Client-Side GitHub API Calls
+**No server infrastructure required.** The Cal.com service handles all booking, calendar, and notification logic. This is a frontend-only integration.
 
-**What:** Fetching GitHub repo data in the browser at page load.
+---
 
-**Why bad:** Exposes the Personal Access Token to the client. Subject to GitHub API rate limits per visitor. Slower page loads. Private repo data visible in network tab.
+### Feature 3: Lead Scoring
 
-**Instead:** Fetch at build time. The data is static between deployments anyway.
+**What it is:** A numeric score (0–100) computed per submission from form data signals and behavioral signals. Stored in SQLite alongside the submission. Displayed in the admin dashboard.
 
-### Anti-Pattern 3: Separate Backend Service
+**Where scoring runs:** Server-side, in `POST /api/contact` immediately after the submission is persisted. This keeps the scoring logic out of the browser and consistent.
 
-**What:** Building a separate Express/Fastify API server alongside Astro for the contact form.
+**Data inputs:**
 
-**Why bad:** Two containers to deploy, two processes to monitor, CORS configuration, doubled complexity for one endpoint.
+| Signal | Source | Weight rationale |
+|--------|--------|------------------|
+| `service_type` | Form Step 1 | DevOps/Analytics = higher typical deal size |
+| `budget` | Form Step 2 | Higher budget bracket = higher priority |
+| `timeline` | Form Step 2 | "ASAP" = higher urgency |
+| `company` | Form Step 3 | Company provided = B2B lead vs individual |
+| `message` length | Form Step 3 | Longer = more considered inquiry |
+| Page visit signals | Behavioral (see below) | Pricing page visit = high intent |
 
-**Instead:** Use Astro's built-in server endpoints. One container, one process, one deployment.
+**Behavioral signals collection:** Client JS writes a cookie or localStorage entry tracking which high-intent pages were visited (pricing, specific service sections). On form submission, this session data is included as a hidden field in the form payload.
 
-### Anti-Pattern 4: Heavy Framework Islands
+```typescript
+// In analytics.js or a new src/scripts/lead-signals.ts
+// Track page visits and engagement
+const signals = {
+  visitedPricing: false,
+  visitedPortfolio: false,
+  timeOnSite: 0,  // seconds
+};
 
-**What:** Using React/Vue/Svelte for components that are purely presentational (service cards, testimonials, team profiles).
+// On form submit, include signals in payload
+document.querySelector('#lead-signals')!.value = JSON.stringify(signals);
+```
 
-**Why bad:** Ships unnecessary JavaScript. These components have zero interactivity.
+**Scoring function — new lib file:**
 
-**Instead:** Write them as `.astro` components. They render to zero-JS HTML. Reserve framework islands only for genuinely interactive elements.
+```
+src/lib/lead-scoring.ts    # NEW — pure function, no I/O
+```
 
-## Component File Structure
+```typescript
+export interface ScoringInput {
+  serviceType: string | null;
+  budget: string | null;
+  timeline: string | null;
+  hasCompany: boolean;
+  messageLength: number;
+  behavioralSignals: BehavioralSignals;
+}
+
+export function scoreLead(input: ScoringInput): number {
+  let score = 0;
+  // Service type weight (0-25)
+  // Budget weight (0-30)
+  // Timeline urgency (0-20)
+  // Company present (0-10)
+  // Message depth (0-10)
+  // Behavioral signals (0-5 per signal)
+  return Math.min(100, score);
+}
+```
+
+Pure function with no dependencies means it is testable without a database or HTTP context.
+
+**Schema change — `submissions` table:**
+
+```typescript
+// Add to existing submissions table in src/db/schema.ts
+serviceType: text('service_type'),
+budget: text('budget'),
+timeline: text('timeline'),
+leadScore: integer('lead_score').default(0),
+leadStatus: text('lead_status').default('new'),  // new | contacted | qualified | closed
+notes: text('notes'),
+hubspotId: text('hubspot_id'),  // null until synced
+hubspotSyncedAt: text('hubspot_synced_at'),
+```
+
+No new table needed. All lead data lives in the `submissions` row. Adding nullable columns to an existing SQLite table via Drizzle migration is straightforward (`drizzle-kit generate` + `drizzle-kit migrate`).
+
+---
+
+### Feature 4: Lead Management Dashboard
+
+**What it replaces:** The existing `src/pages/admin/index.astro` renders a read-only list with a single "mark as read" toggle. The new dashboard needs filtering, status management, score display, notes editing, and HubSpot sync trigger.
+
+**Integration pattern:** Extend the existing admin page architecture — same Basic Auth pattern, same Drizzle query approach, more API endpoints.
+
+**New API routes:**
+
+```
+src/pages/api/admin/
+  toggle-read.ts          [existing — keep unchanged]
+  update-status.ts        [NEW] PATCH — update leadStatus
+  update-notes.ts         [NEW] PATCH — update notes field
+  sync-hubspot.ts         [NEW] POST — trigger HubSpot sync for one lead
+```
+
+**Admin page changes:**
+
+```
+src/pages/admin/index.astro     [MODIFY] — add score column, status dropdown,
+                                  notes textarea, filter controls, HubSpot sync button
+```
+
+The admin page currently fetches all submissions and renders static HTML with a small inline `<script>` for the toggle. The new dashboard follows the same pattern but with more interactive controls. Each action (status change, notes save, HubSpot sync) calls the corresponding API endpoint via `fetch`.
+
+**Filtering:** URL query parameters drive the server-side Drizzle query — no client-side filtering needed.
+
+```
+/admin?status=new&minScore=50
+```
+
+The Astro page frontmatter reads `Astro.url.searchParams` and passes them to the Drizzle query with `where()` clauses. This keeps the admin page statically renderable on the server per-request without client-side JS complexity.
+
+**Score display:** Rendered as a colored badge in the card header. Color bands: 0–30 = grey (cold), 31–60 = amber (warm), 61–100 = green (hot).
+
+---
+
+### Feature 5: HubSpot CRM Integration
+
+**Integration pattern:** Fire-and-forget server-side API call. HubSpot sync is not in the critical path of form submission. It runs either asynchronously after submission or on-demand from the admin dashboard.
+
+**Two trigger points:**
+
+1. **Automatic on submission** — After scoring, call HubSpot contacts API to create/upsert the contact. If the call fails, log and continue. The submission is already persisted in SQLite; HubSpot failure is non-blocking.
+
+2. **Manual from admin dashboard** — "Sync to HubSpot" button calls `/api/admin/sync-hubspot` for a specific lead. Useful for re-syncing after a failure or enriching a lead with notes before it goes to the CRM.
+
+**New lib file:**
+
+```
+src/lib/hubspot.ts    # NEW — HubSpot API client wrapper
+```
+
+```typescript
+import { Client } from '@hubspot/api-client';
+
+export async function upsertContact(data: {
+  email: string;
+  name: string;
+  company?: string;
+  serviceType?: string;
+  budget?: string;
+  leadScore?: number;
+}): Promise<string> {  // returns HubSpot contact ID
+  const client = new Client({ accessToken: import.meta.env.HUBSPOT_TOKEN });
+  // POST /crm/v3/objects/contacts with upsert behavior
+  // Returns hubspot internal ID for storage in submissions.hubspot_id
+}
+```
+
+**Authentication:** HubSpot Private App access token stored in `.env` as `HUBSPOT_TOKEN`. Server-side only — never exposed to client.
+
+**Error handling:** All HubSpot calls wrapped in try/catch. Failures logged to console but never bubble up to the form user. `submissions.hubspot_synced_at` stays null on failure; admin can see which leads need re-sync.
+
+**Package addition:**
+
+```bash
+npm install @hubspot/api-client
+```
+
+**Environment variable additions:**
+
+```
+HUBSPOT_TOKEN=pat-na1-...
+```
+
+---
+
+## Recommended Project Structure (v1.1 additions)
 
 ```
 src/
-  components/
-    layout/
-      BaseLayout.astro      # HTML shell, head, nav, footer, bg glows
-      Navigation.astro       # Glass nav bar (static, no JS needed)
-      Footer.astro
-    home/
-      Hero.astro
-      ServicesGrid.astro
-      FeaturedProjects.astro
-      Testimonials.astro
-      CtaBanner.astro
-    portfolio/
-      ProjectCard.astro
-      ProjectGrid.astro
-    blog/
-      BlogCard.astro
-      BlogPost.astro         # Article layout with prose styling
-    team/
-      TeamMember.astro
-    pricing/
-      PricingTier.astro
-    contact/
-      ContactForm.tsx        # Interactive island (only JS component)
-    shared/
-      SectionHeading.astro
-      GlassPanel.astro       # Reusable glassmorphism card
-      Badge.astro
-  content/
-    blog/
-      *.md                   # Blog posts with frontmatter
-    config.ts                # Collection schemas (Zod)
-  data/
-    team.json                # Team member data
-    testimonials.json        # Client testimonials
-    pricing.json             # Service tiers
-    portfolio.config.ts      # Curated repo list + overrides
-  pages/
-    index.astro              # Home
-    portfolio/
-      index.astro            # Portfolio listing
-      [slug].astro           # Portfolio detail
-    blog/
-      index.astro            # Blog listing
-      [...slug].astro        # Blog post detail
-    team.astro               # Team page
-    pricing.astro            # Pricing page
-    contact.astro            # Contact page
-    api/
-      contact.ts             # POST endpoint (SSR)
-  styles/
-    global.css               # Ported design tokens + base styles
+├── components/
+│   ├── forms/
+│   │   ├── StepIndicator.astro     [NEW] progress bar for multi-step form
+│   │   └── ServiceSelector.astro   [NEW] step 1 service-type cards
+│   └── admin/
+│       ├── LeadCard.astro          [NEW] replaces inline card HTML in admin page
+│       ├── ScoreBadge.astro        [NEW] colored score display
+│       └── StatusDropdown.astro    [NEW] status change control
+├── lib/
+│   ├── email.ts                    [unchanged]
+│   ├── validation.ts               [extend for new fields]
+│   ├── rate-limiter.ts             [unchanged]
+│   ├── lead-scoring.ts             [NEW] pure scoring function
+│   └── hubspot.ts                  [NEW] HubSpot API wrapper
+├── pages/
+│   ├── contact.astro               [modify] multi-step form
+│   ├── admin/
+│   │   └── index.astro             [modify] full lead dashboard
+│   └── api/
+│       ├── contact.ts              [modify] accept new fields, trigger scoring
+│       ├── health.ts               [unchanged]
+│       └── admin/
+│           ├── toggle-read.ts      [unchanged]
+│           ├── update-status.ts    [NEW]
+│           ├── update-notes.ts     [NEW]
+│           └── sync-hubspot.ts     [NEW]
+├── scripts/
+│   ├── contact-form.ts             [replace with multi-step-form.ts or refactor]
+│   ├── multi-step-form.ts          [NEW] step state controller
+│   ├── lead-signals.ts             [NEW] behavioral signal tracker
+│   └── analytics.js                [unchanged]
+└── db/
+    ├── index.ts                    [unchanged]
+    └── schema.ts                   [modify] add columns to submissions
 ```
 
-## Deployment Architecture
+---
+
+## Data Flow
+
+### Multi-Step Form Submission Flow
 
 ```
-Docker Host (self-hosted server)
-  |
-  +-- Traefik (existing, external)
-  |     |
-  |     +-- synctexts.com --> Astro container (port 4321)
-  |
-  +-- synctexts-website container
-        |
-        +-- Node.js + Astro (hybrid mode)
-        +-- SQLite database (Docker volume mount)
-        +-- .env (GitHub PAT, SMTP credentials)
+User fills Step 1–3 (client-side state in multi-step-form.ts)
+         |
+         v
+Step 4: Confirm — user clicks "Submit"
+         |
+         v
+lead-signals.ts reads localStorage/sessionStorage
+  (visited pricing? time on site? pages seen?)
+         |
+         v
+POST /api/contact
+  { name, email, company, message,
+    service_type, budget, timeline,
+    behavioral_signals: "{...}" }
+         |
+         v
+Server: validateContact() — extended validation
+         |
+         v
+Server: db.insert(submissions, {...}) — persist first
+         |
+         v
+Server: scoreLead(input) — pure function, returns 0-100
+         |
+         v
+Server: db.update(submissions, { leadScore }) — update score in place
+         |
+         v
+Server: upsertContact(hubspot) — fire-and-forget, errors caught
+         |
+         v
+Server: sendContactNotification(resend) — email to admin
+         |
+         v
+JSON { success: true }
+         |
+         v
+Client: show success UI + Cal.com "Book a call" CTA
 ```
 
-**Key changes from current setup:**
-
-| Current | New |
-|---------|-----|
-| nginx:alpine serving static HTML | node:alpine running Astro SSR |
-| No build step in container | Multi-stage build: install + build + run |
-| No database | SQLite file on Docker volume |
-| No env vars | GitHub PAT, SMTP creds in .env |
-| Traefik port 80 | Traefik port 4321 (Astro default) |
-
-The Dockerfile changes from a simple nginx copy to a multi-stage Node.js build. The docker-compose gains a volume mount for the SQLite database and an env_file directive. Traefik labels stay the same, just pointing to port 4321 instead of 80.
-
-## Build and Rebuild Strategy
-
-| Trigger | What Happens | How |
-|---------|-------------|-----|
-| Code push to main | Full rebuild + redeploy | CI/CD pipeline (GitHub Actions or webhook) |
-| New blog post | Commit `.md` file, triggers rebuild | Same as code push |
-| Portfolio refresh | Rebuild fetches latest GitHub data | Cron job or manual trigger |
-| Contact form submission | Runtime, no rebuild needed | Server endpoint handles it |
-
-## Scalability Considerations
-
-| Concern | At Current Scale | At 10K Monthly Visitors | Notes |
-|---------|-----------------|------------------------|-------|
-| Page load speed | Static HTML, near-instant | Same -- pre-rendered | No scaling concern |
-| Contact form | SQLite handles easily | SQLite handles easily | Agency sites get dozens of leads/month, not thousands |
-| GitHub API limits | 5K req/hr with PAT, only at build | Same -- build-time only | Not a concern |
-| Build time | <30s for ~20 pages | Same | Astro builds are fast |
-| Server resources | Minimal Node.js process | Same | Static serving is cheap |
-
-This is an agency marketing site, not a SaaS product. Scalability is not a meaningful concern. The architecture is intentionally simple because the traffic patterns do not justify complexity.
-
-## Suggested Build Order (Dependencies)
-
-This ordering reflects technical dependencies -- what must exist before the next thing can be built.
+### Admin Dashboard Data Flow
 
 ```
-Phase 1: Foundation
-  BaseLayout, Navigation, Footer, global styles (ported from existing CSS)
-  Home page (port existing sections into Astro components)
-  --> Everything depends on the layout shell existing first
-
-Phase 2: Content System
-  Content Collections setup (schemas, config)
-  Blog (Markdown files + listing + detail pages)
-  --> Blog is the simplest content type, proves the content system works
-
-Phase 3: Data-Driven Pages
-  Team page (JSON data + components)
-  Pricing page (JSON data + components)
-  Testimonials (JSON data + home page section)
-  --> These are simple data-to-template pages, no external APIs
-
-Phase 4: Portfolio (GitHub Integration)
-  Portfolio config file
-  Custom content loader (GitHub API)
-  Portfolio listing + detail pages
-  --> Depends on content system from Phase 2, adds external API complexity
-
-Phase 5: Contact Form (Server Endpoint)
-  SQLite setup
-  POST /api/contact endpoint
-  ContactForm interactive island
-  Email notification integration
-  --> Only server-side component, needs hybrid mode enabled
-
-Phase 6: Polish and Deploy
-  Analytics (GA4 + GTM)
-  SEO (meta tags, sitemap, robots.txt)
-  Updated Dockerfile (multi-stage Node.js build)
-  Updated docker-compose (volume, env)
-  --> Everything else must work before deployment hardening
+GET /admin[?status=new&minScore=50]
+         |
+         v
+Basic Auth check (same as v1.0)
+         |
+         v
+Drizzle query with WHERE filters from URL params
+         |
+         v
+Render LeadCard components with score badges, status dropdowns
+         |
+         v
+User actions (status change, notes, sync)
+  → fetch() to /api/admin/update-status etc.
+  → optimistic UI update
 ```
+
+### HubSpot Sync Flow
+
+```
+Automatic (on submission):
+  POST /api/contact succeeds
+         |
+         v
+  hubspot.upsertContact(data)
+    → POST https://api.hubapi.com/crm/v3/objects/contacts
+    → Authorization: Bearer {HUBSPOT_TOKEN}
+    → Returns: hubspot_id
+         |
+         v
+  db.update({ hubspot_id, hubspot_synced_at })
+
+Manual (from admin):
+  Admin clicks "Sync to HubSpot" button
+         |
+         v
+  POST /api/admin/sync-hubspot { submissionId }
+         |
+         v
+  Load submission from DB
+  hubspot.upsertContact(data)
+  Update hubspot_id + synced_at
+         |
+         v
+  JSON { success: true, hubspotId }
+         |
+         v
+  Admin UI shows sync status update
+```
+
+---
+
+## Architectural Patterns
+
+### Pattern 1: Extend, Don't Replace the API Endpoint
+
+**What:** Add new optional fields to `/api/contact` rather than creating `/api/contact-v2`.
+
+**When to use:** When existing integrations (any bookmarked direct links, bots) should keep working.
+
+**Trade-offs:** Requires backward-compatible nullable schema additions. Avoids having two endpoints with duplicated validation and persistence logic.
+
+```typescript
+// Existing fields preserved. New fields with fallbacks.
+const serviceType = body.service_type as string | undefined ?? null;
+const budget = body.budget as string | undefined ?? null;
+```
+
+### Pattern 2: Additive Schema Migrations (No Destructive Changes)
+
+**What:** Add nullable columns to the existing `submissions` table. Never drop or rename existing columns.
+
+**When to use:** Any schema change in v1.1.
+
+**Trade-offs:** Schema accumulates columns over time, but for a single SQLite table this is trivially manageable.
+
+```typescript
+// src/db/schema.ts — additions only
+export const submissions = sqliteTable('submissions', {
+  // ... all existing columns preserved ...
+  serviceType: text('service_type'),        // NEW — nullable
+  budget: text('budget'),                   // NEW — nullable
+  timeline: text('timeline'),               // NEW — nullable
+  leadScore: integer('lead_score').default(0),  // NEW
+  leadStatus: text('lead_status').default('new'),
+  notes: text('notes'),
+  hubspotId: text('hubspot_id'),
+  hubspotSyncedAt: text('hubspot_synced_at'),
+});
+```
+
+Run `npx drizzle-kit generate` then `npx drizzle-kit migrate` to apply.
+
+### Pattern 3: Fire-and-Forget External API Calls
+
+**What:** HubSpot API call does not block the response to the user. Errors are caught and logged, not rethrown.
+
+**When to use:** Any external service call that is not critical to the user-facing operation.
+
+**Trade-offs:** Async failures are silent to the user. Admin must check `hubspot_id IS NULL` to find unsynced leads.
+
+```typescript
+// In /api/contact.ts — after DB insert succeeds
+try {
+  const hsId = await upsertContact({ email, name, ... });
+  db.update(submissions).set({ hubspotId: hsId, hubspotSyncedAt: new Date().toISOString() })
+    .where(eq(submissions.id, insertedId)).run();
+} catch (err) {
+  console.error('[HubSpot sync failed]', err);
+  // Submission is already saved. User gets success response regardless.
+}
+```
+
+### Pattern 4: URL-Param-Driven Server Filtering
+
+**What:** Admin filters (status, score range, date) expressed as URL query params. Drizzle `where()` clauses built server-side in the Astro frontmatter.
+
+**When to use:** The admin page is SSR (`prerender = false`). Server-side filtering is more efficient than fetching all records and filtering client-side.
+
+**Trade-offs:** Full page reload on filter change (not a SPA). Acceptable for an internal admin tool used by a single admin.
+
+```typescript
+// In admin/index.astro frontmatter
+const url = Astro.url;
+const statusFilter = url.searchParams.get('status');
+const minScore = Number(url.searchParams.get('minScore') ?? 0);
+
+const query = db.select().from(submissions).orderBy(desc(submissions.createdAt));
+// Conditionally add where clauses based on params
+```
+
+---
+
+## Integration Points
+
+### External Services
+
+| Service | Integration Point | Auth | Failure Mode |
+|---------|-------------------|------|--------------|
+| Cal.com | Client-side embed script in BaseLayout head | None (public) | Script load failure → button does nothing |
+| HubSpot CRM | Server-side `@hubspot/api-client` in `src/lib/hubspot.ts` | Private App token in env | Submission still saved; sync_at stays null |
+| Resend | Existing `src/lib/email.ts`, unchanged | API key in env | Email fails silently (existing behavior) |
+
+### Internal Boundaries
+
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| `contact.astro` ↔ `multi-step-form.ts` | DOM events, form data collection | Form script reads step state, builds payload |
+| `multi-step-form.ts` ↔ `/api/contact` | `fetch` POST, JSON | Same endpoint contract as v1.0, extended fields |
+| `/api/contact` ↔ `lead-scoring.ts` | Direct import, pure function call | No I/O in scoring function |
+| `/api/contact` ↔ `hubspot.ts` | Async import, awaited with try/catch | Fire-and-forget pattern |
+| `admin/index.astro` ↔ `api/admin/*` | `fetch` POST from inline script | Same Basic Auth header pattern as v1.0 |
+| `lead-signals.ts` ↔ `multi-step-form.ts` | `localStorage` read on submit | Behavioral signals collected passively |
+
+---
+
+## Build Order (v1.1 Dependencies)
+
+The ordering reflects what must exist before the next thing can be built.
+
+```
+Phase 1: Schema Extension
+  Modify src/db/schema.ts (add new columns to submissions)
+  Run drizzle-kit migration
+  Extend src/lib/validation.ts for new fields
+  --> Everything downstream depends on the new schema existing
+
+Phase 2: Lead Scoring
+  Implement src/lib/lead-scoring.ts (pure function, no deps)
+  Unit-testable independently
+  --> Needed before API endpoint can compute scores
+
+Phase 3: Extended API Endpoint
+  Modify src/pages/api/contact.ts (accept new fields, call scorer, call HubSpot)
+  Implement src/lib/hubspot.ts (HubSpot client wrapper)
+  Add HUBSPOT_TOKEN to .env
+  --> Depends on schema (Phase 1) and scoring (Phase 2)
+
+Phase 4: Multi-Step Form (Frontend)
+  New src/scripts/multi-step-form.ts (step state machine)
+  New src/scripts/lead-signals.ts (behavioral tracker)
+  New src/components/forms/ (StepIndicator, ServiceSelector)
+  Modify src/pages/contact.astro (new form HTML)
+  --> Depends on API endpoint being ready (Phase 3)
+
+Phase 5: Cal.com Scheduling
+  Add Cal.com script to BaseLayout.astro
+  Add booking CTA to post-submission success state
+  --> Depends on form success flow existing (Phase 4)
+
+Phase 6: Lead Management Dashboard
+  Modify src/pages/admin/index.astro (filtering, scores, status)
+  New src/pages/api/admin/update-status.ts
+  New src/pages/api/admin/update-notes.ts
+  New src/pages/api/admin/sync-hubspot.ts
+  --> Depends on score data existing (Phase 3) and HubSpot client (Phase 3)
+```
+
+---
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Putting Scoring Logic in the Client
+
+**What people do:** Compute lead score in the browser before sending to the server.
+
+**Why it's wrong:** Client-supplied scores can be trivially manipulated. Any lead could set their own score to 100 by editing the payload. Scores are only meaningful if computed server-side from trusted inputs.
+
+**Do this instead:** Score exclusively in `/api/contact` after server-side validation. The client never sees the scoring logic.
+
+### Anti-Pattern 2: Blocking Form Submission on HubSpot
+
+**What people do:** `await upsertContact()` and return an error to the user if HubSpot is down.
+
+**Why it's wrong:** HubSpot has outages. The lead's form submission should never fail because a third-party CRM is temporarily unavailable. The SQLite record is the source of truth.
+
+**Do this instead:** Fire-and-forget with try/catch. Log failures. Provide manual re-sync in admin dashboard.
+
+### Anti-Pattern 3: Client-Side HubSpot API Calls
+
+**What people do:** Call `https://api.hubapi.com` directly from the browser using a token embedded in JavaScript.
+
+**Why it's wrong:** Exposes the HubSpot Private App token publicly. Anyone can extract it and access or corrupt the CRM data.
+
+**Do this instead:** All HubSpot calls go through `/api/admin/sync-hubspot` or from `/api/contact` on the server. The token never leaves the server.
+
+### Anti-Pattern 4: Separate DB Tables for Scores and Leads
+
+**What people do:** Create a separate `lead_scores` table with a foreign key to `submissions`.
+
+**Why it's wrong:** For this scale (agency site getting tens of leads/month), a JOIN to get a score alongside a submission adds complexity for no benefit. The `submissions` table is the one unit of work.
+
+**Do this instead:** Add nullable columns directly to `submissions`. A score is an attribute of a submission, not a separate entity.
+
+### Anti-Pattern 5: Framework Island for the Multi-Step Form
+
+**What people do:** Reach for React/Vue for the multi-step form because "it has state."
+
+**Why it's wrong:** Ships 40–100KB of framework JS for a 3–4 step form. The existing `contact-form.ts` is vanilla TypeScript and handles complex async behavior. A step state machine is straightforward to implement the same way.
+
+**Do this instead:** Vanilla TypeScript class or object managing `currentStep`, `formData`, and rendering. Follows the exact pattern already established in the codebase.
+
+---
+
+## Scaling Considerations
+
+| Scale | Architecture Adjustments |
+|-------|--------------------------|
+| Current (agency site, ~50 leads/month) | SQLite handles trivially. All patterns above are sufficient. No changes to infrastructure. |
+| 10x growth (500 leads/month) | SQLite still fine. Consider moving HubSpot sync to a background queue if latency becomes noticeable. |
+| 100x growth (5000 leads/month) | At this point, evaluate Postgres migration for concurrent writes. HubSpot sync should move off the request path entirely (queue + worker). |
+
+This is an agency marketing site. Reaching 5000 leads/month would be extraordinary success and would justify infrastructure investment. The current architecture handles the realistic growth curve without changes.
+
+---
 
 ## Sources
 
-- [Astro Endpoints Documentation](https://docs.astro.build/en/guides/endpoints/)
-- [Astro Content Collections Documentation](https://docs.astro.build/en/guides/content-collections/)
-- [Astro Rendering Modes](https://v4.docs.astro.build/en/basics/rendering-modes/)
-- [Astro On-Demand Rendering](https://docs.astro.build/en/guides/on-demand-rendering/)
-- [Astro Markdown Documentation](https://docs.astro.build/en/guides/markdown-content/)
-- [Astro SSR Guide (2025)](https://eastondev.com/blog/en/posts/dev/20251202-astro-ssr-guide/)
-- [Astro Content Layer Deep Dive](https://astro.build/blog/live-content-collections-deep-dive/)
-- [Deploying Astro with Hybrid Rendering](https://render.com/articles/deploying-astro-websites-with-hybrid-rendering)
+- Existing codebase: `src/pages/api/contact.ts`, `src/db/schema.ts`, `src/db/index.ts`, `src/scripts/contact-form.ts`, `src/pages/admin/index.astro`
+- [Cal.com Embed Documentation](https://cal.com/help/embedding/adding-embed)
+- [Cal.com Embed Features](https://cal.com/resources/feature/embed)
+- [HubSpot Node.js API Client](https://github.com/HubSpot/hubspot-api-nodejs)
+- [HubSpot CRM Contacts API v3](https://developers.hubspot.com/docs/api-reference/crm-contacts-v3/guide)
+- [Drizzle ORM Migrations](https://orm.drizzle.team/docs/migrations)
+- [Astro Share State Between Islands](https://docs.astro.build/en/recipes/sharing-state-islands/)
+- [Astro Server Endpoints](https://docs.astro.build/en/guides/endpoints/)
+
+---
+*Architecture research for: Astro + SQLite lead conversion engine (v1.1)*
+*Researched: 2026-03-11*
