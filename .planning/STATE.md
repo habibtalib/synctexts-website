@@ -1,11 +1,11 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-11T04:26:35.559Z"
-last_activity: 2026-03-11 -- Completed Plan 04-02 (Analytics integration)
+milestone_name: Agency Website MVP
+status: milestone_complete
+stopped_at: v1.0 milestone archived
+last_updated: "2026-03-11T16:40:00+08:00"
+last_activity: 2026-03-11 -- v1.0 milestone completed and archived
 progress:
   total_phases: 4
   completed_phases: 4
@@ -18,17 +18,16 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-08)
+See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** All phases complete. All 12 plans executed successfully.
+**Current focus:** v1.0 shipped. Planning next milestone.
 
 ## Current Position
 
-Phase: 4 of 4 (SEO, Analytics, Deployment)
-Plan: 3 of 3 in current phase -- ALL COMPLETE
-Status: All phases complete
-Last activity: 2026-03-11 -- Completed Plan 04-02 (Analytics integration)
+Milestone: v1.0 Agency Website MVP -- SHIPPED
+Status: Milestone complete and archived
+Last activity: 2026-03-11 -- Milestone audit passed, archived to .planning/milestones/
 
 Progress: [██████████] 100%
 
@@ -48,69 +47,22 @@ Progress: [██████████] 100%
 | 03-lead-capture | 2 | 35 min | 18 min |
 | 04-seo-analytics-deployment | 3 | 6 min | 2 min |
 
-**Recent Trend:**
-- Last 5 plans: -
-- Trend: -
-
-*Updated after each plan completion*
-| Phase 02 P02 | 4min | 2 tasks | 6 files |
-
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- [Roadmap]: Astro hybrid rendering chosen as framework (research confirmed)
-- [Roadmap]: Coarse granularity -- 4 phases covering 41 requirements
-- [Roadmap]: Phase 3 (Lead Capture) depends only on Phase 1, enabling parallel work with Phase 2
-- [01-01]: Used npm install astro directly (project already had files)
-- [01-01]: Renamed .nav-links to .nav-links-desktop for mobile sidebar distinction
-- [01-01]: Mobile sidebar breakpoint at 768px for better tablet experience
-- [01-01]: Scripts use astro:page-load event for View Transition compatibility
-- [01-02]: Tech icons loaded from Devicon CDN for consistent SVG rendering
-- [01-02]: Portfolio/testimonial data inline as placeholder -- real data in Phase 2
-- [02-01]: Used process.env.GITHUB_PAT for server-only build-time GitHub API access
-- [02-01]: Portfolio loader gracefully degrades to local-only data when PAT is missing
-- [02-01]: Testimonials YAML preserves 3 existing entries and adds 2 new ones
-- [02-03]: Read time calculated from word count / 200 wpm
-- [02-03]: Blog listing uses 2-column grid, collapses to 1-column at 768px
-- [02-03]: Prose code block styles use !important on background for Shiki dark theme
-- [02-02]: TeamMemberCard uses initials fallback when photo images are unavailable
-- [02-02]: PricingTier highlighted state uses primary color border glow and gradient badge
-- [02-04]: Added portfolioCaseStudies as separate collection since portfolio uses custom GitHub API loader
-- [02-04]: Reused prose class from blog for case study Markdown rendering
-- [02-04]: Updated ProjectCard with optional href prop for backward compatibility
-- [02-05]: All Phase 2 content pages visually approved by user
-- [02-05]: PAT security verified -- no GitHub token leakage in dist/ output
-- [03-01]: Used Resend instead of Nodemailer/SMTP for email delivery
-- [03-01]: Validation logic duplicated for client/server (avoid server module imports in browser)
-- [03-01]: Rate limiter uses in-memory Map (resets on restart, acceptable for low-traffic site)
-- [03-01]: Honeypot field named "website" with silent 200 rejection
-- [03-02]: Basic Auth with WWW-Authenticate header for native browser credential dialog
-- [03-02]: Toggle endpoint uses GET redirect to reload page, leveraging browser-cached Basic Auth credentials
-- [04-03]: Replaced old nginx/Traefik Docker setup with Caddy for simpler automatic HTTPS
-- [04-03]: Caddy depends_on app with service_healthy condition for startup ordering
-- [04-01]: JSON-LD rendered in page body (valid per schema.org spec, simpler Astro component composition)
-- [04-01]: OG image defaults to /og-default.png placeholder; overridable per-page via image prop
-- [04-01]: Sitemap filter excludes /admin and /api routes
-- [04-02]: GTM conditionally injected via PUBLIC_GTM_ID env var for graceful degradation
-- [04-02]: Admin pages excluded from GTM via pathname check in BaseLayout frontmatter
-- [04-02]: Contact form tracks all error paths (validation, server, network) as dataLayer events
+All v1.0 decisions documented in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-- Framework migration decision (Astro) is confirmed by research but pending in PROJECT.md Key Decisions table
-- GitHub PAT and SMTP credentials needed before Phase 2 and Phase 3 implementation
-- Specific GitHub repos to showcase must be selected before Phase 2 portfolio work
+None -- v1.0 complete.
 
 ## Session Continuity
 
-Last session: 2026-03-11T04:22:04Z
-Stopped at: Completed 04-02-PLAN.md
-Resume file: .planning/phases/04-seo-analytics-deployment/04-02-SUMMARY.md
+Last session: 2026-03-11
+Stopped at: v1.0 milestone complete
+Next action: /gsd:new-milestone for v1.1+ planning
