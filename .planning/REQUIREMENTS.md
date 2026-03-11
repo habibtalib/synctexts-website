@@ -54,8 +54,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SEO-01**: Unique meta title and description on every page
 - [x] **SEO-02**: Open Graph tags for social sharing on all pages
 - [x] **SEO-03**: Auto-generated sitemap.xml
-- [ ] **SEO-04**: GA4 integration with page view tracking
-- [ ] **SEO-05**: GTM container for flexible tag management
+- [x] **SEO-04**: GA4 integration with page view tracking
+- [x] **SEO-05**: GTM container for flexible tag management
 - [x] **SEO-06**: JSON-LD structured data (Organization schema on all pages, BlogPosting on blog posts)
 - [x] **SEO-07**: Semantic HTML throughout (proper heading hierarchy, landmarks, etc.)
 
@@ -137,8 +137,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-01 | Phase 4 | Complete |
 | SEO-02 | Phase 4 | Complete |
 | SEO-03 | Phase 4 | Complete |
-| SEO-04 | Phase 4 | Pending |
-| SEO-05 | Phase 4 | Pending |
+| SEO-04 | Phase 4 | Complete |
+| SEO-05 | Phase 4 | Complete |
 | SEO-06 | Phase 4 | Complete |
 | SEO-07 | Phase 4 | Complete |
 | DEPL-01 | Phase 4 | Complete |
