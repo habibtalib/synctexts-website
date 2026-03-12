@@ -10,4 +10,12 @@ export const submissions = sqliteTable('submissions', {
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
   read: integer('read', { mode: 'boolean' }).notNull().default(false),
   rateLimited: integer('rate_limited', { mode: 'boolean' }).notNull().default(false),
+  serviceType: text('service_type'),
+  budget: text('budget'),
+  timeline: text('timeline'),
+  leadScore: integer('lead_score'),
+  leadStatus: text('lead_status').notNull().default('new'),
+  notes: text('notes'),
+  hubspotId: text('hubspot_id'),
+  hubspotSyncedAt: text('hubspot_synced_at'),
 });

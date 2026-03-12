@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "cp data/submissions.db data/submissions.db.bak && drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
