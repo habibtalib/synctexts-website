@@ -41,7 +41,9 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
   2. The `submissions` table has the 8 new nullable columns: `service_type`, `budget`, `timeline`, `lead_score`, `lead_status`, `notes`, `hubspot_id`, `hubspot_synced_at`
   3. SQLite opens with WAL journal mode and `busy_timeout = 5000` — concurrent reads during form submission do not produce BUSY errors
   4. `drizzle-kit push` is removed from all production npm scripts
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 05-01-PLAN.md — Extend schema with 8 columns, add WAL PRAGMAs, establish migration workflow
 
 ### Phase 6: Lead Scoring Engine
 **Goal**: Lead scores are computed from form data using a transparent, configurable rule-based function
@@ -110,7 +112,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 | 2. Content & Portfolio | v1.0 | 5/5 | Complete | 2026-03-10 |
 | 3. Lead Capture | v1.0 | 2/2 | Complete | 2026-03-10 |
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
-| 5. Database Foundation | v1.1 | 0/TBD | Not started | - |
+| 5. Database Foundation | v1.1 | 0/1 | Not started | - |
 | 6. Lead Scoring Engine | v1.1 | 0/TBD | Not started | - |
 | 7. Extended API and HubSpot Integration | v1.1 | 0/TBD | Not started | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
