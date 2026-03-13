@@ -23,7 +23,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 **Milestone Goal:** Transform the website from a passive lead capture form into an active conversion engine with intelligent scoring, scheduling, and CRM integration.
 
-- [ ] **Phase 5: Database Foundation** - Extend schema safely with WAL mode and generate+migrate workflow
+- [x] **Phase 5: Database Foundation** - Extend schema safely with WAL mode and generate+migrate workflow (completed 2026-03-13)
 - [ ] **Phase 6: Lead Scoring Engine** - Pure scoring function with configurable weights and tier thresholds
 - [ ] **Phase 7: Extended API and HubSpot Integration** - Form endpoint wired to scoring and async CRM sync
 - [ ] **Phase 8: Multi-Step Form Frontend** - Service-branched wizard with persistence and animated transitions
@@ -41,7 +41,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
   2. The `submissions` table has the 8 new nullable columns: `service_type`, `budget`, `timeline`, `lead_score`, `lead_status`, `notes`, `hubspot_id`, `hubspot_synced_at`
   3. SQLite opens with WAL journal mode and `busy_timeout = 5000` — concurrent reads during form submission do not produce BUSY errors
   4. `drizzle-kit push` is removed from all production npm scripts
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
 - [ ] 05-01-PLAN.md — Extend schema with 8 columns, add WAL PRAGMAs, establish migration workflow
 
@@ -112,7 +112,7 @@ Plans:
 | 2. Content & Portfolio | v1.0 | 5/5 | Complete | 2026-03-10 |
 | 3. Lead Capture | v1.0 | 2/2 | Complete | 2026-03-10 |
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
-| 5. Database Foundation | v1.1 | 0/1 | Not started | - |
+| 5. Database Foundation | 1/1 | Complete   | 2026-03-13 | - |
 | 6. Lead Scoring Engine | v1.1 | 0/TBD | Not started | - |
 | 7. Extended API and HubSpot Integration | v1.1 | 0/TBD | Not started | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |

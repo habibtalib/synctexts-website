@@ -52,8 +52,8 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Database schema migrated via Drizzle generate+migrate (never push) with production backup
-- [ ] **INFRA-02**: SQLite configured with WAL mode and busy_timeout for concurrent read/write safety
+- [x] **INFRA-01**: Database schema migrated via Drizzle generate+migrate (never push) with production backup
+- [x] **INFRA-02**: SQLite configured with WAL mode and busy_timeout for concurrent read/write safety
 - [ ] **INFRA-03**: Shared auth helper used by all admin API endpoints
 
 ## v2 Requirements
@@ -122,8 +122,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HS-03 | Phase 7 | Pending |
 | HS-04 | Phase 7 | Pending |
 | HS-05 | Phase 7 | Pending |
-| INFRA-01 | Phase 5 | Pending |
-| INFRA-02 | Phase 5 | Pending |
+| INFRA-01 | Phase 5 | Complete |
+| INFRA-02 | Phase 5 | Complete |
 | INFRA-03 | Phase 7 | Pending |
 
 **Coverage:**

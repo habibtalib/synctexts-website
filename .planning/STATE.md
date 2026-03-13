@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
 status: planning
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-11T23:29:47.638Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-13T00:27:10.956Z"
 last_activity: 2026-03-11 — v1.1 roadmap created, 31 requirements mapped across 6 phases
 progress:
   total_phases: 6
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
   percent: 0
 ---
 
@@ -48,6 +48,8 @@ Progress: ░░░░░░░░░░ 0%
 All v1.0 decisions documented in PROJECT.md Key Decisions table.
 
 v1.1 decisions pending — will be logged as phases execute.
+- [Phase 05-database-foundation]: leadStatus uses .default('new') not .() for SQL-level DEFAULT during ALTER TABLE migration
+- [Phase 05-database-foundation]: Migration SQL must use --> statement-breakpoint (with space) delimiters; drizzle-kit generate emits CREATE TABLE on first run — manually edit to ALTER TABLE ADD COLUMN
 
 ### Critical Risks (from research)
 
@@ -62,6 +64,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-11T23:29:47.635Z
-Stopped at: Phase 5 context gathered
+Last session: 2026-03-13T00:27:10.946Z
+Stopped at: Completed 05-01-PLAN.md
 Next action: Run `/gsd:plan-phase 5` to plan Phase 5: Database Foundation
