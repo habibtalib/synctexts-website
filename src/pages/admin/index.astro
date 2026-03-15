@@ -30,6 +30,8 @@ if (!authenticated) {
   });
 }
 
+const hubspotPortalId = import.meta.env.HUBSPOT_PORTAL_ID || '';
+
 // Query all submissions, newest first
 const allSubmissions = db
   .select()
@@ -58,7 +60,7 @@ function formatDate(iso: string): string {
         <p>No submissions yet.</p>
       </div>
     ) : (
-      <div class="submissions-list">
+      <div class="submissions-list" data-portal-id={hubspotPortalId}>
         {allSubmissions.map((sub) => (
           <div
             class={`glass-panel submission-card ${!sub.read ? 'unread' : ''}`}
@@ -81,13 +83,40 @@ function formatDate(iso: string): string {
                   <span class="badge-score badge-score-na">N/A</span>
                 )}
               </div>
-              <button
-                class="btn btn-toggle-read"
-                data-id={sub.id}
-                data-read={sub.read ? 'true' : 'false'}
-              >
-                Mark as {sub.read ? 'Unread' : 'Read'}
-              </button>
+              <div class="submission-actions">
+                {sub.hubspotId ? (
+                  <>
+                    <span class="badge-hubspot-synced">Synced</span>
+                    {hubspotPortalId && (
+                      <a
+                        href={`https://app.hubspot.com/contacts/${hubspotPortalId}/contact/${sub.hubspotId}`}
+                        target="_blank"
+                        rel="noopener"
+                        class="hubspot-link"
+                      >
+                        View in HubSpot
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span class="badge-hubspot-unsynced">Not Synced</span>
+                    <button
+                      class="btn btn-hubspot-sync"
+                      data-id={sub.id}
+                    >
+                      Sync to HubSpot
+                    </button>
+                  </>
+                )}
+                <button
+                  class="btn btn-toggle-read"
+                  data-id={sub.id}
+                  data-read={sub.read ? 'true' : 'false'}
+                >
+                  Mark as {sub.read ? 'Unread' : 'Read'}
+                </button>
+              </div>
             </div>
 
             <div class="submission-contact">
@@ -111,6 +140,70 @@ function formatDate(iso: string): string {
 
   <script>
     document.addEventListener('astro:page-load', () => {
+      const list = document.querySelector('.submissions-list') as HTMLElement | null;
+      const portalId = list?.getAttribute('data-portal-id') || '';
+
+      document.querySelectorAll('.btn-hubspot-sync').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = Number(btn.getAttribute('data-id'));
+          if (!id) return;
+
+          const button = btn as HTMLButtonElement;
+          button.disabled = true;
+          button.textContent = 'Syncing...';
+
+          try {
+            const res = await fetch('/api/admin/hubspot-sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id }),
+            });
+
+            if (res.status === 401) {
+              window.location.reload();
+              return;
+            }
+
+            const data = await res.json();
+            if (data.success) {
+              // Build replacement: Synced badge + optional View in HubSpot link
+              const wrapper = button.closest('.submission-actions') as HTMLElement;
+              const unsyncedBadge = wrapper.querySelector('.badge-hubspot-unsynced');
+              if (unsyncedBadge) unsyncedBadge.remove();
+
+              const syncedBadge = document.createElement('span');
+              syncedBadge.className = 'badge-hubspot-synced';
+              syncedBadge.textContent = 'Synced';
+              wrapper.insertBefore(syncedBadge, button);
+
+              if (portalId && data.hubspotId) {
+                const link = document.createElement('a');
+                link.href = `https://app.hubspot.com/contacts/${portalId}/contact/${data.hubspotId}`;
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.className = 'hubspot-link';
+                link.textContent = 'View in HubSpot';
+                wrapper.insertBefore(link, button);
+              }
+
+              button.remove();
+            } else {
+              button.textContent = 'Sync failed';
+              setTimeout(() => {
+                button.textContent = 'Sync to HubSpot';
+                button.disabled = false;
+              }, 2000);
+            }
+          } catch {
+            button.textContent = 'Sync failed';
+            setTimeout(() => {
+              button.textContent = 'Sync to HubSpot';
+              button.disabled = false;
+            }, 2000);
+          }
+        });
+      });
+
       document.querySelectorAll('.btn-toggle-read').forEach((btn) => {
         btn.addEventListener('click', async () => {
           const id = Number(btn.getAttribute('data-id'));
@@ -297,6 +390,68 @@ function formatDate(iso: string): string {
       background: var(--bg-surface-hover);
       border-color: rgba(255, 255, 255, 0.2);
       color: var(--text-primary);
+    }
+
+    .submission-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge-hubspot-synced {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-hubspot-unsynced {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dimmed);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-hubspot-sync {
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: var(--transition-fast);
+    }
+
+    .btn-hubspot-sync:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    .hubspot-link {
+      color: var(--primary);
+      font-size: 0.8rem;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .hubspot-link:hover {
+      color: #818cf8;
     }
 
     .submission-contact {
