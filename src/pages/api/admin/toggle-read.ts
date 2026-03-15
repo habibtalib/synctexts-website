@@ -2,23 +2,9 @@ import type { APIRoute } from 'astro';
 import { db } from '../../../db';
 import { submissions } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
+import { checkBasicAuth } from '../../../lib/auth';
 
 export const prerender = false;
-
-function checkBasicAuth(request: Request): boolean {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Basic ')) return false;
-
-  const decoded = atob(authHeader.slice(6));
-  const [user, pass] = decoded.split(':');
-
-  const expectedUser = import.meta.env.ADMIN_USER;
-  const expectedPass = import.meta.env.ADMIN_PASS;
-
-  if (!expectedUser || !expectedPass) return false;
-
-  return user === expectedUser && pass === expectedPass;
-}
 
 export const POST: APIRoute = async ({ request }) => {
   if (!checkBasicAuth(request)) {
