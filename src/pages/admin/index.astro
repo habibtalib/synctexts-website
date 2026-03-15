@@ -6,6 +6,7 @@ import PageHeader from '../../components/PageHeader.astro';
 import { db } from '../../db';
 import { submissions } from '../../db/schema';
 import { desc } from 'drizzle-orm';
+import { scoreToTier } from '../../lib/scoring';
 
 // Basic Auth check
 const authHeader = Astro.request.headers.get('Authorization');
@@ -72,6 +73,13 @@ function formatDate(iso: string): string {
                 <span class={`read-indicator ${sub.read ? 'read' : 'unread'}`}>
                   {sub.read ? 'Read' : 'Unread'}
                 </span>
+                {sub.leadScore !== null && sub.leadScore !== undefined ? (
+                  <span class={`badge-score badge-score-${scoreToTier(sub.leadScore)}`}>
+                    {scoreToTier(sub.leadScore).toUpperCase()} {sub.leadScore}
+                  </span>
+                ) : (
+                  <span class="badge-score badge-score-na">N/A</span>
+                )}
               </div>
               <button
                 class="btn btn-toggle-read"
@@ -234,6 +242,40 @@ function formatDate(iso: string): string {
     }
 
     .read-indicator.read {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dimmed);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .badge-score {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-score-hot {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-score-warm {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-score-cold {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-score-na {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-dimmed);
       border: 1px solid rgba(255, 255, 255, 0.1);
