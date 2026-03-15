@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
 status: verifying
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-15T06:41:46.659Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-15T07:13:41.185Z"
 last_activity: 2026-03-13 — Phase 05 plan 01 executed (schema extension, WAL, migrations)
 progress:
   total_phases: 6
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
   percent: 17
 ---
 
@@ -50,6 +50,8 @@ All v1.0 decisions documented in PROJECT.md Key Decisions table.
 v1.1 decisions pending — will be logged as phases execute.
 - [Phase 05-database-foundation]: leadStatus uses .default('new') not .() for SQL-level DEFAULT during ALTER TABLE migration
 - [Phase 05-database-foundation]: Migration SQL must use --> statement-breakpoint (with space) delimiters; drizzle-kit generate emits CREATE TABLE on first run — manually edit to ALTER TABLE ADD COLUMN
+- [Phase 06-lead-scoring-engine]: SIGNAL_WEIGHTS sums to 100: budget 35, timeline 25, company 15, message 15, service 10; tier thresholds: cold < 31, warm 31-60, hot >= 61
+- [Phase 06-lead-scoring-engine]: Score badge uses !== null check (not falsy) to show COLD 0 correctly; web_dev scores highest in SERVICE_SCORES due to largest deal size
 
 ### Critical Risks (from research)
 
@@ -64,6 +66,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15T06:41:46.657Z
-Stopped at: Phase 6 context gathered
+Last session: 2026-03-15T07:13:41.183Z
+Stopped at: Completed 06-01-PLAN.md
 Next action: Phase 05 verification in progress

@@ -24,7 +24,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 **Milestone Goal:** Transform the website from a passive lead capture form into an active conversion engine with intelligent scoring, scheduling, and CRM integration.
 
 - [x] **Phase 5: Database Foundation** - Extend schema safely with WAL mode and generate+migrate workflow (completed 2026-03-13)
-- [ ] **Phase 6: Lead Scoring Engine** - Pure scoring function with configurable weights and tier thresholds
+- [x] **Phase 6: Lead Scoring Engine** - Pure scoring function with configurable weights and tier thresholds (completed 2026-03-15)
 - [ ] **Phase 7: Extended API and HubSpot Integration** - Form endpoint wired to scoring and async CRM sync
 - [ ] **Phase 8: Multi-Step Form Frontend** - Service-branched wizard with persistence and animated transitions
 - [ ] **Phase 9: Cal.com Scheduling** - Embedded booking widget linked to lead records via webhook
@@ -53,7 +53,7 @@ Plans:
   1. Calling `scoreLead()` with a complete form payload returns a number between 0 and 100
   2. The scoring config object documents weights for each signal (budget, timeline, service type, company present, message length) and the thresholds for cold (0-30), warm (31-60), and hot (61-100) tiers
   3. Score and tier are stored in SQLite on form submission and visible in the admin page with color-coded badges
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
 - [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
 
@@ -123,7 +123,7 @@ Plans:
 | 3. Lead Capture | v1.0 | 2/2 | Complete | 2026-03-10 |
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
 | 5. Database Foundation | 1/1 | Complete   | 2026-03-13 | - |
-| 6. Lead Scoring Engine | v1.1 | 0/1 | Planning complete | - |
+| 6. Lead Scoring Engine | 1/1 | Complete   | 2026-03-15 | - |
 | 7. Extended API and HubSpot Integration | v1.1 | 0/TBD | Not started | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
