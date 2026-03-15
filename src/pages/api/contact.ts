@@ -4,6 +4,8 @@ import { isRateLimited } from '../../lib/rate-limiter';
 import { db } from '../../db';
 import { submissions } from '../../db/schema';
 import { sendContactNotification } from '../../lib/email';
+import { scoreLead } from '../../lib/scoring';
+import { syncToHubSpot } from '../../lib/hubspot';
 
 export const prerender = false;
 
@@ -19,7 +21,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       );
     }
 
-    // Validate input
+    // Validate input (includes optional enum field validation)
     const { valid, errors } = validateContact(body);
     if (!valid) {
       return new Response(
@@ -34,20 +36,34 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     // Check rate limit
     const rateLimited = isRateLimited(ip);
 
-    // Save to database
+    // Extract required fields
     const name = (body.name as string).trim();
     const email = (body.email as string).trim();
     const company = body.company ? (body.company as string).trim() : null;
     const message = (body.message as string).trim();
 
-    db.insert(submissions).values({
+    // Extract optional new fields (NULL if missing)
+    const serviceType = body.service_type != null ? String(body.service_type).trim() : null;
+    const budget = body.budget != null ? String(body.budget).trim() : null;
+    const timeline = body.timeline != null ? String(body.timeline).trim() : null;
+
+    // Compute lead score from all available signals
+    const { score: leadScore } = scoreLead({ budget, timeline, company, message, serviceType });
+
+    // Save to database — capture insert result to get the new row ID for HubSpot sync
+    const result = db.insert(submissions).values({
       name,
       email,
       company,
       message,
       ip,
       rateLimited,
+      serviceType,
+      budget,
+      timeline,
+      leadScore,
     }).run();
+    const submissionId = Number(result.lastInsertRowid);
 
     // Send email notification (only if not rate-limited)
     if (!rateLimited) {
@@ -57,6 +73,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         console.error('Failed to send email notification:', emailError);
         // Email failure should not prevent success response
       }
+
+      // Fire-and-forget HubSpot sync — do NOT await; must not block the response
+      // Source page is the Referer header (the page that submitted the form)
+      const sourcePage = request.headers.get('referer') || request.url;
+      syncToHubSpot({ submissionId, name, email, company, message, serviceType, budget, timeline, leadScore, sourcePage })
+        .catch((err) => console.error('HubSpot sync failed:', err));
     }
 
     return new Response(
