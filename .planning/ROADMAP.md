@@ -53,7 +53,9 @@ Plans:
   1. Calling `scoreLead()` with a complete form payload returns a number between 0 and 100
   2. The scoring config object documents weights for each signal (budget, timeline, service type, company present, message length) and the thresholds for cold (0-30), warm (31-60), and hot (61-100) tiers
   3. Score and tier are stored in SQLite on form submission and visible in the admin page with color-coded badges
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
 
 ### Phase 7: Extended API and HubSpot Integration
 **Goal**: The contact form endpoint accepts the full multi-step payload, scores it, and syncs to HubSpot without ever blocking lead capture
@@ -64,7 +66,9 @@ Plans:
   2. A HubSpot contact is created or updated asynchronously — a HubSpot API outage returns a 200 to the user and logs the failure without losing the lead
   3. All admin API endpoints return 401 for unauthenticated requests — a shared `requireBasicAuth` helper is used consistently
   4. Admin can click "Sync to HubSpot" on a lead that failed to sync and the sync runs immediately
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
 
 ### Phase 8: Multi-Step Form Frontend
 **Goal**: Visitors can complete a service-specific multi-step contact form that survives refresh, back navigation, and page transitions
@@ -76,7 +80,9 @@ Plans:
   3. Refreshing the page mid-form restores the visitor to their current step with all entered data still present
   4. Attempting to advance a step with invalid or missing fields shows inline error messages without submitting the form
   5. After successful submission, a "Book a Discovery Call" CTA appears on the confirmation screen
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
 
 ### Phase 9: Cal.com Scheduling
 **Goal**: Visitors can book a discovery call directly from the contact page, and bookings are linked to their lead record
@@ -87,7 +93,9 @@ Plans:
   2. After form submission, clicking "Book a Discovery Call" opens the Cal.com embed with name and email prefilled from the submitted form
   3. Navigating away from and back to the contact page re-initializes the Cal.com embed without errors
   4. When a visitor completes a booking, the matching lead record in SQLite is updated with the Cal.com booking UID and scheduled time
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
 
 ### Phase 10: Lead Management Dashboard
 **Goal**: Admin can view, qualify, and manage every lead with score visibility, status workflow, notes, filtering, and HubSpot record links
@@ -100,7 +108,9 @@ Plans:
   4. Admin can filter leads by status, service type, and minimum score via URL params, and sort by score or date — the page URL reflects the active filters
   5. The dashboard paginates results and never loads the full unbounded lead list in a single query
   6. Each lead row shows HubSpot sync status and a direct link to the HubSpot contact record when synced
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
 
 ## Progress
 
@@ -113,7 +123,7 @@ Plans:
 | 3. Lead Capture | v1.0 | 2/2 | Complete | 2026-03-10 |
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
 | 5. Database Foundation | 1/1 | Complete   | 2026-03-13 | - |
-| 6. Lead Scoring Engine | v1.1 | 0/TBD | Not started | - |
+| 6. Lead Scoring Engine | v1.1 | 0/1 | Planning complete | - |
 | 7. Extended API and HubSpot Integration | v1.1 | 0/TBD | Not started | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
