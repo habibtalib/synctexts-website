@@ -66,7 +66,7 @@ Plans:
   2. A HubSpot contact is created or updated asynchronously — a HubSpot API outage returns a 200 to the user and logs the failure without losing the lead
   3. All admin API endpoints return 401 for unauthenticated requests — a shared `requireBasicAuth` helper is used consistently
   4. Admin can click "Sync to HubSpot" on a lead that failed to sync and the sync runs immediately
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 07-01-PLAN.md — Extend contact API with new fields, scoring, HubSpot sync, and shared auth helper
 - [ ] 07-02-PLAN.md — Add manual HubSpot re-sync endpoint and sync status UI to admin dashboard
@@ -125,7 +125,7 @@ Plans:
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
 | 5. Database Foundation | v1.1 | 1/1 | Complete | 2026-03-13 |
 | 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
-| 7. Extended API and HubSpot Integration | v1.1 | 0/2 | Planned | - |
+| 7. Extended API and HubSpot Integration | 1/2 | In Progress|  | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
 | 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |

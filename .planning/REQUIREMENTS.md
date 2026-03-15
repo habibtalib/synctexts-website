@@ -44,17 +44,17 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 
 ### HubSpot CRM
 
-- [ ] **HS-01**: System syncs new leads to HubSpot as contacts asynchronously after form submission
-- [ ] **HS-02**: HubSpot sync uses upsert-by-email to prevent duplicate contacts
-- [ ] **HS-03**: System sends lead score, service type, budget, and source page as HubSpot custom properties
+- [x] **HS-01**: System syncs new leads to HubSpot as contacts asynchronously after form submission
+- [x] **HS-02**: HubSpot sync uses upsert-by-email to prevent duplicate contacts
+- [x] **HS-03**: System sends lead score, service type, budget, and source page as HubSpot custom properties
 - [ ] **HS-04**: Admin can manually trigger HubSpot re-sync for individual leads from the dashboard
-- [ ] **HS-05**: HubSpot sync failures are logged and do not block form submission
+- [x] **HS-05**: HubSpot sync failures are logged and do not block form submission
 
 ### Infrastructure
 
 - [x] **INFRA-01**: Database schema migrated via Drizzle generate+migrate (never push) with production backup
 - [x] **INFRA-02**: SQLite configured with WAL mode and busy_timeout for concurrent read/write safety
-- [ ] **INFRA-03**: Shared auth helper used by all admin API endpoints
+- [x] **INFRA-03**: Shared auth helper used by all admin API endpoints
 
 ## v2 Requirements
 
@@ -117,14 +117,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-05 | Phase 10 | Pending |
 | DASH-06 | Phase 10 | Pending |
 | DASH-07 | Phase 10 | Pending |
-| HS-01 | Phase 7 | Pending |
-| HS-02 | Phase 7 | Pending |
-| HS-03 | Phase 7 | Pending |
+| HS-01 | Phase 7 | Complete |
+| HS-02 | Phase 7 | Complete |
+| HS-03 | Phase 7 | Complete |
 | HS-04 | Phase 7 | Pending |
-| HS-05 | Phase 7 | Pending |
+| HS-05 | Phase 7 | Complete |
 | INFRA-01 | Phase 5 | Complete |
 | INFRA-02 | Phase 5 | Complete |
-| INFRA-03 | Phase 7 | Pending |
+| INFRA-03 | Phase 7 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 31 total
