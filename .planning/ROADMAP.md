@@ -25,7 +25,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 - [x] **Phase 5: Database Foundation** - Extend schema safely with WAL mode and generate+migrate workflow (completed 2026-03-13)
 - [x] **Phase 6: Lead Scoring Engine** - Pure scoring function with configurable weights and tier thresholds (completed 2026-03-15)
-- [ ] **Phase 7: Extended API and HubSpot Integration** - Form endpoint wired to scoring and async CRM sync
+- [x] **Phase 7: Extended API and HubSpot Integration** - Form endpoint wired to scoring and async CRM sync (completed 2026-03-15)
 - [ ] **Phase 8: Multi-Step Form Frontend** - Service-branched wizard with persistence and animated transitions
 - [ ] **Phase 9: Cal.com Scheduling** - Embedded booking widget linked to lead records via webhook
 - [ ] **Phase 10: Lead Management Dashboard** - Upgraded admin with scores, status workflow, filtering, and pagination
@@ -66,7 +66,7 @@ Plans:
   2. A HubSpot contact is created or updated asynchronously — a HubSpot API outage returns a 200 to the user and logs the failure without losing the lead
   3. All admin API endpoints return 401 for unauthenticated requests — a shared `requireBasicAuth` helper is used consistently
   4. Admin can click "Sync to HubSpot" on a lead that failed to sync and the sync runs immediately
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 07-01-PLAN.md — Extend contact API with new fields, scoring, HubSpot sync, and shared auth helper
 - [ ] 07-02-PLAN.md — Add manual HubSpot re-sync endpoint and sync status UI to admin dashboard
@@ -125,7 +125,7 @@ Plans:
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
 | 5. Database Foundation | v1.1 | 1/1 | Complete | 2026-03-13 |
 | 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
-| 7. Extended API and HubSpot Integration | 1/2 | In Progress|  | - |
+| 7. Extended API and HubSpot Integration | 2/2 | Complete   | 2026-03-15 | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
 | 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |

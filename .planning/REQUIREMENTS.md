@@ -21,7 +21,7 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 ### Lead Scoring
 
 - [x] **SCORE-01**: System computes a lead score (0-100) from form data on submission (service type, budget, timeline, company, message length)
-- [ ] **SCORE-02**: Lead scores are stored in SQLite and displayed with color-coded tiers (cold/warm/hot) in the admin dashboard _(display: Phase 6 ✓, storage: Phase 7)_
+- [x] **SCORE-02**: Lead scores are stored in SQLite and displayed with color-coded tiers (cold/warm/hot) in the admin dashboard _(display: Phase 6 ✓, storage: Phase 7)_
 - [x] **SCORE-03**: Scoring weights are defined in a configurable server-side config object
 
 ### Cal.com Scheduling
@@ -47,7 +47,7 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 - [x] **HS-01**: System syncs new leads to HubSpot as contacts asynchronously after form submission
 - [x] **HS-02**: HubSpot sync uses upsert-by-email to prevent duplicate contacts
 - [x] **HS-03**: System sends lead score, service type, budget, and source page as HubSpot custom properties
-- [ ] **HS-04**: Admin can manually trigger HubSpot re-sync for individual leads from the dashboard
+- [x] **HS-04**: Admin can manually trigger HubSpot re-sync for individual leads from the dashboard
 - [x] **HS-05**: HubSpot sync failures are logged and do not block form submission
 
 ### Infrastructure
@@ -120,7 +120,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HS-01 | Phase 7 | Complete |
 | HS-02 | Phase 7 | Complete |
 | HS-03 | Phase 7 | Complete |
-| HS-04 | Phase 7 | Pending |
+| HS-04 | Phase 7 | Complete |
 | HS-05 | Phase 7 | Complete |
 | INFRA-01 | Phase 5 | Complete |
 | INFRA-02 | Phase 5 | Complete |
