@@ -66,9 +66,10 @@ Plans:
   2. A HubSpot contact is created or updated asynchronously — a HubSpot API outage returns a 200 to the user and logs the failure without losing the lead
   3. All admin API endpoints return 401 for unauthenticated requests — a shared `requireBasicAuth` helper is used consistently
   4. Admin can click "Sync to HubSpot" on a lead that failed to sync and the sync runs immediately
-**Plans:** 1 plan
+**Plans:** 2 plans
 Plans:
-- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
+- [ ] 07-01-PLAN.md — Extend contact API with new fields, scoring, HubSpot sync, and shared auth helper
+- [ ] 07-02-PLAN.md — Add manual HubSpot re-sync endpoint and sync status UI to admin dashboard
 
 ### Phase 8: Multi-Step Form Frontend
 **Goal**: Visitors can complete a service-specific multi-step contact form that survives refresh, back navigation, and page transitions
@@ -82,7 +83,7 @@ Plans:
   5. After successful submission, a "Book a Discovery Call" CTA appears on the confirmation screen
 **Plans:** 1 plan
 Plans:
-- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
+- [ ] 08-xx-PLAN.md — To be planned
 
 ### Phase 9: Cal.com Scheduling
 **Goal**: Visitors can book a discovery call directly from the contact page, and bookings are linked to their lead record
@@ -95,7 +96,7 @@ Plans:
   4. When a visitor completes a booking, the matching lead record in SQLite is updated with the Cal.com booking UID and scheduled time
 **Plans:** 1 plan
 Plans:
-- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
+- [ ] 09-xx-PLAN.md — To be planned
 
 ### Phase 10: Lead Management Dashboard
 **Goal**: Admin can view, qualify, and manage every lead with score visibility, status workflow, notes, filtering, and HubSpot record links
@@ -110,7 +111,7 @@ Plans:
   6. Each lead row shows HubSpot sync status and a direct link to the HubSpot contact record when synced
 **Plans:** 1 plan
 Plans:
-- [ ] 06-01-PLAN.md — Create scoring function with configurable weights and add score badges to admin page
+- [ ] 10-xx-PLAN.md — To be planned
 
 ## Progress
 
@@ -122,9 +123,9 @@ Plans:
 | 2. Content & Portfolio | v1.0 | 5/5 | Complete | 2026-03-10 |
 | 3. Lead Capture | v1.0 | 2/2 | Complete | 2026-03-10 |
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
-| 5. Database Foundation | 1/1 | Complete   | 2026-03-13 | - |
-| 6. Lead Scoring Engine | 1/1 | Complete   | 2026-03-15 | - |
-| 7. Extended API and HubSpot Integration | v1.1 | 0/TBD | Not started | - |
+| 5. Database Foundation | v1.1 | 1/1 | Complete | 2026-03-13 |
+| 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
+| 7. Extended API and HubSpot Integration | v1.1 | 0/2 | Planned | - |
 | 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
 | 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |
