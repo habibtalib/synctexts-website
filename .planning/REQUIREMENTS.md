@@ -21,7 +21,7 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 ### Lead Scoring
 
 - [x] **SCORE-01**: System computes a lead score (0-100) from form data on submission (service type, budget, timeline, company, message length)
-- [x] **SCORE-02**: Lead scores are stored in SQLite and displayed with color-coded tiers (cold/warm/hot) in the admin dashboard
+- [ ] **SCORE-02**: Lead scores are stored in SQLite and displayed with color-coded tiers (cold/warm/hot) in the admin dashboard _(display: Phase 6 ✓, storage: Phase 7)_
 - [x] **SCORE-03**: Scoring weights are defined in a configurable server-side config object
 
 ### Cal.com Scheduling
@@ -103,7 +103,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FORM-07 | Phase 8 | Pending |
 | FORM-08 | Phase 8 | Pending |
 | SCORE-01 | Phase 6 | Complete |
-| SCORE-02 | Phase 6 | Complete |
+| SCORE-02 | Phase 6+7 | Partial (display done, storage Phase 7) |
 | SCORE-03 | Phase 6 | Complete |
 | CAL-01 | Phase 9 | Pending |
 | CAL-02 | Phase 9 | Pending |
