@@ -81,9 +81,11 @@ Plans:
   3. Refreshing the page mid-form restores the visitor to their current step with all entered data still present
   4. Attempting to advance a step with invalid or missing fields shows inline error messages without submitting the form
   5. After successful submission, a "Book a Discovery Call" CTA appears on the confirmation screen
-**Plans:** 1 plan
+**Plans:** 3 plans
 Plans:
-- [ ] 08-xx-PLAN.md — To be planned
+- [ ] 08-01-PLAN.md — Rewrite contact.astro HTML structure and scoped CSS for multi-step wizard
+- [ ] 08-02-PLAN.md — Rewrite contact-form.ts as multi-step state machine with full interactivity
+- [ ] 08-03-PLAN.md — Human verification of complete multi-step form wizard
 
 ### Phase 9: Cal.com Scheduling
 **Goal**: Visitors can book a discovery call directly from the contact page, and bookings are linked to their lead record
@@ -104,7 +106,7 @@ Plans:
 **Requirements**: DASH-01, DASH-02, DASH-03, DASH-04, DASH-05, DASH-06, DASH-07
 **Success Criteria** (what must be TRUE):
   1. The dashboard displays every lead with a color-coded score badge (cold/warm/hot), current status, service type, and submission date
-  2. Admin can change a lead's status through the full workflow (new → contacted → qualified → proposal_sent → won/lost) from the dashboard without leaving the page
+  2. Admin can change a lead's status through the full workflow (new -> contacted -> qualified -> proposal_sent -> won/lost) from the dashboard without leaving the page
   3. Admin can add and edit a free-text note on any lead; the note persists on save
   4. Admin can filter leads by status, service type, and minimum score via URL params, and sort by score or date — the page URL reflects the active filters
   5. The dashboard paginates results and never loads the full unbounded lead list in a single query
@@ -115,7 +117,7 @@ Plans:
 
 ## Progress
 
-**Execution Order:** Phases execute in numeric order: 5 → 6 → 7 → 8 → 9 → 10
+**Execution Order:** Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -125,7 +127,7 @@ Plans:
 | 4. SEO, Analytics & Deployment | v1.0 | 3/3 | Complete | 2026-03-11 |
 | 5. Database Foundation | v1.1 | 1/1 | Complete | 2026-03-13 |
 | 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
-| 7. Extended API and HubSpot Integration | 2/2 | Complete   | 2026-03-15 | - |
-| 8. Multi-Step Form Frontend | v1.1 | 0/TBD | Not started | - |
+| 7. Extended API and HubSpot Integration | v1.1 | 2/2 | Complete | 2026-03-15 |
+| 8. Multi-Step Form Frontend | v1.1 | 0/3 | Not started | - |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
 | 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |
