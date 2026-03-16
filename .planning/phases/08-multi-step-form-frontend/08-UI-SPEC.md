@@ -36,16 +36,16 @@ Derived from existing CSS custom properties and established patterns in `global.
 |-------|-------|-------|
 | `--space-1` | `0.25rem` (4px) | Field error margin-top |
 | `--space-2` | `0.5rem` (8px) | Small gaps (dot labels gap) |
-| `--space-3` | `0.75rem` (12px) | Button padding-block, badge padding |
-| `--space-4` | `1rem` (16px) | Input padding, form-group margin fallback |
-| `--space-5` | `1.25rem` (20px) | Input padding-inline, error-box padding |
-| `--space-6` | `1.5rem` (24px) | Form-group margin-bottom, success icon margin |
+| `--space-3` | `0.75rem` (12px) | Button padding-block, badge padding — **exception: inherited from global.css, not a standard spacing token** |
+| `--space-4` | `1rem` (16px) | Input padding, form-group margin fallback; input padding-inline rounded down from 20px to 16px |
+| `--space-6` | `1.5rem` (24px) | Form-group margin-bottom, success icon margin; error-box padding rounded up from 20px to 24px |
 | `--space-8` | `2rem` (32px) | Section padding, card grid gap |
-| `--space-10` | `2.5rem` (40px) | Contact wrapper padding (mobile) |
 | `--space-16` | `4rem` (64px) | Contact wrapper padding (desktop), section gap |
 
+Contact wrapper mobile padding: `2rem` (32px) — rounded from prior 40px value to nearest standard token.
+
 Step indicator specific:
-- Dot diameter: `2.5rem` (40px)
+- Dot diameter: `2.5rem` (40px) — **fixed visual constraint, not a spacing token; diameter is not subject to the spacing scale**
 - Connecting line height: `2px`
 - Connecting line horizontal margin: `0.5rem` each side
 - Label font-size: `0.75rem`
@@ -63,21 +63,39 @@ Service card specific:
 
 All sizes in `rem` (base: 16px). Line-heights and weights derived from `global.css`.
 
+**Font size scale (4 sizes only):**
+
+| Size | rem | px |
+|------|-----|----|
+| XS | `0.75rem` | 12px |
+| SM | `0.875rem` | 14px |
+| MD | `1rem` | 16px |
+| LG | `1.75rem` | 28px |
+
+**Font weight scale (2 weights only):**
+
+| Weight | Usage |
+|--------|-------|
+| 400 | Body text, inputs, placeholders, step labels, Back link |
+| 600 | Headings, dot numbers, form labels, button text |
+
+**Element assignments:**
+
 | Element | Font | Size | Weight | Line-height | Color |
 |---------|------|------|--------|-------------|-------|
-| Step labels | Inter | `0.75rem` | 500 | 1.4 | `var(--text-secondary)` → `var(--text-primary)` when current |
-| Step dot number | Outfit | `0.875rem` | 600 | 1 | inherits dot color |
-| Service card name | Outfit | `1rem` | 600 | 1.3 | `var(--text-primary)` |
-| Service card description | Inter | `0.875rem` | 400 | 1.5 | `var(--text-secondary)` |
-| Form label | Inter | `0.875rem` | 500 | 1.4 | `var(--text-secondary)` |
-| Glass input / select | Inter | `1rem` | 400 | 1.5 | `var(--text-primary)` |
-| Input placeholder | Inter | `1rem` | 400 | 1.5 | `var(--text-dimmed)` (`#64748b`) |
-| Field error message | Inter | `0.8rem` | 400 | 1.4 | `#ef4444` |
-| Form error summary | Inter | `0.875rem` | 400 | 1.5 | `#ef4444` |
-| Success heading ("Message Sent!") | Outfit | `1.75rem` | 600 | 1.2 | `var(--text-primary)` |
-| Success body text | Inter | `1rem` | 400 | 1.6 | `var(--text-secondary)` |
-| CTA button ("Book a Discovery Call") | Outfit | `1.1rem` | 500 | 1.2 | `#ffffff` |
-| "Back" navigation link | Inter | `0.9rem` | 500 | 1.4 | `var(--text-secondary)` |
+| Step labels | Inter | `0.75rem` (XS) | 400 | 1.4 | `var(--text-secondary)` → `var(--text-primary)` when current |
+| Step dot number | Outfit | `0.875rem` (SM) | 600 | 1 | inherits dot color |
+| Service card name | Outfit | `1rem` (MD) | 600 | 1.3 | `var(--text-primary)` |
+| Service card description | Inter | `0.875rem` (SM) | 400 | 1.5 | `var(--text-secondary)` |
+| Form label | Inter | `0.875rem` (SM) | 600 | 1.4 | `var(--text-secondary)` |
+| Glass input / select | Inter | `1rem` (MD) | 400 | 1.5 | `var(--text-primary)` |
+| Input placeholder | Inter | `1rem` (MD) | 400 | 1.5 | `var(--text-dimmed)` (`#64748b`) |
+| Field error message | Inter | `0.875rem` (SM) | 400 | 1.4 | `#ef4444` |
+| Form error summary | Inter | `0.875rem` (SM) | 400 | 1.5 | `#ef4444` |
+| Success heading ("Message Sent!") | Outfit | `1.75rem` (LG) | 600 | 1.2 | `var(--text-primary)` |
+| Success body text | Inter | `1rem` (MD) | 400 | 1.6 | `var(--text-secondary)` |
+| CTA button ("Book a Discovery Call") | Outfit | `1rem` (MD) | 600 | 1.2 | `#ffffff` |
+| "Back" navigation link | Inter | `0.875rem` (SM) | 400 | 1.4 | `var(--text-secondary)` |
 
 Body default: Inter, 16px, 1.6 line-height (inherited from `body` in `global.css`).
 
@@ -86,6 +104,11 @@ Body default: Inter, 16px, 1.6 line-height (inherited from `body` in `global.css
 ## Color
 
 All tokens from `:root` in `src/styles/global.css`. No new color variables introduced.
+
+**60/30/10 color split:**
+- **60% — background / surfaces:** `--bg-base` (`#060608`) and glass panel fills (`rgba(255,255,255,0.03–0.06)`) — the dominant dark canvas
+- **30% — text and borders:** `--text-primary`, `--text-secondary`, `--text-dimmed`, and `--glass-border` — structural contrast layer
+- **10% — accent / interactive:** `--primary` (`#6366f1`) and `--secondary` (`#ec4899`) — CTAs, active states, selection indicators
 
 | Role | Token | Hex / Value |
 |------|-------|-------------|
@@ -164,7 +187,7 @@ All copy fixed — do not invent alternatives.
 | Timeline option 4 | "Just Exploring" |
 | Helper text (below selects) | "Both fields are optional — we'll discuss details on the call." |
 | Back link | "← Back" |
-| Next button | "Next" |
+| Next button | "Next: Contact Info" |
 
 ### Step 3 — Contact Info
 
@@ -301,7 +324,7 @@ Completed dots: `role="button"`, `tabindex="0"`, activated by Enter/Space (keybo
 
 | Element | Idle | Hover | Disabled |
 |---------|------|-------|----------|
-| "Next" (`.btn-primary`) | Gradient fill | `background-position: right center`, `translateY(-2px) scale(1.02)` | `opacity: 0.7; cursor: not-allowed` |
+| "Next: Contact Info" (`.btn-primary`) | Gradient fill | `background-position: right center`, `translateY(-2px) scale(1.02)` | `opacity: 0.7; cursor: not-allowed` |
 | "Send Message" (`.btn-primary`) | Same as Next | Same as Next | Same + spinner visible |
 | "← Back" link | `color: var(--text-secondary)` | `color: var(--text-primary)` | n/a |
 
@@ -407,7 +430,7 @@ At `≤ 600px`: `grid-template-columns: 1fr` (stacked).
 ### `.contact-wrapper` Responsive Behavior
 
 - `≥ 900px`: `grid-template-columns: 1fr 1fr`, `padding: 4rem`, `gap: 4rem`
-- `< 900px`: `grid-template-columns: 1fr`, `padding: 2.5rem`, `gap: 2.5rem` (existing breakpoint unchanged)
+- `< 900px`: `grid-template-columns: 1fr`, `padding: 2rem`, `gap: 2rem` (mobile — rounded to 32px standard token)
 
 Step indicator and form steps sit inside the right grid cell on desktop; they become full-width on mobile since the grid collapses to 1 column.
 
