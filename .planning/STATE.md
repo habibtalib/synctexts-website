@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
-status: verifying
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-16T03:58:06.020Z"
-last_activity: 2026-03-15 — Phase 07 plan 02 executed (admin sync UI, human verified)
+status: executing
+stopped_at: "Completed 08-01-PLAN.md"
+last_updated: "2026-03-16T04:37:22Z"
+last_activity: 2026-03-16 — Phase 08 plan 01 executed (contact.astro multi-step wizard HTML + CSS)
 progress:
   total_phases: 6
   completed_phases: 3
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** Phase 7 — Extended API and HubSpot Integration (complete)
+**Current focus:** Phase 8 — Multi-Step Form Frontend (in progress)
 
 ## Current Position
 
-Phase: 7 of 10 (Phase 7: Extended API and HubSpot Integration)
-Plan: 2 of 2 in current phase (complete)
-Status: Phase 7 complete — verified and approved
-Last activity: 2026-03-15 — Phase 07 plan 02 executed (admin sync UI, human verified)
+Phase: 8 of 10 (Phase 8: Multi-Step Form Frontend)
+Plan: 1 of 2 in current phase (complete)
+Status: Phase 08 plan 01 complete — multi-step form HTML structure and CSS written
+Last activity: 2026-03-16 — Phase 08 plan 01 executed (contact.astro multi-step wizard HTML + CSS)
 
-Progress: [██████████] 100%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -39,7 +39,8 @@ Progress: [██████████] 100%
 - Average duration: 8 min
 - Total execution time: 1.4 hours
 
-**v1.1 plans:** Not started
+**v1.1 plans:**
+- Phase 08 plan 01: 2 min (1 task, 1 file)
 
 ## Accumulated Context
 
@@ -47,7 +48,7 @@ Progress: [██████████] 100%
 
 All v1.0 decisions documented in PROJECT.md Key Decisions table.
 
-v1.1 decisions pending — will be logged as phases execute.
+v1.1 decisions logged as phases execute.
 - [Phase 05-database-foundation]: leadStatus uses .default('new') not .() for SQL-level DEFAULT during ALTER TABLE migration
 - [Phase 05-database-foundation]: Migration SQL must use --> statement-breakpoint (with space) delimiters; drizzle-kit generate emits CREATE TABLE on first run — manually edit to ALTER TABLE ADD COLUMN
 - [Phase 06-lead-scoring-engine]: SIGNAL_WEIGHTS sums to 100: budget 35, timeline 25, company 15, message 15, service 10; tier thresholds: cold < 31, warm 31-60, hot >= 61
@@ -55,6 +56,9 @@ v1.1 decisions pending — will be logged as phases execute.
 - [Phase 07-extended-api-hubspot]: Native fetch used for HubSpot API calls — @hubspot/api-client SDK is 20.8MB for 2-3 endpoints
 - [Phase 07-extended-api-hubspot]: POST-then-PATCH upsert-by-email for HubSpot contacts — batch endpoint has edge cases with email as idProperty
 - [Phase 07-extended-api-hubspot]: Manual sync endpoint awaits syncToHubSpot() for immediate admin feedback; portal ID passed via data-portal-id attribute
+- [Phase 08-multi-step-form-frontend]: Step indicator placed inside form-area div (right column only), not spanning both columns — avoids grid layout pitfall; form-area wrapper uses flex column
+- [Phase 08-multi-step-form-frontend]: Service cards use button[type=button] for native keyboard focus; select dropdowns use appearance:none + SVG chevron background-image for glass styling cross-browser
+- [Phase 08-multi-step-form-frontend]: All CSS transitions gated on prefers-reduced-motion: no-preference — instant state changes as fallback
 
 ### Critical Risks (from research)
 
@@ -69,6 +73,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16T03:58:06.015Z
-Stopped at: Phase 8 context gathered
-Next action: Phase 7 complete — proceed to next phase
+Last session: 2026-03-16T04:37:22Z
+Stopped at: Completed 08-01-PLAN.md
+Next action: Execute Phase 08 plan 02 — contact-form.ts TypeScript state machine

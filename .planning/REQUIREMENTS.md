@@ -9,13 +9,13 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 
 ### Multi-Step Forms
 
-- [ ] **FORM-01**: User can select a service type (Web Dev, DevOps, Analytics) as the first step of the contact form
-- [ ] **FORM-02**: User sees service-specific questions after selecting a service type (different fields per path)
-- [ ] **FORM-03**: User sees a progress indicator showing current step and total steps
+- [x] **FORM-01**: User can select a service type (Web Dev, DevOps, Analytics) as the first step of the contact form
+- [x] **FORM-02**: User sees service-specific questions after selecting a service type (different fields per path)
+- [x] **FORM-03**: User sees a progress indicator showing current step and total steps
 - [ ] **FORM-04**: User can navigate back to previous steps without losing entered data
 - [ ] **FORM-05**: User sees inline validation errors per step before advancing to the next step
 - [ ] **FORM-06**: User's form progress persists across page refresh via sessionStorage
-- [ ] **FORM-07**: User sees animated step transitions consistent with the existing design system
+- [x] **FORM-07**: User sees animated step transitions consistent with the existing design system
 - [ ] **FORM-08**: User sees a "Book a Discovery Call" CTA after successful form submission
 
 ### Lead Scoring
@@ -94,13 +94,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FORM-01 | Phase 8 | Pending |
-| FORM-02 | Phase 8 | Pending |
-| FORM-03 | Phase 8 | Pending |
+| FORM-01 | Phase 8 | Complete |
+| FORM-02 | Phase 8 | Complete |
+| FORM-03 | Phase 8 | Complete |
 | FORM-04 | Phase 8 | Pending |
 | FORM-05 | Phase 8 | Pending |
 | FORM-06 | Phase 8 | Pending |
-| FORM-07 | Phase 8 | Pending |
+| FORM-07 | Phase 8 | Complete |
 | FORM-08 | Phase 8 | Pending |
 | SCORE-01 | Phase 6 | Complete |
 | SCORE-02 | Phase 6+7 | Partial (display done, storage Phase 7) |
