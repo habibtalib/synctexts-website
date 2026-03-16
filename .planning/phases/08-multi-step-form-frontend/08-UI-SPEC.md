@@ -1,7 +1,8 @@
 ---
 phase: 8
 slug: multi-step-form-frontend
-status: draft
+status: approved
+reviewed_at: 2026-03-16
 shadcn_initialized: false
 preset: none
 created: 2026-03-16
