@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
-status: executing
-stopped_at: "Completed 08-01-PLAN.md"
-last_updated: "2026-03-16T04:37:22Z"
+status: completed
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-16T04:42:53.206Z"
 last_activity: 2026-03-16 — Phase 08 plan 01 executed (contact.astro multi-step wizard HTML + CSS)
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  total_plans: 7
+  completed_plans: 6
+  percent: 80
 ---
 
 # Project State
@@ -59,6 +59,8 @@ v1.1 decisions logged as phases execute.
 - [Phase 08-multi-step-form-frontend]: Step indicator placed inside form-area div (right column only), not spanning both columns — avoids grid layout pitfall; form-area wrapper uses flex column
 - [Phase 08-multi-step-form-frontend]: Service cards use button[type=button] for native keyboard focus; select dropdowns use appearance:none + SVG chevron background-image for glass styling cross-browser
 - [Phase 08-multi-step-form-frontend]: All CSS transitions gated on prefers-reduced-motion: no-preference — instant state changes as fallback
+- [Phase 08-multi-step-form-frontend]: transitionend uses \!== 'transform' early return (equivalent to === filter) to avoid double-fire from transform and opacity transitions
+- [Phase 08-multi-step-form-frontend]: CAL_URL uses import.meta.env with type cast and hardcoded fallback — zero config needed for Phase 8, Phase 9 can parameterize
 
 ### Critical Risks (from research)
 
@@ -73,6 +75,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16T04:37:22Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-16T04:42:53.204Z
+Stopped at: Completed 08-02-PLAN.md
 Next action: Execute Phase 08 plan 02 — contact-form.ts TypeScript state machine
