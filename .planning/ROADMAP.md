@@ -26,7 +26,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 - [x] **Phase 5: Database Foundation** - Extend schema safely with WAL mode and generate+migrate workflow (completed 2026-03-13)
 - [x] **Phase 6: Lead Scoring Engine** - Pure scoring function with configurable weights and tier thresholds (completed 2026-03-15)
 - [x] **Phase 7: Extended API and HubSpot Integration** - Form endpoint wired to scoring and async CRM sync (completed 2026-03-15)
-- [ ] **Phase 8: Multi-Step Form Frontend** - Service-branched wizard with persistence and animated transitions
+- [x] **Phase 8: Multi-Step Form Frontend** - Service-branched wizard with persistence and animated transitions (completed 2026-03-20)
 - [ ] **Phase 9: Cal.com Scheduling** - Embedded booking widget linked to lead records via webhook
 - [ ] **Phase 10: Lead Management Dashboard** - Upgraded admin with scores, status workflow, filtering, and pagination
 
@@ -81,11 +81,11 @@ Plans:
   3. Refreshing the page mid-form restores the visitor to their current step with all entered data still present
   4. Attempting to advance a step with invalid or missing fields shows inline error messages without submitting the form
   5. After successful submission, a "Book a Discovery Call" CTA appears on the confirmation screen
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 08-01-PLAN.md — Rewrite contact.astro HTML structure and scoped CSS for multi-step wizard
-- [ ] 08-02-PLAN.md — Rewrite contact-form.ts as multi-step state machine with full interactivity
-- [ ] 08-03-PLAN.md — Human verification of complete multi-step form wizard
+- [x] 08-01-PLAN.md — Rewrite contact.astro HTML structure and scoped CSS for multi-step wizard
+- [x] 08-02-PLAN.md — Rewrite contact-form.ts as multi-step state machine with full interactivity
+- [x] 08-03-PLAN.md — Human verification of complete multi-step form wizard
 
 ### Phase 9: Cal.com Scheduling
 **Goal**: Visitors can book a discovery call directly from the contact page, and bookings are linked to their lead record
@@ -128,6 +128,6 @@ Plans:
 | 5. Database Foundation | v1.1 | 1/1 | Complete | 2026-03-13 |
 | 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
 | 7. Extended API and HubSpot Integration | v1.1 | 2/2 | Complete | 2026-03-15 |
-| 8. Multi-Step Form Frontend | 2/3 | In Progress|  | - |
+| 8. Multi-Step Form Frontend | v1.1 | 3/3 | Complete | 2026-03-20 |
 | 9. Cal.com Scheduling | v1.1 | 0/TBD | Not started | - |
 | 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |
