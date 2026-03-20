@@ -43,7 +43,7 @@ Potential clients can see SyncTexts' real project portfolio and expertise, then 
 <!-- Current scope: v1.1 Lead Conversion Engine -->
 
 - [ ] Multi-step contact forms with service-specific paths (web dev, DevOps, analytics)
-- [ ] Cal.com embedded scheduling widget for direct call booking
+- [x] Cal.com embedded scheduling widget for direct call booking — Validated in Phase 9
 - [ ] Lead scoring from form data (service type, budget) + behavioral signals (page visits, engagement)
 - [ ] Built-in lead management dashboard (scores, statuses, notes, filtering)
 - [ ] HubSpot CRM integration via API for lead sync
@@ -79,7 +79,8 @@ Shipped v1.0 with 3,711 LOC across Astro, TypeScript, CSS, and JavaScript.
 **Current state:**
 - 6 main pages + portfolio detail + blog post dynamic routes + admin page
 - 5 content collections (blog, team, testimonials, pricing, portfolio with GitHub API loader)
-- Contact form pipeline: client validation → API endpoint → SQLite + Resend email
+- Contact form pipeline: multi-step wizard → API endpoint → SQLite + Resend email + HubSpot sync + lead scoring
+- Cal.com embedded booking widget in success panel with dark theme, prefill, and webhook-linked bookings
 - SEO: unique meta/OG per page, JSON-LD, auto-sitemap
 - Analytics: GTM conditional injection, GA4 pageview + CTA + form event tracking
 - Deployment: multi-stage Dockerfile, docker-compose with Caddy, health check
@@ -111,4 +112,4 @@ Shipped v1.0 with 3,711 LOC across Astro, TypeScript, CSS, and JavaScript.
 | Basic Auth for admin | Simple, no user management needed for single admin | ⚠️ Revisit if multiple admins needed |
 
 ---
-*Last updated: 2026-03-11 after v1.1 milestone started*
+*Last updated: 2026-03-20 after Phase 9 (Cal.com Scheduling) complete*
