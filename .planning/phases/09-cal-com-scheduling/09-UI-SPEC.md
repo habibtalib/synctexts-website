@@ -57,13 +57,11 @@ All values sourced from style.css `:root` and global rules. No new type styles a
 | Role | Size | Weight | Line Height | Font |
 |------|------|--------|-------------|------|
 | Body | 16px (1rem) | 400 (regular) | 1.6 | Inter (`--font-body`) |
-| Label | 14px (0.875rem) | 500 (medium) | 1.5 | Inter (`--font-body`) |
 | Heading | 20px (1.25rem) | 600 (semibold) | 1.2 | Outfit (`--font-display`) |
-| Display | 28px (1.75rem) | 700 (bold) | 1.1 | Outfit (`--font-display`) |
 
-Source: style.css global rules (`body` line-height 1.6, headings font-weight 600 line-height 1.2, `.btn-lg` font-size 1.1rem, `.success-panel h2` inherits heading role).
+Note: Label (14px/500) and Display (28px/700) are pre-existing design system tokens defined in style.css `:root` — not used in Phase 9 authored markup and not available for ad-hoc use in this phase.
 
-Phase-specific note: Only 2 weights are used in authored markup — 400 (body) and 600 (headings/buttons). The Cal.com embed iframe manages its own internal typography.
+Source: style.css global rules (`body` line-height 1.6, headings font-weight 600 line-height 1.2, `.success-panel h2` inherits heading role).
 
 ---
 
