@@ -96,7 +96,7 @@ Plans:
   2. After form submission, clicking "Book a Discovery Call" opens the Cal.com embed with name and email prefilled from the submitted form
   3. Navigating away from and back to the contact page re-initializes the Cal.com embed without errors
   4. When a visitor completes a booking, the matching lead record in SQLite is updated with the Cal.com booking UID and scheduled time
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 Plans:
 - [ ] 09-01-PLAN.md — Add booking columns to schema, run migration, create Cal.com webhook endpoint
 - [ ] 09-02-PLAN.md — Replace CTA link with inline Cal.com embed in success panel with dark theme and prefill
@@ -131,5 +131,5 @@ Plans:
 | 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
 | 7. Extended API and HubSpot Integration | v1.1 | 2/2 | Complete | 2026-03-15 |
 | 8. Multi-Step Form Frontend | v1.1 | 3/3 | Complete | 2026-03-20 |
-| 9. Cal.com Scheduling | v1.1 | 0/3 | Not started | - |
+| 9. Cal.com Scheduling | 1/3 | In Progress|  | - |
 | 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |

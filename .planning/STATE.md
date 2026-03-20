@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
-status: verifying
-stopped_at: Phase 9 UI-SPEC approved
-last_updated: "2026-03-20T03:18:30.962Z"
-last_activity: 2026-03-20 — Phase 08 complete — all 3 plans executed, human verification approved
+status: unknown
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-03-20T03:30:25.701Z"
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 7
-  completed_plans: 7
-  percent: 100
+  total_plans: 10
+  completed_plans: 8
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** Phase 8 — Multi-Step Form Frontend (in progress)
+**Current focus:** Phase 09 — cal-com-scheduling
 
 ## Current Position
 
-Phase: 8 of 10 (Phase 8: Multi-Step Form Frontend — COMPLETE)
-Plan: 3 of 3 in current phase (all complete)
-Status: Phase 08 complete — all plans executed, human verification approved
-Last activity: 2026-03-20 — Phase 08 complete — all 3 plans executed, human verification approved
-
-Progress: [██████████] 100% (v1.1 plans 5-8)
+Phase: 09 (cal-com-scheduling) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -66,6 +60,8 @@ v1.1 decisions logged as phases execute.
 - [Phase 08-multi-step-form-frontend]: All CSS transitions gated on prefers-reduced-motion: no-preference — instant state changes as fallback
 - [Phase 08-multi-step-form-frontend]: transitionend uses \!== 'transform' early return (equivalent to === filter) to avoid double-fire from transform and opacity transitions
 - [Phase 08-multi-step-form-frontend]: CAL_URL uses import.meta.env with type cast and hardcoded fallback — zero config needed for Phase 8, Phase 9 can parameterize
+- [Phase 09-cal-com-scheduling]: Match booking to most recent lead by email using orderBy(desc(submissions.id)).limit(1) — consistent with HubSpot dedup pattern
+- [Phase 09-cal-com-scheduling]: timingSafeEqual wrapped in try/catch to handle Buffer length mismatch (attacker sends wrong-length sig gets 401 not 500)
 
 ### Critical Risks (from research)
 
@@ -80,6 +76,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T03:18:30.959Z
-Stopped at: Phase 9 UI-SPEC approved
+Last session: 2026-03-20T03:30:25.699Z
+Stopped at: Completed 09-01-PLAN.md
 Next action: Plan Phase 09 — Cal.com Scheduling

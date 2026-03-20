@@ -29,7 +29,7 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 - [ ] **CAL-01**: User can book a discovery call via an embedded Cal.com widget on the contact page
 - [ ] **CAL-02**: Cal.com embed uses dark theme matching the site's glassmorphism design
 - [ ] **CAL-03**: Cal.com embed prefills name and email from the contact form submission
-- [ ] **CAL-04**: Cal.com bookings are linked to lead records via webhook integration
+- [x] **CAL-04**: Cal.com bookings are linked to lead records via webhook integration
 - [ ] **CAL-05**: Cal.com embed survives Astro View Transitions (re-initializes on page navigation)
 
 ### Lead Dashboard
@@ -108,7 +108,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAL-01 | Phase 9 | Pending |
 | CAL-02 | Phase 9 | Pending |
 | CAL-03 | Phase 9 | Pending |
-| CAL-04 | Phase 9 | Pending |
+| CAL-04 | Phase 9 | Complete |
 | CAL-05 | Phase 9 | Pending |
 | DASH-01 | Phase 10 | Pending |
 | DASH-02 | Phase 10 | Pending |
