@@ -18,4 +18,6 @@ export const submissions = sqliteTable('submissions', {
   notes: text('notes'),
   hubspotId: text('hubspot_id'),
   hubspotSyncedAt: text('hubspot_synced_at'),
+  calBookingUid: text('cal_booking_uid'),
+  calScheduledAt: text('cal_scheduled_at'),
 });
