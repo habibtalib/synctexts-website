@@ -26,11 +26,11 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 
 ### Cal.com Scheduling
 
-- [ ] **CAL-01**: User can book a discovery call via an embedded Cal.com widget on the contact page
-- [ ] **CAL-02**: Cal.com embed uses dark theme matching the site's glassmorphism design
-- [ ] **CAL-03**: Cal.com embed prefills name and email from the contact form submission
+- [x] **CAL-01**: User can book a discovery call via an embedded Cal.com widget on the contact page
+- [x] **CAL-02**: Cal.com embed uses dark theme matching the site's glassmorphism design
+- [x] **CAL-03**: Cal.com embed prefills name and email from the contact form submission
 - [x] **CAL-04**: Cal.com bookings are linked to lead records via webhook integration
-- [ ] **CAL-05**: Cal.com embed survives Astro View Transitions (re-initializes on page navigation)
+- [x] **CAL-05**: Cal.com embed survives Astro View Transitions (re-initializes on page navigation)
 
 ### Lead Dashboard
 
@@ -105,11 +105,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCORE-01 | Phase 6 | Complete |
 | SCORE-02 | Phase 6+7 | Partial (display done, storage Phase 7) |
 | SCORE-03 | Phase 6 | Complete |
-| CAL-01 | Phase 9 | Pending |
-| CAL-02 | Phase 9 | Pending |
-| CAL-03 | Phase 9 | Pending |
+| CAL-01 | Phase 9 | Complete |
+| CAL-02 | Phase 9 | Complete |
+| CAL-03 | Phase 9 | Complete |
 | CAL-04 | Phase 9 | Complete |
-| CAL-05 | Phase 9 | Pending |
+| CAL-05 | Phase 9 | Complete |
 | DASH-01 | Phase 10 | Pending |
 | DASH-02 | Phase 10 | Pending |
 | DASH-03 | Phase 10 | Pending |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
 status: unknown
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-20T03:30:25.701Z"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-20T03:31:27.772Z"
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 10
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 09 (cal-com-scheduling) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -39,6 +39,7 @@ Plan: 1 of 3
 - Phase 08 plan 01: 2 min (1 task, 1 file)
 - Phase 08 plan 02: 2 min (1 task, 1 file)
 - Phase 08 plan 03: checkpoint — human verification approved
+- Phase 09 plan 02: 3 min (2 tasks, 2 files)
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ v1.1 decisions logged as phases execute.
 - [Phase 08-multi-step-form-frontend]: CAL_URL uses import.meta.env with type cast and hardcoded fallback — zero config needed for Phase 8, Phase 9 can parameterize
 - [Phase 09-cal-com-scheduling]: Match booking to most recent lead by email using orderBy(desc(submissions.id)).limit(1) — consistent with HubSpot dedup pattern
 - [Phase 09-cal-com-scheduling]: timingSafeEqual wrapped in try/catch to handle Buffer length mismatch (attacker sends wrong-length sig gets 401 not 500)
+- [Phase 09-cal-com-scheduling]: Used :global() CSS in Astro scoped styles for JS-injected #cal-embed-container and #cal-embed-loading elements (no data-astro-cid attribute on innerHTML-injected nodes)
+- [Phase 09-cal-com-scheduling]: Cal.com IIFE snippet injected lazily as script.textContent after form submission — no Cal.com JS on page load; double-inject guard via cal-embed-script sentinel ID
 
 ### Critical Risks (from research)
 
@@ -76,6 +79,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20T03:30:25.699Z
-Stopped at: Completed 09-01-PLAN.md
-Next action: Plan Phase 09 — Cal.com Scheduling
+Last session: 2026-03-20T03:31:27.770Z
+Stopped at: Completed 09-02-PLAN.md
+Next action: Execute Phase 09 Plan 03 — Cal.com webhook endpoint and DB migration
