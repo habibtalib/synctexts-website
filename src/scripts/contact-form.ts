@@ -5,6 +5,7 @@
 declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
+    Cal?: ((...args: unknown[]) => void) & { loaded?: boolean; ns?: Record<string, unknown>; q?: unknown[] };
   }
 }
 
@@ -25,6 +26,88 @@ interface FormState {
 
 const STORAGE_KEY = 'contact_form_state';
 const CAL_URL = (import.meta as Record<string, unknown> & { env?: Record<string, string> }).env?.PUBLIC_CAL_URL ?? 'https://cal.com/synctexts/discovery';
+
+// ============================================================
+// Cal.com embed injection
+// ============================================================
+
+function injectCalEmbed(name: string, email: string): void {
+  const EMBED_SCRIPT_ID = 'cal-embed-script';
+  const CAL_LINK = 'synctexts/discovery';
+
+  // Inject Cal.com IIFE snippet once — guard against double-injection
+  if (!document.getElementById(EMBED_SCRIPT_ID)) {
+    const snippet = document.createElement('script');
+    snippet.id = EMBED_SCRIPT_ID;
+    snippet.textContent = `(function(C,A,L){var p=function(a,ar){a.q.push(ar)};var d=C.document;C.Cal=C.Cal||function(){var cal=C.Cal;var ar=arguments;if(!cal.loaded){cal.ns={};cal.q=cal.q||[];d.head.appendChild(d.createElement("script")).src=A;cal.loaded=true;}if(ar[0]===L){var api=function(){p(api,arguments)};var namespace=ar[1];api.q=api.q||[];if(typeof namespace==="string"){cal.ns[namespace]=cal.ns[namespace]||api;p(cal.ns[namespace],ar);p(cal,["initNamespace",namespace]);}else p(cal,ar);return;}p(cal,ar);};})(window,"https://app.cal.com/embed/embed.js","init");`;
+    document.head.appendChild(snippet);
+  }
+
+  // Guard: only proceed if embed container exists in DOM
+  const container = document.getElementById('cal-embed-container');
+  if (!container) return;
+
+  // Initialize Cal.com inline embed with prefill and dark theme
+  window.Cal!('init', { origin: 'https://cal.com' });
+  window.Cal!('inline', {
+    elementOrSelector: '#cal-embed-container',
+    calLink: CAL_LINK,
+    config: {
+      name,
+      email,
+      theme: 'dark',
+    },
+  });
+
+  // Apply indigo brand color matching site's --primary
+  window.Cal!('ui', {
+    styles: {
+      branding: { brandColor: '#6366f1' },
+    },
+    hideEventTypeDetails: false,
+  });
+
+  // Remove loading spinner once embed renders
+  const removeSpinner = (): void => {
+    const spinner = document.getElementById('cal-embed-loading');
+    if (spinner) spinner.remove();
+  };
+
+  // Fallback: remove spinner after 5 seconds regardless
+  setTimeout(removeSpinner, 5000);
+
+  // Listen for Cal.com embed loaded message
+  const handleMessage = (event: MessageEvent): void => {
+    if (typeof event.data === 'string') {
+      try {
+        const parsed = JSON.parse(event.data);
+        if (parsed.originator === 'CAL' || parsed.type?.startsWith?.('CAL:')) {
+          removeSpinner();
+          window.removeEventListener('message', handleMessage);
+        }
+      } catch {
+        // Not a Cal.com message — ignore
+      }
+    }
+  };
+  window.addEventListener('message', handleMessage);
+
+  // GTM tracking for Cal.com embed shown
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'cal_embed_shown' });
+
+  // Listen for booking confirmation via bookingSuccessfulV2
+  window.Cal!('on', {
+    action: 'bookingSuccessfulV2',
+    callback: (e: { detail: { data: { uid: string; title: string; startTime: string } } }) => {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'cal_booking_created',
+        booking_uid: e.detail.data.uid,
+      });
+    },
+  });
+}
 
 // ============================================================
 // State management
@@ -535,9 +618,20 @@ function initContactForm(): void {
               <div class="success-icon">&#10003;</div>
               <h2>Message Sent!</h2>
               <p>We'll get back to you within 24 hours.</p>
-              <a href="${CAL_URL}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">Book a Discovery Call</a>
+              <div id="cal-embed-container">
+                <div id="cal-embed-loading" role="status" aria-label="Loading booking calendar"></div>
+              </div>
             </div>
           `;
+          injectCalEmbed(state.name.trim(), state.email.trim());
+
+          // Fallback: if Cal.com embed fails to load after 10s, show link button instead
+          setTimeout(() => {
+            const calContainer = document.getElementById('cal-embed-container');
+            if (calContainer && !calContainer.querySelector('iframe')) {
+              calContainer.innerHTML = `<a href="${CAL_URL}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" style="display:inline-block;margin-top:1.5rem;">Book a Discovery Call</a>`;
+            }
+          }, 10000);
         }
       } else if (result.errors) {
         // Server validation errors
