@@ -293,7 +293,7 @@ Destructive actions in this phase: None. "Lost" status is a semantic label, not 
 ```
 .lead-row-compact (flex, align-center, gap: 12px, min-height: 44px, padding: 12px 16px, cursor: pointer)
   [indigo left border if unread — 3px solid --primary]
-  [name]           — flex: 0 0 160px; Outfit 1.0rem weight 600; truncate with ellipsis
+  [name]           — flex: 0 0 160px; Outfit 1.25rem weight 600; truncate with ellipsis
   [email]          — flex: 1 1 200px; Inter 0.85rem --text-secondary; truncate
   [score badge]    — flex: 0 0 auto; badge-score pattern
   [status badge]   — flex: 0 0 auto; badge-status pattern
