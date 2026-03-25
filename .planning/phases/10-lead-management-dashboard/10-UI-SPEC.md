@@ -48,6 +48,7 @@ Exceptions:
 - Expanded panel max-height ceiling: 600px (CSS max-height transition ceiling — not a spacing token)
 - Container padding: 2rem (32px) horizontal — inherited from `.container` in `style.css`
 - Card border-radius: 16px — inherited from `.submission-card` pattern
+- Compact row gap and padding: `gap: 12px` and `padding: 12px 16px` — 12px is not a named scale token. Used here because the compact row requires tighter-than-md (16px) density to fit name, email, badges, and date in a single scannable line without crowding. 16px gap makes the row feel too wide; 8px is too tight for visual separation between interactive badge clusters. 12px is the midpoint that achieves linear.app-style row density. Exception applies to `.lead-row-compact` only.
 
 ---
 
@@ -58,7 +59,7 @@ Source: `style.css` `:root` and existing `index.astro` admin CSS patterns.
 | Role | Size | Weight | Line Height | Font | Usage |
 |------|------|--------|-------------|------|-------|
 | Body | 16px (1rem) | 400 (regular) | 1.6 | Inter | Lead message text, notes textarea, expanded panel content |
-| Label | 13.6px (0.85rem) | 400 (regular) | 1.4 | Inter | Submission date, IP address, secondary meta |
+| Label | 13.6px (0.85rem) | 400 (regular) | 1.4 | Inter | Submission date, IP address, secondary meta, pagination buttons, notes save button, save confirmation flash |
 | Badge | 11.2px (0.7rem) | 600 (semibold) | 1 | Inter | All badges (score, status, read, HubSpot, booked, rate-limited) |
 | Heading | 20px (1.25rem) | 600 (semibold) | 1.2 | Outfit | Lead name in compact row |
 
@@ -68,6 +69,8 @@ Typography rules:
 - Notes textarea: 16px Inter at weight 400 — matches `.glass-input` body text from Phase 8
 - Pagination label ("Page 2 of 5", "Showing 26-50 of 127 leads"): 13.6px Inter at weight 400, color `--text-dimmed`
 - Filter toolbar labels: 13.6px Inter at weight 400, color `--text-secondary`
+- Pagination buttons (`.btn-pagination`): 13.6px (0.85rem) Inter — buttons at label scale is standard; aligns with pagination info text in the same control row
+- Notes save button (`.notes-save-btn`) and save confirmation (`.notes-save-confirm`): 13.6px (0.85rem) Inter — consistent with label scale used throughout the expanded panel
 
 ---
 
@@ -134,7 +137,7 @@ New CSS classes to introduce in Phase 10, following existing naming conventions:
 .lead-row                   — wrapper for compact row + expanded panel; glass-panel card
 .lead-row.unread            — applies 3px indigo left border (replaces .submission-card.unread)
 .lead-row.expanded          — triggers .lead-panel max-height expansion
-.lead-row-compact           — the always-visible clickable row: flex, align-center, gap-md, min-height 44px
+.lead-row-compact           — the always-visible clickable row: flex, align-center, gap: 12px, min-height 44px, padding: 12px 16px (see spacing exception)
 .lead-row-name              — lead name: Outfit 1.25rem weight 600
 .lead-row-email             — email: Inter 0.85rem --text-secondary
 .lead-row-badges            — flex row of all inline badges (score, status, service, booked, note-icon)
@@ -163,15 +166,15 @@ New CSS classes to introduce in Phase 10, following existing naming conventions:
 .pagination-info            — "Showing 26-50 of 127 leads": 0.85rem --text-dimmed
 .pagination-controls        — flex row gap-sm: prev button, page indicator, next button
 .pagination-page            — "Page 2 of 5": 0.85rem Inter weight 400 --text-secondary
-.btn-pagination             — glass button variant; 0.8rem; padding 0.4rem 1rem; border-radius 8px
+.btn-pagination             — glass button variant; font-size: 0.85rem (13.6px); padding 0.4rem 1rem; border-radius 8px
 .btn-pagination[disabled]   — opacity: 0.35; cursor: default; no hover effect
 ```
 
 ### Notes Editor
 ```
 .notes-textarea             — extends .glass-input; min-height: 80px; resize: vertical; width: 100%
-.notes-save-btn             — extends .btn; font-size 0.8rem; padding 0.4rem 1rem
-.notes-save-confirm         — "Saved" flash: 0.8rem #10b981; opacity 1 fading to 0 over 1.5s
+.notes-save-btn             — extends .btn; font-size: 0.85rem (13.6px); padding 0.4rem 1rem
+.notes-save-confirm         — "Saved" flash: font-size: 0.85rem (13.6px); color #10b981; opacity 1 fading to 0 over 1.5s
 ```
 
 ### Note Icon (compact row indicator)
