@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import { db } from '../../db';
 import { submissions } from '../../db/schema';
-import { desc } from 'drizzle-orm';
+import { desc, asc, eq, gte, and, count } from 'drizzle-orm';
 import { scoreToTier } from '../../lib/scoring';
 
 // Basic Auth check
@@ -32,13 +32,71 @@ if (!authenticated) {
 
 const hubspotPortalId = import.meta.env.HUBSPOT_PORTAL_ID || '';
 
-// Query all submissions, newest first
-const allSubmissions = db
+// --- URL param extraction ---
+const url = Astro.url;
+const statusParam = url.searchParams.get('status') || '';
+const serviceParam = url.searchParams.get('service') || '';
+const minScoreParam = parseInt(url.searchParams.get('min_score') || '0', 10);
+const sortParam = url.searchParams.get('sort') || 'date_desc';
+const pageParam = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
+
+const PAGE_SIZE = 25;
+
+// --- Build WHERE clause ---
+const conditions: ReturnType<typeof eq>[] = [];
+if (statusParam) conditions.push(eq(submissions.leadStatus, statusParam));
+if (serviceParam) conditions.push(eq(submissions.serviceType, serviceParam));
+if (minScoreParam > 0) conditions.push(gte(submissions.leadScore, minScoreParam));
+
+const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+// --- ORDER BY ---
+const orderByClause =
+  sortParam === 'score_desc' ? desc(submissions.leadScore) :
+  sortParam === 'score_asc'  ? asc(submissions.leadScore) :
+  sortParam === 'date_asc'   ? asc(submissions.createdAt) :
+  desc(submissions.createdAt); // default: date_desc
+
+// --- Count query ---
+const totalResult = db
+  .select({ count: count() })
+  .from(submissions)
+  .where(whereClause)
+  .get();
+const totalCount = totalResult?.count ?? 0;
+const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+const safePage = Math.min(pageParam, totalPages);
+
+// --- Data query ---
+const leads = db
   .select()
   .from(submissions)
-  .orderBy(desc(submissions.createdAt))
+  .where(whereClause)
+  .orderBy(orderByClause)
+  .limit(PAGE_SIZE)
+  .offset((safePage - 1) * PAGE_SIZE)
   .all();
 
+// --- Pagination URL builder ---
+function buildUrl(overrides: Record<string, string | number>) {
+  const params = new URLSearchParams();
+  if (statusParam) params.set('status', statusParam);
+  if (serviceParam) params.set('service', serviceParam);
+  if (minScoreParam > 0) params.set('min_score', String(minScoreParam));
+  if (sortParam !== 'date_desc') params.set('sort', sortParam);
+  for (const [k, v] of Object.entries(overrides)) params.set(k, String(v));
+  const qs = params.toString();
+  return `/admin${qs ? '?' + qs : ''}`;
+}
+
+const prevUrl = safePage > 1 ? buildUrl({ page: safePage - 1 }) : null;
+const nextUrl = safePage < totalPages ? buildUrl({ page: safePage + 1 }) : null;
+const startItem = (safePage - 1) * PAGE_SIZE + 1;
+const endItem = Math.min(safePage * PAGE_SIZE, totalCount);
+
+const hasActiveFilters = !!(statusParam || serviceParam || minScoreParam > 0);
+
+// --- Helpers ---
 function formatDate(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleDateString('en-US', {
@@ -49,100 +107,446 @@ function formatDate(iso: string): string {
     minute: '2-digit',
   });
 }
+
+function formatShortDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  new: 'New',
+  contacted: 'Contacted',
+  qualified: 'Qualified',
+  proposal_sent: 'Proposal Sent',
+  won: 'Won',
+  lost: 'Lost',
+};
+
+const STATUS_BADGE_CLASSES: Record<string, string> = {
+  new: 'badge-status-new',
+  contacted: 'badge-status-contacted',
+  qualified: 'badge-status-qualified',
+  proposal_sent: 'badge-status-proposal',
+  won: 'badge-status-won',
+  lost: 'badge-status-lost',
+};
+
+const SERVICE_LABELS: Record<string, string> = {
+  web_dev: 'Web Dev',
+  devops: 'DevOps',
+  analytics: 'Analytics',
+};
 ---
 
-<BaseLayout title="Admin - Submissions">
-  <PageHeader title="Submissions" subtitle="Contact form submissions" />
+<BaseLayout title="Lead Dashboard - Admin">
+  <PageHeader title="Lead Dashboard" subtitle="Manage and qualify leads" />
 
   <section class="container admin-section">
-    {allSubmissions.length === 0 ? (
+    <!-- Filter Toolbar -->
+    <form method="get" action="/admin" class="filter-toolbar glass-panel" id="filter-form">
+      <input type="hidden" name="page" value="1" />
+
+      <select name="status" class={`filter-select glass-input ${statusParam ? 'active' : ''}`} id="filter-status">
+        <option value="">All Statuses</option>
+        <option value="new" selected={statusParam === 'new'}>New</option>
+        <option value="contacted" selected={statusParam === 'contacted'}>Contacted</option>
+        <option value="qualified" selected={statusParam === 'qualified'}>Qualified</option>
+        <option value="proposal_sent" selected={statusParam === 'proposal_sent'}>Proposal Sent</option>
+        <option value="won" selected={statusParam === 'won'}>Won</option>
+        <option value="lost" selected={statusParam === 'lost'}>Lost</option>
+      </select>
+
+      <select name="service" class={`filter-select glass-input ${serviceParam ? 'active' : ''}`} id="filter-service">
+        <option value="">All Services</option>
+        <option value="web_dev" selected={serviceParam === 'web_dev'}>Web Dev</option>
+        <option value="devops" selected={serviceParam === 'devops'}>DevOps</option>
+        <option value="analytics" selected={serviceParam === 'analytics'}>Analytics</option>
+      </select>
+
+      <select name="min_score" class={`filter-select glass-input ${minScoreParam > 0 ? 'active' : ''}`} id="filter-score">
+        <option value="0" selected={minScoreParam === 0}>Any Score</option>
+        <option value="25" selected={minScoreParam === 25}>Score ≥ 25</option>
+        <option value="50" selected={minScoreParam === 50}>Score ≥ 50</option>
+        <option value="75" selected={minScoreParam === 75}>Score ≥ 75</option>
+      </select>
+
+      <select name="sort" class="filter-select glass-input" id="filter-sort">
+        <option value="date_desc" selected={sortParam === 'date_desc'}>Newest First</option>
+        <option value="date_asc" selected={sortParam === 'date_asc'}>Oldest First</option>
+        <option value="score_desc" selected={sortParam === 'score_desc'}>Score: High to Low</option>
+        <option value="score_asc" selected={sortParam === 'score_asc'}>Score: Low to High</option>
+      </select>
+
+      <button type="submit" class="btn btn-filter">Apply Filters</button>
+      {hasActiveFilters && (
+        <a href="/admin" class="filter-reset">Clear filters</a>
+      )}
+    </form>
+
+    <!-- Results Summary -->
+    {totalCount > 0 && (
+      <div class="results-summary">
+        Showing {startItem}–{endItem} of {totalCount} leads
+      </div>
+    )}
+
+    <!-- Lead List -->
+    {totalCount === 0 ? (
       <div class="glass-panel empty-state">
-        <p>No submissions yet.</p>
+        <h3 class="empty-state-heading">No leads found</h3>
+        <p class="empty-state-body">
+          {hasActiveFilters
+            ? 'No leads match the current filters. Try adjusting your search criteria or clear all filters.'
+            : 'No submissions yet. Leads will appear here once visitors complete the contact form.'}
+        </p>
+        {hasActiveFilters && (
+          <a href="/admin" class="btn btn-filter">Clear filters</a>
+        )}
       </div>
     ) : (
-      <div class="submissions-list" data-portal-id={hubspotPortalId}>
-        {allSubmissions.map((sub) => (
-          <div
-            class={`glass-panel submission-card ${!sub.read ? 'unread' : ''}`}
-            data-id={sub.id}
-          >
-            <div class="submission-header">
-              <div class="submission-meta">
-                <span class="submission-date">{formatDate(sub.createdAt)}</span>
-                {sub.rateLimited && (
-                  <span class="badge-rate-limited">Rate Limited</span>
-                )}
-                <span class={`read-indicator ${sub.read ? 'read' : 'unread'}`}>
-                  {sub.read ? 'Read' : 'Unread'}
-                </span>
-                {sub.leadScore !== null && sub.leadScore !== undefined ? (
-                  <span class={`badge-score badge-score-${scoreToTier(sub.leadScore)}`}>
-                    {scoreToTier(sub.leadScore).toUpperCase()} {sub.leadScore}
-                  </span>
-                ) : (
-                  <span class="badge-score badge-score-na">N/A</span>
-                )}
+      <div class="lead-list" data-portal-id={hubspotPortalId}>
+        {leads.map((lead) => {
+          const tier = lead.leadScore !== null && lead.leadScore !== undefined
+            ? scoreToTier(lead.leadScore)
+            : null;
+          const statusClass = STATUS_BADGE_CLASSES[lead.leadStatus] || 'badge-status-new';
+          const statusLabel = STATUS_LABELS[lead.leadStatus] || 'New';
+          const serviceLabel = lead.serviceType ? (SERVICE_LABELS[lead.serviceType] || lead.serviceType) : null;
+          const hasNote = !!(lead.notes && lead.notes.trim());
+          const hasBooking = !!lead.calBookingUid;
+
+          return (
+            <div
+              class={`lead-row glass-panel ${!lead.read ? 'unread' : ''}`}
+              data-id={lead.id}
+            >
+              {/* Compact Row */}
+              <div class="lead-row-compact">
+                <span class="lead-row-name">{lead.name}</span>
+                <a href={`mailto:${lead.email}`} class="lead-row-email" onclick="event.stopPropagation();">{lead.email}</a>
+                <div class="lead-row-badges">
+                  {tier !== null ? (
+                    <span class={`badge-score badge-score-${tier}`}>
+                      {tier.toUpperCase()} {lead.leadScore}
+                    </span>
+                  ) : (
+                    <span class="badge-score badge-score-na">N/A</span>
+                  )}
+                  <span class={`badge-status ${statusClass}`} data-status={lead.leadStatus}>{statusLabel}</span>
+                  {serviceLabel && (
+                    <span class="badge-service">{serviceLabel}</span>
+                  )}
+                  {hasBooking && (
+                    <span class="badge-booked">Booked</span>
+                  )}
+                  {lead.rateLimited && (
+                    <span class="badge-rate-limited">Rate Limited</span>
+                  )}
+                  {hasNote && (
+                    <span class="note-icon" title="Has note">✎</span>
+                  )}
+                </div>
+                <span class="lead-row-date">{formatShortDate(lead.createdAt)}</span>
               </div>
-              <div class="submission-actions">
-                {sub.hubspotId ? (
-                  <>
-                    <span class="badge-hubspot-synced">Synced</span>
-                    {hubspotPortalId && (
-                      <a
-                        href={`https://app.hubspot.com/contacts/${hubspotPortalId}/contact/${sub.hubspotId}`}
-                        target="_blank"
-                        rel="noopener"
-                        class="hubspot-link"
-                      >
-                        View in HubSpot
-                      </a>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <span class="badge-hubspot-unsynced">Not Synced</span>
+
+              {/* Expanded Panel */}
+              <div class="lead-panel">
+                <div class="lead-panel-inner">
+                  <div class="lead-panel-divider"></div>
+
+                  {/* Message */}
+                  <div class="lead-panel-section">
+                    <label class="lead-panel-label">Message</label>
+                    <p class="lead-panel-message">{lead.message}</p>
+                  </div>
+
+                  {/* Details Grid */}
+                  {(lead.budget || lead.timeline || lead.serviceType || lead.company) && (
+                    <div class="lead-panel-section">
+                      <label class="lead-panel-label">Details</label>
+                      <div class="lead-panel-details">
+                        {lead.budget && <div class="detail-item"><span class="detail-key">Budget</span><span class="detail-value">{lead.budget}</span></div>}
+                        {lead.timeline && <div class="detail-item"><span class="detail-key">Timeline</span><span class="detail-value">{lead.timeline}</span></div>}
+                        {lead.serviceType && <div class="detail-item"><span class="detail-key">Service</span><span class="detail-value">{SERVICE_LABELS[lead.serviceType] || lead.serviceType}</span></div>}
+                        {lead.company && <div class="detail-item"><span class="detail-key">Company</span><span class="detail-value">{lead.company}</span></div>}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Cal.com Booking */}
+                  {hasBooking && (
+                    <div class="lead-panel-section">
+                      <label class="lead-panel-label">Cal.com Booking</label>
+                      <div class="lead-panel-details">
+                        {lead.calScheduledAt && (
+                          <div class="detail-item">
+                            <span class="detail-key">Scheduled</span>
+                            <span class="detail-value">{formatDate(lead.calScheduledAt)}</span>
+                          </div>
+                        )}
+                        <div class="detail-item">
+                          <span class="detail-key">Booking ID</span>
+                          <span class="detail-value detail-mono">{lead.calBookingUid}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Notes */}
+                  <div class="lead-panel-section">
+                    <label class="lead-panel-label">Notes</label>
+                    <textarea
+                      class="notes-textarea glass-input"
+                      data-id={lead.id}
+                      placeholder="Add a note..."
+                    >{lead.notes || ''}</textarea>
+                    <div class="notes-actions">
+                      <button class="btn notes-save-btn" data-id={lead.id} type="button">Save Note</button>
+                      <span class="notes-save-confirm"></span>
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  <div class="lead-panel-section">
+                    <label class="lead-panel-label">Status</label>
+                    <select class="status-select glass-input" data-id={lead.id}>
+                      <option value="new" selected={lead.leadStatus === 'new'}>New</option>
+                      <option value="contacted" selected={lead.leadStatus === 'contacted'}>Contacted</option>
+                      <option value="qualified" selected={lead.leadStatus === 'qualified'}>Qualified</option>
+                      <option value="proposal_sent" selected={lead.leadStatus === 'proposal_sent'}>Proposal Sent</option>
+                      <option value="won" selected={lead.leadStatus === 'won'}>Won</option>
+                      <option value="lost" selected={lead.leadStatus === 'lost'}>Lost</option>
+                    </select>
+                  </div>
+
+                  {/* Actions Row */}
+                  <div class="lead-panel-section lead-panel-actions">
                     <button
-                      class="btn btn-hubspot-sync"
-                      data-id={sub.id}
+                      class="btn btn-toggle-read"
+                      data-id={lead.id}
+                      data-read={lead.read ? 'true' : 'false'}
+                      type="button"
                     >
-                      Sync to HubSpot
+                      Mark as {lead.read ? 'Unread' : 'Read'}
                     </button>
-                  </>
-                )}
-                <button
-                  class="btn btn-toggle-read"
-                  data-id={sub.id}
-                  data-read={sub.read ? 'true' : 'false'}
-                >
-                  Mark as {sub.read ? 'Unread' : 'Read'}
-                </button>
+
+                    {lead.hubspotId ? (
+                      <>
+                        <span class="badge-hubspot-synced">Synced</span>
+                        {hubspotPortalId && (
+                          <a
+                            href={`https://app.hubspot.com/contacts/${hubspotPortalId}/contact/${lead.hubspotId}`}
+                            target="_blank"
+                            rel="noopener"
+                            class="hubspot-link"
+                          >
+                            View in HubSpot
+                          </a>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <span class="badge-hubspot-unsynced">Not Synced</span>
+                        <button
+                          class="btn btn-hubspot-sync"
+                          data-id={lead.id}
+                          type="button"
+                        >
+                          Sync to HubSpot
+                        </button>
+                      </>
+                    )}
+
+                    <span class="lead-panel-meta">
+                      <span class="submission-date">{formatDate(lead.createdAt)}</span>
+                      {lead.ip && <span class="submission-ip">IP: {lead.ip}</span>}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
+          );
+        })}
+      </div>
+    )}
 
-            <div class="submission-contact">
-              <strong>{sub.name}</strong>
-              <a href={`mailto:${sub.email}`} class="submission-email">{sub.email}</a>
-              {sub.company && <span class="submission-company">{sub.company}</span>}
-            </div>
-
-            <div class="submission-message">
-              <p>{sub.message}</p>
-            </div>
-
-            <div class="submission-footer-meta">
-              {sub.ip && <span class="submission-ip">IP: {sub.ip}</span>}
-            </div>
-          </div>
-        ))}
+    {/* Pagination */}
+    {totalPages > 1 && (
+      <div class="pagination">
+        <span class="pagination-info">
+          Showing {startItem}–{endItem} of {totalCount} leads
+        </span>
+        <div class="pagination-controls">
+          {prevUrl ? (
+            <a href={prevUrl} class="btn btn-pagination">Previous</a>
+          ) : (
+            <button class="btn btn-pagination" disabled>Previous</button>
+          )}
+          <span class="pagination-page">Page {safePage} of {totalPages}</span>
+          {nextUrl ? (
+            <a href={nextUrl} class="btn btn-pagination">Next</a>
+          ) : (
+            <button class="btn btn-pagination" disabled>Next</button>
+          )}
+        </div>
       </div>
     )}
   </section>
 
   <script>
+    const STATUS_BADGE_CLASSES: Record<string, string> = {
+      new: 'badge-status-new',
+      contacted: 'badge-status-contacted',
+      qualified: 'badge-status-qualified',
+      proposal_sent: 'badge-status-proposal',
+      won: 'badge-status-won',
+      lost: 'badge-status-lost',
+    };
+
+    const STATUS_LABELS: Record<string, string> = {
+      new: 'New',
+      contacted: 'Contacted',
+      qualified: 'Qualified',
+      proposal_sent: 'Proposal Sent',
+      won: 'Won',
+      lost: 'Lost',
+    };
+
     document.addEventListener('astro:page-load', () => {
-      const list = document.querySelector('.submissions-list') as HTMLElement | null;
+      const list = document.querySelector('.lead-list') as HTMLElement | null;
       const portalId = list?.getAttribute('data-portal-id') || '';
 
+      // --- Filter auto-submit on change ---
+      const filterForm = document.getElementById('filter-form') as HTMLFormElement | null;
+      if (filterForm) {
+        filterForm.querySelectorAll('.filter-select').forEach((sel) => {
+          sel.addEventListener('change', () => filterForm.submit());
+        });
+      }
+
+      // --- Expand/Collapse ---
+      document.querySelectorAll('.lead-row-compact').forEach((row) => {
+        row.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest('button, a, select, textarea, input')) return;
+          const card = row.closest('.lead-row') as HTMLElement;
+          if (card) card.classList.toggle('expanded');
+        });
+      });
+
+      // --- Status Dropdown AJAX ---
+      document.querySelectorAll('.status-select').forEach((sel) => {
+        const select = sel as HTMLSelectElement;
+        let previousValue = select.value;
+
+        select.addEventListener('change', async () => {
+          const id = Number(select.getAttribute('data-id'));
+          const status = select.value;
+          if (!id) return;
+
+          try {
+            const res = await fetch('/api/admin/update-status', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id, status }),
+            });
+
+            if (res.status === 401) {
+              window.location.reload();
+              return;
+            }
+
+            const data = await res.json();
+            if (data.success) {
+              const card = select.closest('.lead-row') as HTMLElement;
+              const badge = card.querySelector('.badge-status') as HTMLElement;
+              if (badge) {
+                // Remove all status badge classes
+                Object.values(STATUS_BADGE_CLASSES).forEach((cls) => badge.classList.remove(cls));
+                badge.classList.add(STATUS_BADGE_CLASSES[status] || 'badge-status-new');
+                badge.textContent = STATUS_LABELS[status] || status;
+                badge.setAttribute('data-status', status);
+              }
+              previousValue = status;
+            } else {
+              select.value = previousValue;
+            }
+          } catch {
+            select.value = previousValue;
+          }
+        });
+      });
+
+      // --- Notes Save AJAX ---
+      document.querySelectorAll('.notes-save-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const button = btn as HTMLButtonElement;
+          const id = Number(button.getAttribute('data-id'));
+          if (!id) return;
+
+          const card = button.closest('.lead-row') as HTMLElement;
+          const textarea = card.querySelector('.notes-textarea') as HTMLTextAreaElement;
+          const confirm = card.querySelector('.notes-save-confirm') as HTMLElement;
+          const notes = textarea.value;
+
+          button.disabled = true;
+
+          try {
+            const res = await fetch('/api/admin/update-notes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id, notes }),
+            });
+
+            if (res.status === 401) {
+              window.location.reload();
+              return;
+            }
+
+            const data = await res.json();
+            if (data.success) {
+              // Flash "Saved"
+              confirm.textContent = 'Saved';
+              confirm.style.opacity = '1';
+              setTimeout(() => {
+                confirm.style.opacity = '0';
+              }, 1500);
+
+              // Update note icon in compact row
+              const noteIcon = card.querySelector('.note-icon') as HTMLElement | null;
+              if (data.hasNote && !noteIcon) {
+                const badges = card.querySelector('.lead-row-badges');
+                if (badges) {
+                  const icon = document.createElement('span');
+                  icon.className = 'note-icon';
+                  icon.title = 'Has note';
+                  icon.textContent = '✎';
+                  badges.appendChild(icon);
+                }
+              } else if (!data.hasNote && noteIcon) {
+                noteIcon.remove();
+              }
+            } else {
+              button.textContent = 'Save failed';
+              setTimeout(() => {
+                button.textContent = 'Save Note';
+              }, 2000);
+            }
+          } catch {
+            button.textContent = 'Save failed';
+            setTimeout(() => {
+              button.textContent = 'Save Note';
+            }, 2000);
+          } finally {
+            button.disabled = false;
+          }
+        });
+      });
+
+      // --- HubSpot Sync (preserved from existing) ---
       document.querySelectorAll('.btn-hubspot-sync').forEach((btn) => {
         btn.addEventListener('click', async () => {
           const id = Number(btn.getAttribute('data-id'));
@@ -166,8 +570,7 @@ function formatDate(iso: string): string {
 
             const data = await res.json();
             if (data.success) {
-              // Build replacement: Synced badge + optional View in HubSpot link
-              const wrapper = button.closest('.submission-actions') as HTMLElement;
+              const wrapper = button.closest('.lead-panel-actions') as HTMLElement;
               const unsyncedBadge = wrapper.querySelector('.badge-hubspot-unsynced');
               if (unsyncedBadge) unsyncedBadge.remove();
 
@@ -204,6 +607,7 @@ function formatDate(iso: string): string {
         });
       });
 
+      // --- Toggle Read (preserved from existing) ---
       document.querySelectorAll('.btn-toggle-read').forEach((btn) => {
         btn.addEventListener('click', async () => {
           const id = Number(btn.getAttribute('data-id'));
@@ -217,29 +621,20 @@ function formatDate(iso: string): string {
             });
 
             if (res.status === 401) {
-              // Re-auth needed - reload triggers Basic Auth dialog
               window.location.reload();
               return;
             }
 
             const data = await res.json();
             if (data.success) {
-              // Update UI in place
-              const card = btn.closest('.submission-card') as HTMLElement;
-              const indicator = card.querySelector('.read-indicator') as HTMLElement;
+              const card = btn.closest('.lead-row') as HTMLElement;
 
               if (data.read) {
                 card.classList.remove('unread');
-                indicator.classList.remove('unread');
-                indicator.classList.add('read');
-                indicator.textContent = 'Read';
                 btn.textContent = 'Mark as Unread';
                 btn.setAttribute('data-read', 'true');
               } else {
                 card.classList.add('unread');
-                indicator.classList.add('unread');
-                indicator.classList.remove('read');
-                indicator.textContent = 'Unread';
                 btn.textContent = 'Mark as Read';
                 btn.setAttribute('data-read', 'false');
               }
@@ -253,72 +648,196 @@ function formatDate(iso: string): string {
   </script>
 
   <style>
+    /* ===== Admin Section ===== */
     .admin-section {
       padding-bottom: 6rem;
     }
 
+    /* ===== Filter Toolbar ===== */
+    .filter-toolbar {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-select {
+      width: auto;
+      flex: 1 1 140px;
+      min-width: 140px;
+      padding: 0.4rem 2rem 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      background-size: 12px;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .filter-select.active {
+      border-color: rgba(99, 102, 241, 0.5);
+      background-color: rgba(99, 102, 241, 0.08);
+    }
+
+    .btn-filter {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: var(--transition-fast);
+    }
+
+    .btn-filter:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: var(--text-primary);
+    }
+
+    .filter-reset {
+      font-size: 0.85rem;
+      color: var(--text-dimmed);
+      text-decoration: none;
+    }
+
+    .filter-reset:hover {
+      text-decoration: underline;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Results Summary ===== */
+    .results-summary {
+      font-size: 0.85rem;
+      color: var(--text-dimmed);
+      margin-bottom: 0.75rem;
+      padding: 0 0.25rem;
+    }
+
+    /* ===== Empty State ===== */
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
-      color: var(--text-dimmed);
-      font-size: 1.1rem;
     }
 
-    .submissions-list {
+    .empty-state-heading {
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .empty-state-body {
+      color: var(--text-dimmed);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 1.5rem;
+    }
+
+    /* ===== Lead List ===== */
+    .lead-list {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 8px;
     }
 
-    .submission-card {
-      padding: 2rem;
-      border-radius: 16px;
-      transition: border-color 0.3s ease;
+    /* ===== Lead Row ===== */
+    .lead-row {
+      border-radius: 12px;
+      overflow: hidden;
     }
 
-    .submission-card:hover {
+    .lead-row:hover {
       transform: none;
     }
 
-    .submission-card.unread {
+    .lead-row.unread {
       border-left: 3px solid var(--primary);
     }
 
-    .submission-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .submission-meta {
+    .lead-row-compact {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      gap: 12px;
+      min-height: 44px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.15s ease;
     }
 
-    .submission-date {
+    .lead-row-compact:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .lead-row-name {
+      flex: 0 0 160px;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lead-row-email {
+      flex: 1 1 180px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-decoration: none;
+    }
+
+    .lead-row-email:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .lead-row-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .lead-row-date {
+      flex: 0 0 auto;
       font-size: 0.85rem;
       color: var(--text-dimmed);
+      margin-left: auto;
+      white-space: nowrap;
     }
 
-    .badge-rate-limited {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: 50px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .read-indicator {
+    /* ===== Badges (shared base) ===== */
+    .badge-score,
+    .badge-status,
+    .badge-service,
+    .badge-booked,
+    .badge-rate-limited,
+    .badge-hubspot-synced,
+    .badge-hubspot-unsynced {
       display: inline-block;
       padding: 0.2rem 0.6rem;
       border-radius: 50px;
@@ -326,30 +845,10 @@ function formatDate(iso: string): string {
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
-    .read-indicator.unread {
-      background: rgba(99, 102, 241, 0.15);
-      color: #818cf8;
-      border: 1px solid rgba(99, 102, 241, 0.3);
-    }
-
-    .read-indicator.read {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dimmed);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .badge-score {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 50px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
+    /* Score badges */
     .badge-score-hot {
       background: rgba(16, 185, 129, 0.15);
       color: #10b981;
@@ -374,6 +873,254 @@ function formatDate(iso: string): string {
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    /* Status badges */
+    .badge-status-new {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .badge-status-contacted {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-status-qualified {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-status-proposal {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .badge-status-won {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-status-lost {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Service badge */
+    .badge-service {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dimmed);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Booked badge */
+    .badge-booked {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Rate limited badge */
+    .badge-rate-limited {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* HubSpot badges */
+    .badge-hubspot-synced {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-hubspot-unsynced {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dimmed);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Note icon */
+    .note-icon {
+      font-size: 0.85rem;
+      color: var(--text-dimmed);
+      cursor: default;
+    }
+
+    /* ===== Expanded Panel ===== */
+    .lead-panel {
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .lead-panel {
+        transition: max-height 0.3s ease;
+      }
+    }
+
+    .lead-row.expanded .lead-panel {
+      max-height: 800px;
+    }
+
+    .lead-panel-inner {
+      padding: 0 16px 16px 16px;
+    }
+
+    .lead-panel-divider {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 16px;
+    }
+
+    .lead-panel-section {
+      margin-bottom: 16px;
+    }
+
+    .lead-panel-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .lead-panel-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dimmed);
+      margin-bottom: 6px;
+    }
+
+    .lead-panel-message {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+
+    /* Details grid */
+    .lead-panel-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .detail-key {
+      font-size: 0.75rem;
+      color: var(--text-dimmed);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .detail-value {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .detail-mono {
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+
+    /* Notes */
+    .notes-textarea {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      line-height: 1.6;
+    }
+
+    .notes-textarea:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .notes-textarea::placeholder {
+      color: var(--text-dimmed);
+    }
+
+    .notes-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 8px;
+    }
+
+    .notes-save-btn {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: var(--transition-fast);
+    }
+
+    .notes-save-btn:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: var(--text-primary);
+    }
+
+    .notes-save-confirm {
+      font-size: 0.85rem;
+      color: #10b981;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Status select */
+    .status-select {
+      min-width: 160px;
+      padding: 0.4rem 2rem 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      background-size: 12px;
+    }
+
+    .status-select:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Actions row */
+    .lead-panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
     .btn-toggle-read {
       padding: 0.4rem 1rem;
       font-size: 0.8rem;
@@ -390,39 +1137,6 @@ function formatDate(iso: string): string {
       background: var(--bg-surface-hover);
       border-color: rgba(255, 255, 255, 0.2);
       color: var(--text-primary);
-    }
-
-    .submission-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .badge-hubspot-synced {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 50px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .badge-hubspot-unsynced {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dimmed);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .btn-hubspot-sync {
@@ -454,51 +1168,16 @@ function formatDate(iso: string): string {
       color: #818cf8;
     }
 
-    .submission-contact {
+    .lead-panel-meta {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-left: auto;
     }
 
-    .submission-contact strong {
-      font-size: 1.1rem;
-      color: var(--text-primary);
-    }
-
-    .submission-email {
-      color: var(--primary);
-      font-size: 0.95rem;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    .submission-email:hover {
-      color: #818cf8;
-    }
-
-    .submission-company {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      padding: 0.15rem 0.6rem;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-    }
-
-    .submission-message {
-      margin-bottom: 1rem;
-    }
-
-    .submission-message p {
-      color: var(--text-secondary);
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-
-    .submission-footer-meta {
-      display: flex;
-      gap: 1rem;
+    .submission-date {
+      font-size: 0.85rem;
+      color: var(--text-dimmed);
     }
 
     .submission-ip {
@@ -507,20 +1186,111 @@ function formatDate(iso: string): string {
       font-family: monospace;
     }
 
+    /* ===== Pagination ===== */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0.25rem;
+    }
+
+    .pagination-info {
+      font-size: 0.85rem;
+      color: var(--text-dimmed);
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pagination-page {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0 0.5rem;
+    }
+
+    .btn-pagination {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: var(--transition-fast);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-pagination:hover:not([disabled]) {
+      background: var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    .btn-pagination[disabled] {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    /* ===== Responsive ===== */
     @media (max-width: 768px) {
-      .submission-card {
-        padding: 1.5rem;
+      .filter-toolbar {
+        flex-direction: column;
+        align-items: stretch;
       }
 
-      .submission-header {
+      .filter-select {
+        width: 100%;
+      }
+
+      .lead-row-compact {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .lead-row-name {
+        flex: 0 0 auto;
+        max-width: 50%;
+      }
+
+      .lead-row-email {
+        flex: 1 1 100%;
+        order: 3;
+      }
+
+      .lead-row-badges {
+        order: 4;
+        flex-basis: 100%;
+      }
+
+      .lead-row-date {
+        display: none;
+      }
+
+      .lead-panel-details {
+        grid-template-columns: 1fr;
+      }
+
+      .lead-panel-actions {
         flex-direction: column;
         align-items: flex-start;
       }
 
-      .submission-contact {
+      .lead-panel-meta {
+        margin-left: 0;
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 0.25rem;
+      }
+
+      .pagination {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
       }
     }
   </style>
