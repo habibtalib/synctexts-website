@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Agency Website MVP** — Phases 1-4 (shipped 2026-03-11)
-- 🚧 **v1.1 Lead Conversion Engine** — Phases 5-10 (in progress)
+- ✅ **v1.1 Lead Conversion Engine** — Phases 5-10 (shipped 2026-04-01)
 
 ## Phases
 
@@ -19,7 +19,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 </details>
 
-### 🚧 v1.1 Lead Conversion Engine (In Progress)
+### ✅ v1.1 Lead Conversion Engine (Shipped 2026-04-01)
 
 **Milestone Goal:** Transform the website from a passive lead capture form into an active conversion engine with intelligent scoring, scheduling, and CRM integration.
 
@@ -27,8 +27,8 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 - [x] **Phase 6: Lead Scoring Engine** - Pure scoring function with configurable weights and tier thresholds (completed 2026-03-15)
 - [x] **Phase 7: Extended API and HubSpot Integration** - Form endpoint wired to scoring and async CRM sync (completed 2026-03-15)
 - [x] **Phase 8: Multi-Step Form Frontend** - Service-branched wizard with persistence and animated transitions (completed 2026-03-20)
-- [ ] **Phase 9: Cal.com Scheduling** - Embedded booking widget linked to lead records via webhook
-- [ ] **Phase 10: Lead Management Dashboard** - Upgraded admin with scores, status workflow, filtering, and pagination
+- [x] **Phase 9: Cal.com Scheduling** - Embedded booking widget linked to lead records via webhook (completed 2026-03-20)
+- [x] **Phase 10: Lead Management Dashboard** - Upgraded admin with scores, status workflow, filtering, and pagination (completed 2026-04-01)
 
 ## Phase Details
 
@@ -96,11 +96,11 @@ Plans:
   2. After form submission, clicking "Book a Discovery Call" opens the Cal.com embed with name and email prefilled from the submitted form
   3. Navigating away from and back to the contact page re-initializes the Cal.com embed without errors
   4. When a visitor completes a booking, the matching lead record in SQLite is updated with the Cal.com booking UID and scheduled time
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 09-01-PLAN.md — Add booking columns to schema, run migration, create Cal.com webhook endpoint
-- [ ] 09-02-PLAN.md — Replace CTA link with inline Cal.com embed in success panel with dark theme and prefill
-- [ ] 09-03-PLAN.md — Human verification of Cal.com embed and webhook integration
+- [x] 09-01-PLAN.md — Add booking columns to schema, run migration, create Cal.com webhook endpoint
+- [x] 09-02-PLAN.md — Replace CTA link with inline Cal.com embed in success panel with dark theme and prefill
+- [x] 09-03-PLAN.md — Human verification of Cal.com embed and webhook integration
 
 ### Phase 10: Lead Management Dashboard
 **Goal**: Admin can view, qualify, and manage every lead with score visibility, status workflow, notes, filtering, and HubSpot record links
@@ -113,9 +113,9 @@ Plans:
   4. Admin can filter leads by status, service type, and minimum score via URL params, and sort by score or date — the page URL reflects the active filters
   5. The dashboard paginates results and never loads the full unbounded lead list in a single query
   6. Each lead row shows HubSpot sync status and a direct link to the HubSpot contact record when synced
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 10-xx-PLAN.md — To be planned
+- [x] 10-01-PLAN.md — Upgrade admin page with compact rows, filter toolbar, pagination, status workflow, inline notes, and AJAX endpoints
 
 ## Progress
 
@@ -131,5 +131,5 @@ Plans:
 | 6. Lead Scoring Engine | v1.1 | 1/1 | Complete | 2026-03-15 |
 | 7. Extended API and HubSpot Integration | v1.1 | 2/2 | Complete | 2026-03-15 |
 | 8. Multi-Step Form Frontend | v1.1 | 3/3 | Complete | 2026-03-20 |
-| 9. Cal.com Scheduling | 2/3 | In Progress|  | - |
-| 10. Lead Management Dashboard | v1.1 | 0/TBD | Not started | - |
+| 9. Cal.com Scheduling | v1.1 | 3/3 | Complete | 2026-03-20 |
+| 10. Lead Management Dashboard | v1.1 | 1/1 | Complete | 2026-04-01 |

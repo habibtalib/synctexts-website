@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Lead Conversion Engine
-status: unknown
-stopped_at: Phase 10 UI-SPEC approved
-last_updated: "2026-03-25T11:38:24.028Z"
+status: complete
+stopped_at: v1.1 milestone shipped
+last_updated: "2026-04-01T04:45:00.000Z"
 progress:
   total_phases: 6
-  completed_phases: 5
-  total_plans: 10
-  completed_plans: 10
+  completed_phases: 6
+  total_plans: 13
+  completed_plans: 13
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Potential clients can see SyncTexts' real project portfolio and expertise, then easily get in touch -- turning the website into a lead generation engine.
-**Current focus:** Phase 09 — cal-com-scheduling
+**Current focus:** v1.1 COMPLETE — all phases shipped
 
 ## Current Position
 
-Phase: 09 (cal-com-scheduling) — EXECUTING
-Plan: 2 of 3
+Phase: 10 (lead-management-dashboard) — COMPLETE
+Plan: 1 of 1 — COMPLETE
 
 ## Performance Metrics
 
@@ -36,10 +36,17 @@ Plan: 2 of 3
 
 **v1.1 plans:**
 
+- Phase 05 plan 01: migration + WAL mode
+- Phase 06 plan 01: scoring function + admin badges
+- Phase 07 plan 01: extended API + HubSpot sync
+- Phase 07 plan 02: manual HubSpot re-sync + UI
 - Phase 08 plan 01: 2 min (1 task, 1 file)
 - Phase 08 plan 02: 2 min (1 task, 1 file)
 - Phase 08 plan 03: checkpoint — human verification approved
+- Phase 09 plan 01: webhook endpoint + DB migration
 - Phase 09 plan 02: 3 min (2 tasks, 2 files)
+- Phase 09 plan 03: checkpoint — human verification approved
+- Phase 10 plan 01: 5 min (3 files — 2 new API endpoints + 1 major page rewrite)
 
 ## Accumulated Context
 
@@ -65,6 +72,11 @@ v1.1 decisions logged as phases execute.
 - [Phase 09-cal-com-scheduling]: timingSafeEqual wrapped in try/catch to handle Buffer length mismatch (attacker sends wrong-length sig gets 401 not 500)
 - [Phase 09-cal-com-scheduling]: Used :global() CSS in Astro scoped styles for JS-injected #cal-embed-container and #cal-embed-loading elements (no data-astro-cid attribute on innerHTML-injected nodes)
 - [Phase 09-cal-com-scheduling]: Cal.com IIFE snippet injected lazily as script.textContent after form submission — no Cal.com JS on page load; double-inject guard via cal-embed-script sentinel ID
+- [Phase 10-lead-management-dashboard]: Compact row + expandable panel pattern with max-height transition gated on prefers-reduced-motion
+- [Phase 10-lead-management-dashboard]: Filter toolbar uses <form method=get> with auto-submit on change for native URL param handling
+- [Phase 10-lead-management-dashboard]: Status AJAX update instantly reflects in compact row badge without page reload
+- [Phase 10-lead-management-dashboard]: Notes use explicit "Save Note" button (not auto-save) with "Saved" flash confirmation
+- [Phase 10-lead-management-dashboard]: .glass-input overridden with width:auto + flex:1 in filter toolbar to prevent full-width stacking
 
 ### Critical Risks (from research)
 
@@ -75,10 +87,10 @@ v1.1 decisions logged as phases execute.
 
 ### Pending Todos
 
-None.
+None. v1.1 milestone complete.
 
 ## Session Continuity
 
-Last session: 2026-03-25T11:38:24.025Z
-Stopped at: Phase 10 UI-SPEC approved
-Next action: Execute Phase 09 Plan 03 — Cal.com webhook endpoint and DB migration
+Last session: 2026-04-01T04:45:00.000Z
+Stopped at: v1.1 milestone shipped — all 10 phases complete
+Next action: Plan v2 milestone or deploy to production

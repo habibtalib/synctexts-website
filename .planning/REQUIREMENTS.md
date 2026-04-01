@@ -34,13 +34,13 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 
 ### Lead Dashboard
 
-- [ ] **DASH-01**: Admin can view leads with score badges, status, and submission details
-- [ ] **DASH-02**: Admin can update lead status through a workflow (new/contacted/qualified/proposal_sent/won/lost)
-- [ ] **DASH-03**: Admin can add and edit notes on each lead
-- [ ] **DASH-04**: Admin can sort leads by score, date, or status
-- [ ] **DASH-05**: Admin can filter leads by status, service type, and minimum score via URL params
-- [ ] **DASH-06**: Dashboard paginates results to handle growing lead volume
-- [ ] **DASH-07**: Dashboard shows HubSpot sync status and direct link to HubSpot contact per lead
+- [x] **DASH-01**: Admin can view leads with score badges, status, and submission details
+- [x] **DASH-02**: Admin can update lead status through a workflow (new/contacted/qualified/proposal_sent/won/lost)
+- [x] **DASH-03**: Admin can add and edit notes on each lead
+- [x] **DASH-04**: Admin can sort leads by score, date, or status
+- [x] **DASH-05**: Admin can filter leads by status, service type, and minimum score via URL params
+- [x] **DASH-06**: Dashboard paginates results to handle growing lead volume
+- [x] **DASH-07**: Dashboard shows HubSpot sync status and direct link to HubSpot contact per lead
 
 ### HubSpot CRM
 
@@ -110,13 +110,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAL-03 | Phase 9 | Complete |
 | CAL-04 | Phase 9 | Complete |
 | CAL-05 | Phase 9 | Complete |
-| DASH-01 | Phase 10 | Pending |
-| DASH-02 | Phase 10 | Pending |
-| DASH-03 | Phase 10 | Pending |
-| DASH-04 | Phase 10 | Pending |
-| DASH-05 | Phase 10 | Pending |
-| DASH-06 | Phase 10 | Pending |
-| DASH-07 | Phase 10 | Pending |
+| DASH-01 | Phase 10 | Complete |
+| DASH-02 | Phase 10 | Complete |
+| DASH-03 | Phase 10 | Complete |
+| DASH-04 | Phase 10 | Complete |
+| DASH-05 | Phase 10 | Complete |
+| DASH-06 | Phase 10 | Complete |
+| DASH-07 | Phase 10 | Complete |
 | HS-01 | Phase 7 | Complete |
 | HS-02 | Phase 7 | Complete |
 | HS-03 | Phase 7 | Complete |
