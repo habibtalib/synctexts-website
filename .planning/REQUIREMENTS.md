@@ -56,7 +56,55 @@ Requirements for the Lead Conversion Engine milestone. Each maps to roadmap phas
 - [x] **INFRA-02**: SQLite configured with WAL mode and busy_timeout for concurrent read/write safety
 - [x] **INFRA-03**: Shared auth helper used by all admin API endpoints
 
-## v2 Requirements
+## v2.0 Requirements
+
+Requirements for the Content & Credibility Engine milestone.
+
+### Content Infrastructure
+
+- [ ] **CONTENT-01**: Blog supports categories with filterable index page
+- [ ] **CONTENT-02**: Blog index has pagination (12 posts/page)
+- [ ] **CONTENT-03**: Blog posts show estimated read time, publish date, author, and category
+- [ ] **CONTENT-04**: Blog has related posts section (by tags/category) at bottom of each post
+- [ ] **CONTENT-05**: RSS feed auto-generated from blog collection
+
+### Case Studies
+
+- [ ] **CASE-01**: Portfolio detail pages support structured results data (metrics, testimonials, timeline)
+- [ ] **CASE-02**: Case study pages have structured layout: Challenge → Approach → Results → Testimonial
+- [ ] **CASE-03**: Results section shows quantified outcomes (e.g., "3x faster deploys", "99.9% uptime")
+- [ ] **CASE-04**: Each case study has a CTA to book a discovery call
+
+### Social Proof & Trust Signals
+
+- [ ] **TRUST-01**: Client logos displayed in a marquee/ticker on the homepage
+- [ ] **TRUST-02**: Individual service pages with detailed capabilities, process, and relevant case studies
+- [ ] **TRUST-03**: Testimonials linked to specific case studies where applicable
+- [ ] **TRUST-04**: Partner badges / "As seen in" section
+
+### SEO & Performance
+
+- [ ] **SEO-01**: Blog posts generate Article structured data (author, dates, images)
+- [ ] **SEO-02**: Internal linking strategy — related posts, service→case study cross-links
+- [ ] **SEO-03**: Image optimization pipeline (responsive images, WebP/AVIF, lazy loading)
+- [ ] **SEO-04**: Lighthouse CI integration — automated performance/accessibility audits on build
+- [ ] **SEO-05**: Open Graph images auto-generated per blog post
+
+### Analytics & Insights
+
+- [ ] **ANALYTICS-01**: Admin dashboard shows submission trends over time (chart)
+- [ ] **ANALYTICS-02**: Admin dashboard shows conversion funnel: visits → form starts → submissions → bookings
+- [ ] **ANALYTICS-03**: Source tracking — capture UTM params on form submission for attribution
+
+### Tech Debt & Quality
+
+- [ ] **DEBT-01**: Remove unused `.coming-soon` CSS class
+- [ ] **DEBT-02**: Remove dead `jsonLd` prop from BaseLayout Props interface
+- [ ] **DEBT-03**: Fix homepage portfolio href fallback for projects without caseStudySlug
+- [ ] **DEBT-04**: Upgrade Astro to latest stable
+- [ ] **DEBT-05**: Add `robots.txt` with admin/API exclusion rules
+
+## v3 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
 
@@ -103,7 +151,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FORM-07 | Phase 8 | Complete |
 | FORM-08 | Phase 8 | Complete |
 | SCORE-01 | Phase 6 | Complete |
-| SCORE-02 | Phase 6+7 | Partial (display done, storage Phase 7) |
+| SCORE-02 | Phase 6+7 | Complete |
 | SCORE-03 | Phase 6 | Complete |
 | CAL-01 | Phase 9 | Complete |
 | CAL-02 | Phase 9 | Complete |
@@ -125,12 +173,38 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-01 | Phase 5 | Complete |
 | INFRA-02 | Phase 5 | Complete |
 | INFRA-03 | Phase 7 | Complete |
+| CONTENT-01 | Phase 11 | Pending |
+| CONTENT-02 | Phase 11 | Pending |
+| CONTENT-03 | Phase 11 | Pending |
+| CONTENT-04 | Phase 11 | Pending |
+| CONTENT-05 | Phase 11 | Pending |
+| CASE-01 | Phase 12 | Pending |
+| CASE-02 | Phase 12 | Pending |
+| CASE-03 | Phase 12 | Pending |
+| CASE-04 | Phase 12 | Pending |
+| TRUST-01 | Phase 13 | Pending |
+| TRUST-02 | Phase 13 | Pending |
+| TRUST-03 | Phase 13 | Pending |
+| TRUST-04 | Phase 13 | Pending |
+| SEO-01 | Phase 14 | Pending |
+| SEO-02 | Phase 14 | Pending |
+| SEO-03 | Phase 14 | Pending |
+| SEO-04 | Phase 14 | Pending |
+| SEO-05 | Phase 14 | Pending |
+| ANALYTICS-01 | Phase 15 | Pending |
+| ANALYTICS-02 | Phase 15 | Pending |
+| ANALYTICS-03 | Phase 15 | Pending |
+| DEBT-01 | Phase 16 | Pending |
+| DEBT-02 | Phase 16 | Pending |
+| DEBT-03 | Phase 16 | Pending |
+| DEBT-04 | Phase 16 | Pending |
+| DEBT-05 | Phase 16 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 31 total
-- Mapped to phases: 31
+- v1.1 requirements: 31 total — 31 complete ✓
+- v2.0 requirements: 27 total — 0 complete
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-11 after roadmap creation*
+*Last updated: 2026-04-02 after v2.0 milestone creation*
