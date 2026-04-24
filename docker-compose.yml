@@ -12,22 +12,32 @@ services:
       interval: 30s
       timeout: 3s
       start_period: 10s
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=stack_web"
+      - "traefik.http.routers.synctexts-http.entrypoints=web"
+      - "traefik.http.routers.synctexts-http.rule=Host(`synctexts.com`) || Host(`www.synctexts.com`)"
+      - "traefik.http.routers.synctexts.entrypoints=websecure"
+      - "traefik.http.routers.synctexts.rule=Host(`synctexts.com`) || Host(`www.synctexts.com`)"
+      - "traefik.http.routers.synctexts.tls=true"
+      - "traefik.http.routers.synctexts.tls.certresolver=le"
+      - "traefik.http.services.synctexts.loadbalancer.server.port=4321"
+      - "traefik.http.middlewares.synctexts-www.redirectregex.regex=^https?://www\\.synctexts\\.com/(.*)"
+      - "traefik.http.middlewares.synctexts-www.redirectregex.replacement=https://synctexts.com/$${1}"
+      - "traefik.http.middlewares.synctexts-www.redirectregex.permanent=true"
+      - "traefik.http.middlewares.synctexts-headers.headers.frameDeny=true"
+      - "traefik.http.middlewares.synctexts-headers.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.synctexts-headers.headers.referrerPolicy=strict-origin-when-cross-origin"
+      - "traefik.http.middlewares.synctexts-headers.headers.permissionsPolicy=camera=(), microphone=(), geolocation=()"
+      - "traefik.http.routers.synctexts.middlewares=synctexts-www,synctexts-headers"
+      - "traefik.http.routers.synctexts-http.middlewares=synctexts-www,synctexts-headers"
 
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy-data:/data
-      - caddy-config:/config
-    depends_on:
-      app:
-        condition: service_healthy
+networks:
+  web:
+    external: true
+    name: stack_web
 
 volumes:
   app-data:
-  caddy-data:
-  caddy-config:
