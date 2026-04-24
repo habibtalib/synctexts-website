@@ -1,27 +1,7 @@
 - id: "habib"
-  name: "Habib Anwari"
-  role: "Founder & Full-Stack Engineer"
-  bio: "Architect of scalable web platforms with 8+ years of experience across Laravel, Node.js, and cloud-native stacks. Leads technical strategy and client delivery."
+  name: "Habib bin Talib"
+  role: "Chief Executive Officer"
+  bio: "Visionary technologist with deep expertise in full-stack engineering, cloud infrastructure, and digital transformation. Leads SyncTexts with a hands-on approach — from architecting scalable platforms to delivering enterprise solutions across Laravel, Node.js, and Kubernetes."
   photo: "/images/team/habib.webp"
+  slug: "habib"
   order: 1
-
-- id: "lina"
-  name: "Lina Petrova"
-  role: "DevOps Lead"
-  bio: "Kubernetes and Terraform specialist who designs CI/CD pipelines that ship code confidently. Passionate about infrastructure-as-code and zero-downtime deployments."
-  photo: "/images/team/lina.webp"
-  order: 2
-
-- id: "omar"
-  name: "Omar Bassi"
-  role: "UI/UX Designer"
-  bio: "Design systems thinker who bridges user research and pixel-perfect implementation. Crafts interfaces that are both beautiful and conversion-optimized."
-  photo: "/images/team/omar.webp"
-  order: 3
-
-- id: "maya"
-  name: "Maya Torres"
-  role: "Mobile Engineer"
-  bio: "Flutter and native iOS/Android developer focused on performance and accessibility. Delivers cross-platform apps that feel truly native on every device."
-  photo: "/images/team/maya.webp"
-  order: 4

@@ -6,4 +6,6 @@ dist
 data/
 .planning/
 .DS_Store
-*.md
+README.md
+CLAUDE.md
+AGENTS.md

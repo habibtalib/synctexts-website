@@ -17,6 +17,7 @@ const members = (await getCollection('team')).sort((a, b) => a.data.order - b.da
           role={member.data.role}
           bio={member.data.bio}
           photo={member.data.photo}
+          slug={member.data.slug}
           delay={`${(i + 1) * 0.1}s`}
         />
       ))}

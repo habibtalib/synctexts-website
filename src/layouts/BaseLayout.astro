@@ -88,9 +88,7 @@ const gtmId = isAdmin ? null : import.meta.env.PUBLIC_GTM_ID;
       <slot />
     </main>
     <Footer />
-    <script>
-      import '../scripts/animations.js';
-    </script>
+    <script is:inline src="/animations.js"></script>
     {gtmId && <script>import '../scripts/analytics.js';</script>}
   </body>
 </html>

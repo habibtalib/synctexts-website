@@ -26,6 +26,9 @@
           "photo": {
             "type": "string"
           },
+          "slug": {
+            "type": "string"
+          },
           "order": {
             "type": "number",
             "default": 0

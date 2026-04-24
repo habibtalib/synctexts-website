@@ -4,10 +4,11 @@ interface Props {
   role: string;
   bio: string;
   photo: string;
+  slug?: string;
   delay?: string;
 }
 
-const { name, role, bio, photo, delay } = Astro.props;
+const { name, role, bio, photo, slug, delay } = Astro.props;
 ---
 
 <div class="team-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
@@ -16,7 +17,7 @@ const { name, role, bio, photo, delay } = Astro.props;
     <span class="avatar-initials">{name.split(' ').map(n => n[0]).join('')}</span>
   </div>
   <div class="team-info">
-    <h3 class="team-name">{name}</h3>
+    <h3 class="team-name">{slug ? <a href={`/team/${slug}`} class="team-name-link">{name}</a> : name}</h3>
     <span class="team-role">{role}</span>
     <p class="team-bio">{bio}</p>
   </div>
@@ -96,5 +97,15 @@ const { name, role, bio, photo, delay } = Astro.props;
     color: var(--text-secondary);
     line-height: 1.6;
     margin-top: 0.5rem;
+  }
+
+  .team-name-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .team-name-link:hover {
+    color: var(--primary);
   }
 </style>

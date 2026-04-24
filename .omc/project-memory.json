@@ -177,14 +177,74 @@
   "hotPaths": [
     {
       "path": "src/components/Footer.astro",
-      "accessCount": 2,
-      "lastAccessed": 1777020982309,
+      "accessCount": 6,
+      "lastAccessed": 1777022012420,
+      "type": "file"
+    },
+    {
+      "path": "src/components/TeamMemberCard.astro",
+      "accessCount": 4,
+      "lastAccessed": 1777044780027,
+      "type": "file"
+    },
+    {
+      "path": "src/layouts/BaseLayout.astro",
+      "accessCount": 3,
+      "lastAccessed": 1777043196633,
+      "type": "file"
+    },
+    {
+      "path": "src/data/team.yaml",
+      "accessCount": 3,
+      "lastAccessed": 1777044801222,
       "type": "file"
     },
     {
       "path": "src/styles/global.css",
       "accessCount": 2,
       "lastAccessed": 1777021028356,
+      "type": "file"
+    },
+    {
+      "path": ".dockerignore",
+      "accessCount": 2,
+      "lastAccessed": 1777043069537,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/team.astro",
+      "accessCount": 2,
+      "lastAccessed": 1777044788110,
+      "type": "file"
+    },
+    {
+      "path": "src/content.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1777044816123,
+      "type": "file"
+    },
+    {
+      "path": "src/db/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777021278162,
+      "type": "file"
+    },
+    {
+      "path": "src/scripts/animations.js",
+      "accessCount": 1,
+      "lastAccessed": 1777021567858,
+      "type": "file"
+    },
+    {
+      "path": "Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1777043031065,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/team/habib.astro",
+      "accessCount": 1,
+      "lastAccessed": 1777044878306,
       "type": "file"
     }
   ],
