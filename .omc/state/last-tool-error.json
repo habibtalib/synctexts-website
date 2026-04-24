@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"ssh root@synctexts.com \\\"cd /opt/apps/synctexts.com && docker compose build --no-cache && docker compose up -d\\\" 2>&1\",\"timeout\":300000,\"description\":\"Rebuild and redeploy on server\"}",
+  "error": "Exit code 1\n#1 [internal] load local bake definitions\n#1 reading from stdin 521B done\n#1 DONE 0.0s\n\n#2 [internal] load build definition from Dockerfile\n#2 transferring dockerfile: 614B done\n#2 DONE 0.0s\n\n#3 [internal] load metadata for docker.io/library/node:22-alpine\n#3 DONE 0.0s\n\n#4 [internal] load .dockerignore\n#4 transferring context: 107B done\n#4 DONE 0.0s\n\n#5 [build 1/6] FROM docker.io/library/node:22-alpine\n#5 DONE 0.0s\n\n#6 [build 2/6] WORKDIR /app\n#6 CACHED\n\n#7 [internal] load build cont...",
+  "timestamp": "2026-04-24T08:59:06.801Z",
+  "retry_count": 2
+}

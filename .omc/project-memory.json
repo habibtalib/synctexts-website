@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1777020659325,
+  "projectRoot": "/Users/habib/Git/synctexts-website",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "astro",
+        "version": "5.18.0",
+        "category": "fullstack"
+      },
+      {
+        "name": "vite",
+        "version": "5.0.0",
+        "category": "build"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "astro dev",
+      "build": "astro build",
+      "preview": "astro preview",
+      "db:generate": "drizzle-kit generate",
+      "db:migrate": "cp data/submissions.db data/submissions.db.bak && drizzle-kit migrate",
+      "db:studio": "drizzle-kit studio"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": "ES modules",
+    "testPattern": null,
+    "fileOrganization": "type-based"
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "public",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "data": {
+      "path": "data",
+      "purpose": "Data files",
+      "fileCount": 4,
+      "lastAccessed": 1777020659309,
+      "keyFiles": [
+        "submissions.db",
+        "submissions.db-shm",
+        "submissions.db-wal",
+        "submissions.db.bak"
+      ]
+    },
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 0,
+      "lastAccessed": 1777020659309,
+      "keyFiles": []
+    },
+    "drizzle": {
+      "path": "drizzle",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1777020659313,
+      "keyFiles": [
+        "0000_square_swordsman.sql",
+        "0001_wild_hex.sql"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 2,
+      "lastAccessed": 1777020659313,
+      "keyFiles": [
+        "favicon.svg",
+        "og-default.png"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 1,
+      "lastAccessed": 1777020659313,
+      "keyFiles": [
+        "content.config.ts"
+      ]
+    },
+    "src/components": {
+      "path": "src/components",
+      "purpose": "UI components",
+      "fileCount": 15,
+      "lastAccessed": 1777020659314,
+      "keyFiles": [
+        "BackgroundGlows.astro",
+        "BlogPostCard.astro",
+        "ContactCTA.astro"
+      ]
+    },
+    "src/data": {
+      "path": "src/data",
+      "purpose": "Data files",
+      "fileCount": 4,
+      "lastAccessed": 1777020659314,
+      "keyFiles": [
+        "portfolio-config.yaml",
+        "pricing.yaml",
+        "team.yaml"
+      ]
+    },
+    "src/lib": {
+      "path": "src/lib",
+      "purpose": "Library code",
+      "fileCount": 7,
+      "lastAccessed": 1777020659314,
+      "keyFiles": [
+        "auth.ts",
+        "email.ts",
+        "hubspot.ts"
+      ]
+    },
+    "src/pages": {
+      "path": "src/pages",
+      "purpose": "Page components",
+      "fileCount": 4,
+      "lastAccessed": 1777020659314,
+      "keyFiles": [
+        "contact.astro",
+        "index.astro",
+        "pricing.astro"
+      ]
+    },
+    "src/scripts": {
+      "path": "src/scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 3,
+      "lastAccessed": 1777020659314,
+      "keyFiles": [
+        "analytics.js",
+        "animations.js",
+        "contact-form.ts"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src/components/Footer.astro",
+      "accessCount": 2,
+      "lastAccessed": 1777020982309,
+      "type": "file"
+    },
+    {
+      "path": "src/styles/global.css",
+      "accessCount": 2,
+      "lastAccessed": 1777021028356,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
