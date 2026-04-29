@@ -795,6 +795,23 @@ a {
   font-size: 0.85rem;
 }
 
+.footer-legal {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.footer-legal a {
+  color: #64748b;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-legal a:hover {
+  color: var(--primary);
+}
+
 .footer-registration {
   font-size: 0.75rem;
   letter-spacing: 0.05em;
