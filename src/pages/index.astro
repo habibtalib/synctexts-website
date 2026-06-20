@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import ServicesGrid from '../components/ServicesGrid.astro';
 import TechGrid from '../components/TechGrid.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import { getCollection } from 'astro:content';
@@ -28,14 +28,16 @@ const testimonials = await getCollection('testimonials');
       <p>A selection of recent work, demonstrating our capabilities across the full stack.</p>
     </div>
 
-    <div class="projects-grid">
+    <div class="portfolio-grid">
       {projects.map((p, i) => (
-        <ProjectCard
-          tag={p.data.languages.join(' / ')}
+        <PortfolioCard
           title={p.data.title}
           description={p.data.description}
+          languages={p.data.languages}
+          updatedAt={p.data.updatedAt}
+          caseStudySlug={p.data.caseStudySlug || p.id}
+          cover={p.data.cover}
           delay={`${(i + 1) * 0.1}s`}
-          href={`/portfolio/${p.data.caseStudySlug || p.id}`}
         />
       ))}
     </div>
