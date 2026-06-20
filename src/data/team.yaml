@@ -1,7 +1,7 @@
 - id: "habib"
   name: "Habib bin Talib"
   role: "Chief Executive Officer"
-  bio: "Visionary technologist with deep expertise in full-stack engineering, cloud infrastructure, and digital transformation. Leads SyncTexts with a hands-on approach — from architecting scalable platforms to delivering enterprise solutions across Laravel, Node.js, and Kubernetes."
+  bio: "Full-stack engineer, cloud architect, and serial founder with 8+ years building production platforms — from microfrontends and real-time streaming analytics on Kubernetes to government and enterprise systems. Leads SyncTexts hands-on across Laravel, Node.js, and cloud infrastructure."
   photo: "/images/team/habib.webp"
   slug: "habib"
   order: 1
