@@ -4,10 +4,11 @@ client: "Malaysia Centre for Geospatial Data Infrastructure (MaCGDI)"
 industry: "Government / Geospatial"
 duration: "Ongoing"
 techStack:
-  - "Java"
-  - "Apache Tomcat"
-  - "Geoportal Server"
-  - "ISO 19139 Metadata"
+  - "Laravel 13"
+  - "React"
+  - "Inertia"
+  - "Tailwind CSS"
+  - "MySQL"
 cover: "/images/portfolio/mygdi.png"
 gallery:
   - "/images/portfolio/mygdi.png"
@@ -15,19 +16,19 @@ gallery:
 
 ## The Challenge
 
-MyGDI Explorer is Malaysia's national geospatial metadata catalog — the discovery layer for thousands of geospatial datasets published by government agencies. As a long-running Geoportal Server / Tomcat deployment, it needed careful diagnostics, security hardening, and code-level fixes to stay healthy and secure.
+MyGDI Explorer is Malaysia's national geospatial metadata catalog — the discovery layer for thousands of geospatial datasets published by government agencies. The original system ran on a legacy Java geoportal stack that was difficult to maintain and dated for users.
 
 ## Our Approach
 
-We carried out a structured support and modernization engagement:
+We rebuilt MyGDI Explorer on a modern Laravel 13 + React stack:
 
-- **Evidence-based diagnosis** — collected and analyzed application logs and screenshots across the application, LDAP/identity, and database hosts to map the system and isolate issues.
-- **Patching & hardening** — produced a troubleshooting, patching, and hardening runbook covering the Tomcat/Java application stack.
-- **Code-level fixes** — documented and recommended fixes to apply to the live application source and deployment.
-- **Catalog operations** — supported a metadata catalog of 7,000+ records used to discover, manage, and publish national geospatial datasets.
+- **Catalog search & browse** — a fast, bilingual (BM / EN) interface for discovering geospatial datasets, services, and maps across all Malaysian agencies.
+- **Metadata publishing** — workflows for creating, uploading, and publishing records to the national catalog.
+- **MYGDIX viewer** — an interactive map viewer for exploring published datasets on a national basemap.
+- **METAFOR** — a downloadable metadata editor compliant with the MyGDI metadata standard for offline record creation.
 
 ## Results
 
-- A clear, documented picture of the system's hosts, issues, and remediation steps.
-- A repeatable hardening and patching runbook for ongoing maintenance.
-- Concrete code and configuration fixes to improve stability and security.
+- A modern, responsive replacement for the legacy geoportal experience.
+- Bilingual, user-friendly discovery over the national geospatial catalog.
+- A maintainable Laravel/React codebase ready for ongoing enhancement.

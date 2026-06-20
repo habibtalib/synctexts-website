@@ -29,6 +29,19 @@
     - "/images/portfolio/yns.png"
   caseStudySlug: "yns-sp3"
 
+- slug: "egkafa"
+  title: "e-GKAFA — JAIS KAFA Teacher System"
+  description: "Management system for KAFA Islamic primary-education teachers and operations at Jabatan Agama Islam Selangor (JAIS), with separate officer (Pegawai) and teacher (Guru) portals."
+  techTags:
+    - "Laravel"
+    - "FilamentPHP 3"
+    - "Livewire"
+    - "MySQL"
+  cover: "/images/portfolio/egkafa.png"
+  screenshots:
+    - "/images/portfolio/egkafa.png"
+  caseStudySlug: "egkafa"
+
 - slug: "edl-jas"
   title: "EDL — Enviro Digital Library @JAS"
   description: "Digital environmental library for the Department of Environment (Jabatan Alam Sekitar) — a Laravel + Filament rewrite of a legacy ASP.NET system, running on the existing database via the strangler pattern. Collections, e-books, image galleries, and a data bank."
@@ -58,13 +71,85 @@
 
 - slug: "mygdi-explorer"
   title: "MyGDI Explorer — National Geospatial Catalog"
-  description: "Support, hardening, and modernization of the MyGDI Explorer geoportal — Malaysia's national geospatial metadata catalog (7,000+ records) for discovering, managing, and publishing geospatial datasets. Diagnostics, security hardening, and code-level fixes."
+  description: "Modern rebuild of MyGDI Explorer, Malaysia's national geospatial metadata catalog — search, catalog browsing, metadata publishing, an interactive MYGDIX map viewer, and the METAFOR metadata editor. A Laravel 13 + React rewrite of the legacy geoportal."
   techTags:
-    - "Java"
-    - "Apache Tomcat"
-    - "Geoportal Server"
-    - "ISO 19139 Metadata"
+    - "Laravel 13"
+    - "React"
+    - "Inertia"
+    - "Tailwind CSS"
+    - "MySQL"
   cover: "/images/portfolio/mygdi.png"
   screenshots:
     - "/images/portfolio/mygdi.png"
   caseStudySlug: "mygdi-explorer"
+
+- slug: "ekedatangan"
+  title: "eKedatangan — Biometric Attendance (IKMa)"
+  description: "Computerised biometric attendance system for Institut Koperasi Malaysia (IKMa) — staff attendance capture, leave, and calendar tracking."
+  techTags:
+    - "Laravel 12"
+    - "Bootstrap"
+    - "FullCalendar"
+    - "MySQL"
+  cover: "/images/portfolio/ekedatangan.png"
+  screenshots:
+    - "/images/portfolio/ekedatangan.png"
+  caseStudySlug: "ekedatangan"
+
+- slug: "bookhero"
+  title: "BookHero — Online Book Printing"
+  description: "Online book-printing and order platform (print.wirabuku.my) — custom print ordering with a modern Filament admin back office for catalogue, orders, and fulfilment."
+  techTags:
+    - "Laravel"
+    - "FilamentPHP 4"
+    - "Inertia"
+    - "Tailwind CSS"
+    - "MySQL"
+  cover: "/images/portfolio/bookhero.png"
+  screenshots:
+    - "/images/portfolio/bookhero.png"
+  caseStudySlug: "bookhero"
+
+- slug: "zaipermai"
+  title: "ZaiPermai — Agent Management System"
+  description: "Member and agent management platform for ZaiPermai — agent onboarding, sales and commission tracking, and member operations."
+  techTags:
+    - "Laravel"
+    - "MySQL"
+  cover: "/images/portfolio/zaipermai.png"
+  screenshots:
+    - "/images/portfolio/zaipermai.png"
+  caseStudySlug: "zaipermai"
+
+- slug: "smartdocket"
+  title: "Smart Docket — Selangor Land & Mines"
+  description: "Online rock-material (bahan batuan) permit system for the Selangor Land & Mines Office (Pejabat Tanah dan Galian Negeri Selangor) — permit applications, approvals, and renewals for permit holders."
+  techTags:
+    - "PHP"
+    - "MySQL"
+  cover: "/images/portfolio/smartdocket.png"
+  screenshots:
+    - "/images/portfolio/smartdocket.png"
+  caseStudySlug: "smartdocket"
+
+- slug: "fimm"
+  title: "FIMM — Member & Compliance Portal"
+  description: "Web platform for the Federation of Investment Managers Malaysia (FIMM) supporting member services and compliance processes."
+  techTags:
+    - "PHP"
+    - "MySQL"
+  cover: "/images/portfolio/fimm.png"
+  screenshots:
+    - "/images/portfolio/fimm.png"
+  caseStudySlug: "fimm"
+
+- slug: "merdekatimes"
+  title: "The Merdeka Times — News Platform"
+  description: "Online news and media publication platform — article publishing, categories, and a reader-facing news portal."
+  techTags:
+    - "Web Platform"
+    - "CMS"
+  cover: "/images/portfolio/merdekatimes.png"
+  screenshots:
+    - "/images/portfolio/merdekatimes.png"
+  caseStudySlug: "merdekatimes"
