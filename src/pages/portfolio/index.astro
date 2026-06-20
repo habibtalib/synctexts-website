@@ -19,6 +19,7 @@ const projects = await getCollection('portfolio');
           languages={project.data.languages}
           updatedAt={project.data.updatedAt}
           caseStudySlug={project.data.caseStudySlug}
+          cover={project.data.cover}
           delay={`${(i + 1) * 0.1}s`}
         />
       ))}

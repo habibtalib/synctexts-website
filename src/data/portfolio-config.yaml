@@ -1,38 +1,70 @@
-- slug: "enterprise-crm"
-  repo: "synctexts/enterprise-crm"
-  title: "Enterprise CRM Dashboard"
-  description: "A comprehensive customer relationship management system built with Laravel and FilamentPHP, featuring real-time analytics and role-based access control."
+# SyncTexts portfolio — real client projects.
+# `cover` is the card thumbnail; case-study details live in src/data/portfolio/*.md
+
+- slug: "eypj-v3"
+  title: "eYPJ — Yayasan Pelajaran Johor Portal"
+  description: "Multi-panel education financing platform for Yayasan Pelajaran Johor — managing scholarships, study loans, and grants with separate admin and applicant experiences, ProLIMS data migration, and analytics dashboards."
+  techTags:
+    - "Laravel 12"
+    - "FilamentPHP 3"
+    - "Livewire"
+    - "Tailwind CSS"
+    - "MySQL"
+  cover: "/images/portfolio/eypj.png"
+  screenshots:
+    - "/images/portfolio/eypj.png"
+  caseStudySlug: "eypj-v3"
+
+- slug: "yns-sp3"
+  title: "SP3 — Yayasan Negeri Sembilan Loan System"
+  description: "Online education-loan application and management portal for Yayasan Negeri Sembilan, covering applicant onboarding, loan processing, disbursement, and repayment tracking."
+  techTags:
+    - "Laravel 12"
+    - "FilamentPHP 3"
+    - "Livewire"
+    - "Bootstrap"
+    - "MySQL"
+  cover: "/images/portfolio/yns.png"
+  screenshots:
+    - "/images/portfolio/yns.png"
+  caseStudySlug: "yns-sp3"
+
+- slug: "edl-jas"
+  title: "EDL — Enviro Digital Library @JAS"
+  description: "Digital environmental library for the Department of Environment (Jabatan Alam Sekitar) — a Laravel + Filament rewrite of a legacy ASP.NET system, running on the existing database via the strangler pattern. Collections, e-books, image galleries, and a data bank."
   techTags:
     - "Laravel"
     - "FilamentPHP"
-    - "PostgreSQL"
-    - "Redis"
+    - "SQL Server"
     - "Tailwind CSS"
-  screenshots: []
-  caseStudySlug: "project-crm"
+  cover: "/images/portfolio/edl.png"
+  screenshots:
+    - "/images/portfolio/edl.png"
+  caseStudySlug: "edl-jas"
 
-- slug: "k8s-platform"
-  repo: "synctexts/k8s-platform"
-  title: "High-Availability Microservices"
-  description: "Terraform-provisioned Kubernetes cluster architecture handling 1M+ daily requests with automated scaling and zero-downtime deployments."
+- slug: "speia"
+  title: "SPEIA — Environmental Compliance & EIA Monitoring"
+  description: "Department of Environment platform for managing Environmental Impact Assessment projects — site investigations, environmental media monitoring (air, water, river, land, lake), waste management, monthly reporting, scoring, and audit trails with rich PDF/Excel exports."
   techTags:
-    - "Kubernetes"
-    - "Terraform"
-    - "Go"
-    - "Prometheus"
-    - "ArgoCD"
-  screenshots: []
-  caseStudySlug: "project-infra"
+    - "Laravel"
+    - "Vue.js"
+    - "Laravel Passport"
+    - "Bootstrap"
+    - "MySQL"
+  cover: "/images/portfolio/speia.png"
+  screenshots:
+    - "/images/portfolio/speia.png"
+  caseStudySlug: "speia"
 
-- slug: "fintech-wallet"
-  repo: "synctexts/fintech-wallet"
-  title: "FinTech Mobile Wallet"
-  description: "Cross-platform mobile application utilizing Flutter for a native feel, integrating secure payment gateways and biometric authentication."
+- slug: "mygdi-explorer"
+  title: "MyGDI Explorer — National Geospatial Catalog"
+  description: "Support, hardening, and modernization of the MyGDI Explorer geoportal — Malaysia's national geospatial metadata catalog (7,000+ records) for discovering, managing, and publishing geospatial datasets. Diagnostics, security hardening, and code-level fixes."
   techTags:
-    - "Flutter"
-    - "Dart"
-    - "Firebase"
-    - "Stripe"
-    - "Node.js"
-  screenshots: []
-  caseStudySlug: "project-fintech"
+    - "Java"
+    - "Apache Tomcat"
+    - "Geoportal Server"
+    - "ISO 19139 Metadata"
+  cover: "/images/portfolio/mygdi.png"
+  screenshots:
+    - "/images/portfolio/mygdi.png"
+  caseStudySlug: "mygdi-explorer"

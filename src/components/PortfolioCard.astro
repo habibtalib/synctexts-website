@@ -5,10 +5,12 @@ interface Props {
   languages: string[];
   updatedAt: string | null;
   caseStudySlug: string | null;
+  cover?: string | null;
   delay?: string;
 }
 
-const { title, description, languages, updatedAt, caseStudySlug, delay } = Astro.props;
+const { title, description, languages, updatedAt, caseStudySlug, cover, delay } = Astro.props;
+const cardHref = caseStudySlug ? `/portfolio/${caseStudySlug}` : null;
 
 // Truncate description to ~120 chars
 const truncated = description.length > 120 ? description.slice(0, 117) + '...' : description;
@@ -24,6 +26,17 @@ if (updatedAt) {
 ---
 
 <div class="portfolio-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
+  {cover && (
+    cardHref ? (
+      <a href={cardHref} class="portfolio-cover" aria-label={title}>
+        <img src={cover} alt={`${title} screenshot`} loading="lazy" />
+      </a>
+    ) : (
+      <div class="portfolio-cover">
+        <img src={cover} alt={`${title} screenshot`} loading="lazy" />
+      </div>
+    )
+  )}
   <div class="portfolio-card-content">
     <h3>{title}</h3>
     <p class="portfolio-description">{truncated}</p>
@@ -42,3 +55,36 @@ if (updatedAt) {
     </div>
   </div>
 </div>
+
+<style>
+  .portfolio-card {
+    overflow: hidden;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .portfolio-cover {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid var(--glass-border);
+    background: var(--bg-base);
+  }
+
+  .portfolio-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.4s ease;
+  }
+
+  .portfolio-cover:hover img {
+    transform: scale(1.04);
+  }
+
+  .portfolio-card :global(.portfolio-card-content) {
+    padding: 1.75rem 1.75rem 1.5rem;
+  }
+</style>

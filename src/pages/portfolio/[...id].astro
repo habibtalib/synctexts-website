@@ -13,7 +13,8 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, client, industry, duration, techStack } = entry.data;
+const { title, client, industry, duration, techStack, cover, gallery, liveUrl } = entry.data;
+const galleryImages = (gallery && gallery.length ? gallery : cover ? [cover] : []);
 ---
 
 <BaseLayout title={title} description={`${title} - Case Study by SyncTexts`}>
@@ -30,14 +31,87 @@ const { title, client, industry, duration, techStack } = entry.data;
           <span class="tech-tag">{tech}</span>
         ))}
       </div>
+      {liveUrl && (
+        <a href={liveUrl} target="_blank" rel="noopener" class="btn btn-primary case-study-live">
+          Visit Live Site &rarr;
+        </a>
+      )}
     </header>
+
+    {cover && (
+      <div class="case-study-cover glass-panel">
+        <img src={cover} alt={`${title} screenshot`} />
+      </div>
+    )}
 
     <div class="prose">
       <Content />
     </div>
+
+    {galleryImages.length > 1 && (
+      <section class="case-study-gallery">
+        <h2>Screenshots</h2>
+        <div class="gallery-grid">
+          {galleryImages.map((src) => (
+            <a href={src} target="_blank" rel="noopener" class="gallery-item glass-panel">
+              <img src={src} alt={`${title} screenshot`} loading="lazy" />
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     <footer class="case-study-footer">
       <a href="/portfolio" class="back-to-portfolio">&larr; Back to Portfolio</a>
     </footer>
   </article>
 </BaseLayout>
+
+<style>
+  .case-study-live {
+    margin-top: 1.5rem;
+  }
+
+  .case-study-cover {
+    margin: 2.5rem 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .case-study-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .case-study-gallery {
+    margin: 3rem 0;
+  }
+
+  .case-study-gallery h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .gallery-item {
+    display: block;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.4s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.03);
+  }
+</style>

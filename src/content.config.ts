@@ -140,6 +140,7 @@ const portfolio = defineCollection({
             [],
           updatedAt: (ghData.updatedAt as string) || null,
           screenshots: (project.screenshots as string[]) || [],
+          cover: (project.cover as string) || null,
           caseStudySlug: (project.caseStudySlug as string) || null,
         };
 
@@ -156,6 +157,7 @@ const portfolio = defineCollection({
     languages: z.array(z.string()),
     updatedAt: z.string().nullable(),
     screenshots: z.array(z.string()).default([]),
+    cover: z.string().nullable(),
     caseStudySlug: z.string().nullable(),
   }),
 });
@@ -169,6 +171,9 @@ const portfolioCaseStudies = defineCollection({
     industry: z.string(),
     duration: z.string(),
     techStack: z.array(z.string()),
+    cover: z.string().optional(),
+    gallery: z.array(z.string()).default([]),
+    liveUrl: z.string().optional(),
   }),
 });
 
