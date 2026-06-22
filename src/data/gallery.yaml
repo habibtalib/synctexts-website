@@ -1,0 +1,11 @@
+# Event & activity gallery (Media Library).
+# Add one entry per photo. Put image files in: public/images/gallery/
+# Newest date shows first. Template:
+#
+# - id: "unique-slug"
+#   title: "Event or activity title"
+#   description: "Short description / context for the photo."
+#   date: "2026-06-22"          # YYYY-MM-DD (optional)
+#   image: "/images/gallery/my-photo.jpg"
+#   order: 1                     # optional tie-breaker when dates match
+[]

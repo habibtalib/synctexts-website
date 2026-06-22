@@ -177,4 +177,17 @@ const portfolioCaseStudies = defineCollection({
   }),
 });
 
-export const collections = { blog, team, testimonials, pricing, portfolio, portfolioCaseStudies };
+// Gallery / Media Library - event & activity photos with captions
+const gallery = defineCollection({
+  loader: file('./src/data/gallery.yaml'),
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date().optional(),
+    image: z.string(),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { blog, team, testimonials, pricing, portfolio, portfolioCaseStudies, gallery };
