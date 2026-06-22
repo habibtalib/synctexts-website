@@ -6,10 +6,11 @@
   slug: "habib"
   order: 1
 
-- id: "hafizal"
-  name: "Mohd Hafizal bin Samsi"
-  role: "Chief Operating Officer / Director"
-  bio: "Project and TechOps leader with 17+ years across enterprise systems, GovTech, cloud infrastructure, and applied AI. Drives delivery, infrastructure, and operations at SyncTexts — from agile project management to secure, production-ready cloud deployments."
-  photo: "/images/team/hafizal.jpg"
-  slug: "hafizal"
-  order: 2
+# Hidden from the public site for now — uncomment to restore (profile page is at _hafizal.astro)
+# - id: "hafizal"
+#   name: "Mohd Hafizal bin Samsi"
+#   role: "Chief Operating Officer / Director"
+#   bio: "Project and TechOps leader with 17+ years across enterprise systems, GovTech, cloud infrastructure, and applied AI. Drives delivery, infrastructure, and operations at SyncTexts — from agile project management to secure, production-ready cloud deployments."
+#   photo: "/images/team/hafizal.jpg"
+#   slug: "hafizal"
+#   order: 2
