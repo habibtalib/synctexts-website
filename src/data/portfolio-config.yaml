@@ -153,3 +153,14 @@
   screenshots:
     - "/images/portfolio/merdekatimes.png"
   caseStudySlug: "merdekatimes"
+
+- slug: "noir"
+  title: "Usahawan Noir — Beauty Agent Platform"
+  description: "Agent and entrepreneur platform for the Noir beauty brand — member onboarding, agent dashboards, and sales operations for the Usahawan Noir network."
+  techTags:
+    - "Laravel"
+    - "MySQL"
+  cover: "/images/portfolio/noir.png"
+  screenshots:
+    - "/images/portfolio/noir.png"
+  caseStudySlug: "noir"
