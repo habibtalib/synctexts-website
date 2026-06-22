@@ -1,0 +1,507 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Professional experience — sourced from Mohd Hafizal's 2026 portfolio.
+const experience = [
+  {
+    company: 'SyncTexts',
+    meta: 'Full-time · Kuala Lumpur, Malaysia',
+    roles: [
+      {
+        title: 'Project Manager · Director',
+        period: 'Dec 2021 — Present',
+        points: [
+          'Lead project delivery, resource allocation, and agile management for a software house focused on enterprise systems, AI integration, cloud infrastructure, and digital transformation.',
+          'Drive core database integration and systems architecture planning, plus client relations, budgets, and milestones.',
+          'Managed delivery of Sistem Pinjaman Negeri Sembilan, eYPJ (Yayasan Pelajaran Johor), Bantuan Sara Hidup, an eLearning platform (eduhub.ulearniti.com), and Sistem Guru KAFA JAIS & e-Kedatangan.',
+        ],
+        tags: ['Agile', 'Project Management', 'Laravel', 'Systems Architecture'],
+      },
+    ],
+  },
+  {
+    company: 'PINC Technology Sdn Bhd',
+    meta: 'Shah Alam, Malaysia',
+    roles: [
+      {
+        title: 'TechOps Engineer',
+        period: '2025 — Present',
+        points: [
+          'Support enterprise technical operations — server setup, network infrastructure, and engineering governance.',
+          'Perform monthly on-site maintenance and health checks for IT infrastructure at Lembaga Pelabuhan Johor, Port Tanjung Pelepas, and Jabatan Laut Malaysia.',
+          'Set up servers and network architecture for the CPOC iNav project; enforce security best practices, access controls, and ITSM compliance.',
+        ],
+        tags: ['AWS', 'DevOps', 'ITSM', 'Networking'],
+      },
+    ],
+  },
+  {
+    company: 'Blacksmith Data Sdn Bhd',
+    meta: 'Shah Alam, Malaysia',
+    roles: [
+      {
+        title: 'Full Stack Engineer',
+        period: '2022 — 2025',
+        points: [
+          'Engineered runlets for processing, digesting, and sinking high-volume streaming data.',
+          'Built VTS Provider Management and ATO Management platforms with PHP Laravel within a tight one-month delivery window.',
+          'Managed and troubleshot cloud deployments on AWS and Google Cloud.',
+        ],
+        tags: ['Laravel', 'AWS', 'Google Cloud', 'Streaming Data'],
+      },
+    ],
+  },
+  {
+    company: 'MCOM Messaging Sdn Bhd',
+    meta: 'Kuala Lumpur, Malaysia',
+    roles: [
+      {
+        title: 'IT Manager · Senior Database Administrator',
+        period: '2014 — 2020',
+        points: [
+          'Oversaw all IT operations, network design, server architecture, and data security policies.',
+          'Managed Premium SMS and e-commerce platforms across Malaysia, Thailand, and Cambodia.',
+          'Executed advanced database work: query optimization, index tuning, and complex T-SQL scripting.',
+        ],
+        tags: ['T-SQL', 'Database Admin', 'Network Design', 'Data Security'],
+      },
+    ],
+  },
+];
+
+const skillGroups = [
+  {
+    label: 'Languages & Frameworks',
+    skills: ['PHP', 'Laravel', 'Java', 'Spring Boot', 'Quarkus', 'Python', 'Node.js', 'VB.NET', 'JavaScript', 'React', 'Next.js'],
+  },
+  {
+    label: 'Cloud & DevOps',
+    skills: ['AWS', 'Google Cloud', 'Docker', 'Kubernetes', 'Nginx', 'Cloudflare', 'CI/CD', 'GitHub Actions'],
+  },
+  {
+    label: 'Data & Analytics',
+    skills: ['MySQL', 'PostgreSQL', 'ClickHouse', 'BigQuery', 'MSSQL', 'Oracle', 'T-SQL'],
+  },
+  {
+    label: 'AI & Leadership',
+    skills: ['RAG', 'LLM Integration', 'Workflow Automation', 'Agile Delivery', 'ITSM'],
+  },
+];
+
+const certifications = [
+  { title: 'T-BOSIET', detail: 'Tropical Basic Offshore Safety Induction & Emergency Training' },
+  { title: 'Personal Data Protection', detail: 'Persidangan Perlindungan Data Peribadi — MCMC (2019)' },
+  { title: 'Web Server Security for IT Professionals', detail: 'BridgeKnowledge (2017)' },
+  { title: 'Java Web Development — Servlets & JSP', detail: 'IKCM (2007)' },
+];
+---
+
+<BaseLayout
+  title="Mohd Hafizal bin Samsi — COO"
+  description="Meet Mohd Hafizal bin Samsi, Chief Operating Officer & Director of SyncTexts — project and TechOps leader with 17+ years across enterprise systems, GovTech, cloud infrastructure, and applied AI."
+>
+  <section class="container section profile-hero reveal">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img src="/images/team/hafizal.jpg" alt="Mohd Hafizal bin Samsi" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.add('avatar-fallback');" />
+        <span class="avatar-initials">MH</span>
+      </div>
+      <div class="profile-intro">
+        <h1 class="profile-name">Mohd Hafizal bin Samsi</h1>
+        <span class="profile-role">Chief Operating Officer / Director, SyncTexts</span>
+        <p class="profile-headline">Project Manager · TechOps · DevOps · ~17 Years Experience</p>
+        <p class="profile-location">📍 Banting, Selangor, Malaysia</p>
+        <div class="profile-links">
+          <a href="https://github.com/hafizal-synctexts" target="_blank" rel="noopener" class="profile-link glass-panel">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="profile-section glass-panel">
+      <h2>About</h2>
+      <p>Project and TechOps leader with 17+ years bridging software engineering, robust cloud infrastructure, and agile project delivery — building high-performance, secure, and production-ready enterprise systems across Enterprise Systems, GovTech, Cloud Infrastructure, Maritime Solutions, and Applied AI.</p>
+      <p>As COO and Director of SyncTexts, Hafizal drives delivery, infrastructure, and operations — from agile project management of government and corporate systems to secure cloud deployments and database architecture. He is a strong advocate for sovereign, ethical, and secure technology, and for growing the Malaysian deep-tech ecosystem.</p>
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <h2 class="profile-block-title">Experience</h2>
+    <div class="timeline">
+      {experience.map((company) => (
+        <div class="timeline-item glass-panel reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-company">{company.company}</div>
+          <div class="timeline-meta">{company.meta}</div>
+          {company.roles.map((role) => (
+            <div class="timeline-role">
+              <h3>{role.title}</h3>
+              <span class="timeline-period">{role.period}</span>
+              <ul>
+                {role.points.map((point) => <li>{point}</li>)}
+              </ul>
+              <div class="profile-tags">
+                {role.tags.map((tag) => <span class="profile-tag">{tag}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="profile-grid">
+      <div class="profile-section glass-panel reveal">
+        <h2>Skills</h2>
+        <div class="skill-groups">
+          {skillGroups.map((group) => (
+            <div class="skill-group">
+              <span class="skill-group-label">{group.label}</span>
+              <div class="profile-tags">
+                {group.skills.map((skill) => <span class="profile-tag">{skill}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="profile-section glass-panel reveal">
+        <h2>Education</h2>
+        <div class="profile-project" style="cursor: default;">
+          <h3>Coventry University, UK</h3>
+          <p>BSc (Hons) Computer Science · via KPTM<br>Focus: Software Engineering, Database Systems, Project Management</p>
+        </div>
+        <h2 style="margin-top: 1.75rem;">Certifications</h2>
+        <div class="profile-projects">
+          {certifications.map((c) => (
+            <div class="profile-project" style="cursor: default;">
+              <h3>{c.title}</h3>
+              <p>{c.detail}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="profile-cta glass-panel">
+      <h2>Work With Us</h2>
+      <p>Looking for a technology partner with proven government and enterprise delivery? Let's discuss your next project.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Get In Touch</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .profile-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--glass-border);
+    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    position: absolute;
+    inset: 0;
+  }
+
+  .avatar-initials {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    user-select: none;
+  }
+
+  .profile-avatar:not(.avatar-fallback) .avatar-initials {
+    display: none;
+  }
+
+  .avatar-fallback img {
+    display: none;
+  }
+
+  .profile-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .profile-name {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+  }
+
+  .profile-role {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .profile-headline {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .profile-location {
+    color: var(--text-dimmed);
+    font-size: 0.95rem;
+  }
+
+  .profile-links {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .profile-link:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .profile-block-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .profile-section {
+    padding: 2rem;
+  }
+
+  .profile-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  .profile-section p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 1.75rem 2rem 1.75rem 2.5rem;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 2rem;
+    width: 4px;
+    height: calc(100% - 3.5rem);
+    border-radius: 4px;
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+  }
+
+  .timeline-company {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .timeline-meta {
+    font-size: 0.85rem;
+    color: var(--text-dimmed);
+    margin-top: 0.25rem;
+  }
+
+  .timeline-role {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .timeline-role:first-of-type {
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .timeline-role h3 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+
+  .timeline-period {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-top: 0.15rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-role ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timeline-role li {
+    position: relative;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+
+  .timeline-role li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+  }
+
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .profile-tag {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  .skill-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .skill-group-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dimmed);
+    margin-bottom: 0.6rem;
+  }
+
+  .profile-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .profile-project {
+    display: block;
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    text-decoration: none;
+  }
+
+  .profile-project h3 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-project p {
+    font-size: 0.85rem;
+    color: var(--text-dimmed);
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+
+  .profile-cta {
+    text-align: center;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .profile-cta h2 {
+    font-size: 2rem;
+  }
+
+  .profile-cta p {
+    color: var(--text-secondary);
+    max-width: 500px;
+  }
+
+  @media (max-width: 900px) {
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .profile-links {
+      justify-content: center;
+    }
+
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-name {
+      font-size: 2rem;
+    }
+  }
+</style>
