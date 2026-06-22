@@ -22,6 +22,19 @@
             "type": "string"
           }
         },
+        "cover": {
+          "type": "string"
+        },
+        "gallery": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "liveUrl": {
+          "type": "string"
+        },
         "$schema": {
           "type": "string"
         }

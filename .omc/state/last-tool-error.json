@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"find /Users/habib/Git/synctexts-website/src -path '*team*' -o -path '*content*config*' | head -10; echo '==='; ls /Users/habib/Git/synctexts-website/src/data/team/ 2>/dev/null; echo '===';...",
-  "error": "Exit code 1\n/Users/habib/Git/synctexts-website/src/content.config.ts\n/Users/habib/Git/synctexts-website/src/data/team.yaml\n/Users/habib/Git/synctexts-website/src/pages/team.astro\n===\n===",
-  "timestamp": "2026-04-24T15:22:32.766Z",
-  "retry_count": 1
-}

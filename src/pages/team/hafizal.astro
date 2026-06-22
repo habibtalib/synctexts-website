@@ -1,0 +1,9 @@
+---
+// COO profile is hidden from the public site for now.
+// The full profile is preserved in _hafizal.astro (underscore = excluded from routing).
+// This stub overwrites the previously deployed page (deploy syncs with rm:false) and
+// redirects visitors to the team page. To restore: delete this file and rename
+// _hafizal.astro -> hafizal.astro, then uncomment the entry in src/data/team.yaml.
+export const prerender = false;
+return Astro.redirect('/team', 302);
+---

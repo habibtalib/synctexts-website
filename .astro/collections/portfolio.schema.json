@@ -29,6 +29,12 @@
           },
           "default": []
         },
+        "cover": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "caseStudySlug": {
           "type": [
             "string",
@@ -44,6 +50,7 @@
         "description",
         "languages",
         "updatedAt",
+        "cover",
         "caseStudySlug"
       ],
       "additionalProperties": false

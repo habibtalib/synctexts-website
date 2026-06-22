@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1777020659325,
+  "lastScanned": 1777436729929,
   "projectRoot": "/Users/habib/Git/synctexts-website",
   "techStack": {
     "languages": [
@@ -74,7 +74,7 @@
       "path": "data",
       "purpose": "Data files",
       "fileCount": 4,
-      "lastAccessed": 1777020659309,
+      "lastAccessed": 1777436729911,
       "keyFiles": [
         "submissions.db",
         "submissions.db-shm",
@@ -86,14 +86,14 @@
       "path": "dist",
       "purpose": "Distribution/build output",
       "fileCount": 0,
-      "lastAccessed": 1777020659309,
+      "lastAccessed": 1777436729915,
       "keyFiles": []
     },
     "drizzle": {
       "path": "drizzle",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1777020659313,
+      "lastAccessed": 1777436729915,
       "keyFiles": [
         "0000_square_swordsman.sql",
         "0001_wild_hex.sql"
@@ -102,9 +102,10 @@
     "public": {
       "path": "public",
       "purpose": "Public files",
-      "fileCount": 2,
-      "lastAccessed": 1777020659313,
+      "fileCount": 3,
+      "lastAccessed": 1777436729916,
       "keyFiles": [
+        "animations.js",
         "favicon.svg",
         "og-default.png"
       ]
@@ -113,7 +114,7 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 1,
-      "lastAccessed": 1777020659313,
+      "lastAccessed": 1777436729916,
       "keyFiles": [
         "content.config.ts"
       ]
@@ -122,7 +123,7 @@
       "path": "src/components",
       "purpose": "UI components",
       "fileCount": 15,
-      "lastAccessed": 1777020659314,
+      "lastAccessed": 1777436729916,
       "keyFiles": [
         "BackgroundGlows.astro",
         "BlogPostCard.astro",
@@ -133,7 +134,7 @@
       "path": "src/data",
       "purpose": "Data files",
       "fileCount": 4,
-      "lastAccessed": 1777020659314,
+      "lastAccessed": 1777436729916,
       "keyFiles": [
         "portfolio-config.yaml",
         "pricing.yaml",
@@ -144,7 +145,7 @@
       "path": "src/lib",
       "purpose": "Library code",
       "fileCount": 7,
-      "lastAccessed": 1777020659314,
+      "lastAccessed": 1777436729917,
       "keyFiles": [
         "auth.ts",
         "email.ts",
@@ -155,7 +156,7 @@
       "path": "src/pages",
       "purpose": "Page components",
       "fileCount": 4,
-      "lastAccessed": 1777020659314,
+      "lastAccessed": 1777436729917,
       "keyFiles": [
         "contact.astro",
         "index.astro",
@@ -166,7 +167,7 @@
       "path": "src/scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 3,
-      "lastAccessed": 1777020659314,
+      "lastAccessed": 1777436729917,
       "keyFiles": [
         "analytics.js",
         "animations.js",
@@ -177,32 +178,32 @@
   "hotPaths": [
     {
       "path": "src/components/Footer.astro",
-      "accessCount": 6,
-      "lastAccessed": 1777022012420,
+      "accessCount": 8,
+      "lastAccessed": 1777436836299,
       "type": "file"
     },
     {
       "path": "src/components/TeamMemberCard.astro",
-      "accessCount": 4,
-      "lastAccessed": 1777044780027,
-      "type": "file"
-    },
-    {
-      "path": "src/layouts/BaseLayout.astro",
-      "accessCount": 3,
-      "lastAccessed": 1777043196633,
+      "accessCount": 5,
+      "lastAccessed": 1777045055494,
       "type": "file"
     },
     {
       "path": "src/data/team.yaml",
-      "accessCount": 3,
-      "lastAccessed": 1777044801222,
+      "accessCount": 4,
+      "lastAccessed": 1777045054810,
+      "type": "file"
+    },
+    {
+      "path": "src/layouts/BaseLayout.astro",
+      "accessCount": 4,
+      "lastAccessed": 1777436748506,
       "type": "file"
     },
     {
       "path": "src/styles/global.css",
-      "accessCount": 2,
-      "lastAccessed": 1777021028356,
+      "accessCount": 4,
+      "lastAccessed": 1777436857383,
       "type": "file"
     },
     {
@@ -224,6 +225,24 @@
       "type": "file"
     },
     {
+      "path": "src/pages/team/habib.astro",
+      "accessCount": 2,
+      "lastAccessed": 1777045055741,
+      "type": "file"
+    },
+    {
+      "path": "Dockerfile",
+      "accessCount": 2,
+      "lastAccessed": 1777071428880,
+      "type": "file"
+    },
+    {
+      "path": "docker-compose.yml",
+      "accessCount": 2,
+      "lastAccessed": 1777071482826,
+      "type": "file"
+    },
+    {
       "path": "src/db/index.ts",
       "accessCount": 1,
       "lastAccessed": 1777021278162,
@@ -236,15 +255,39 @@
       "type": "file"
     },
     {
-      "path": "Dockerfile",
+      "path": "Caddyfile",
       "accessCount": 1,
-      "lastAccessed": 1777043031065,
+      "lastAccessed": 1777071454275,
       "type": "file"
     },
     {
-      "path": "src/pages/team/habib.astro",
+      "path": "src/pages/index.astro",
       "accessCount": 1,
-      "lastAccessed": 1777044878306,
+      "lastAccessed": 1777436747988,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/pricing.astro",
+      "accessCount": 1,
+      "lastAccessed": 1777436748218,
+      "type": "file"
+    },
+    {
+      "path": "src/components/PageHeader.astro",
+      "accessCount": 1,
+      "lastAccessed": 1777436766054,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/refund-policy.astro",
+      "accessCount": 1,
+      "lastAccessed": 1777436798599,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/privacy-policy.astro",
+      "accessCount": 1,
+      "lastAccessed": 1777436828922,
       "type": "file"
     }
   ],
