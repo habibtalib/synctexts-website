@@ -11,10 +11,11 @@ const sessions = (await getCollection('training')).sort((a, b) => {
 });
 
 // "23–25 Jun" style range label (year lives in the month marker)
-function rangeLabel(start?: Date, end?: Date): string {
+function rangeLabel(start?: Date, end?: Date, approx = false): string {
   if (!start) return '';
   const day = (x: Date) => x.getDate();
   const mon = (x: Date) => x.toLocaleDateString('en-GB', { month: 'short' });
+  if (approx) return mon(start); // month-level precision only
   if (!end || start.getTime() === end.getTime()) return `${day(start)} ${mon(start)}`;
   if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear())
     return `${day(start)}–${day(end)} ${mon(start)}`;
@@ -83,7 +84,7 @@ const areas = [
           {group.items.map((s) => (
             <div class="tl-item">
               <div class="tl-when">
-                <span class="tl-range">{rangeLabel(s.data.date, s.data.endDate)}</span>
+                <span class="tl-range">{rangeLabel(s.data.date, s.data.endDate, s.data.approx)}</span>
                 {s.data.duration && <span class="tl-duration">{s.data.duration}</span>}
               </div>
               <div class="tl-rail"><span class="tl-dot"></span></div>
@@ -94,7 +95,7 @@ const areas = [
                 </div>
                 {s.data.date && (
                   <span class="tl-range-inline">
-                    {rangeLabel(s.data.date, s.data.endDate)}{s.data.duration ? ` · ${s.data.duration}` : ''}
+                    {rangeLabel(s.data.date, s.data.endDate, s.data.approx)}{s.data.duration ? ` · ${s.data.duration}` : ''}
                   </span>
                 )}
                 <h3>{s.data.title}</h3>

@@ -10,8 +10,8 @@
 #   order: 1                     # optional tie-breaker when dates match
 
 - id: "suk-kedah-laravel-training"
-  title: "Laravel with Claude Code — SUK Kedah"
-  description: "Participants receiving their certificates at the completion of a hands-on Laravel (with Claude Code) training delivered for the Kedah State Secretariat (SUK Kedah)."
+  title: "Laravel Beginner — SUK Kedah"
+  description: "Participants receiving their certificates at the completion of the Laravel Beginner course delivered for the Kedah State Secretariat (SUK Kedah)."
   date: "2025-11-12"
   image: "/images/gallery/suk-kedah-training.jpg"
   order: 1

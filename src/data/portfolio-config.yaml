@@ -154,6 +154,19 @@
     - "/images/portfolio/merdekatimes.png"
   caseStudySlug: "merdekatimes"
 
+- slug: "mdm-enav"
+  title: "MDM — Maritime Data Management (eNav)"
+  description: "Maritime data management platform for Jabatan Laut Malaysia (Marine Department) on the national e-Navigation platform — secure role-based access, real-time data updates via SignalR, and operational dashboards for maritime records."
+  techTags:
+    - "ASP.NET"
+    - "SignalR"
+    - "MongoDB"
+    - "Bootstrap"
+  cover: "/images/portfolio/mdm.png"
+  screenshots:
+    - "/images/portfolio/mdm.png"
+  caseStudySlug: "mdm-enav"
+
 - slug: "matca"
   title: "MATCA — Air Traffic Controllers Association Portal"
   description: "Official web portal for the Malaysia Air Traffic Controllers Association (MATCA) — membership recruitment, association events, gallery, and merchandise for the professional community of air traffic controllers."

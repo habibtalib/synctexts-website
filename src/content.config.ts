@@ -200,6 +200,7 @@ const training = defineCollection({
     description: z.string(),
     date: z.coerce.date().optional(),
     endDate: z.coerce.date().optional(),
+    approx: z.boolean().default(false), // month-level precision — hide the day
     duration: z.string().optional(),
     venue: z.string().optional(),
     tags: z.array(z.string()).default([]),

@@ -70,21 +70,39 @@
 - id: "suk-kedah-laravel-claude-code"
   title: "Laravel with Claude Code"
   client: "SUK Kedah"
-  description: "Hands-on training on modern Laravel development supercharged with Claude Code — AI-assisted coding workflows, from scaffolding to production practices, for the Kedah State Secretariat's development team."
-  date: "2025-11-12"
+  description: "Advanced hands-on training on modern Laravel development supercharged with Claude Code — AI-assisted coding workflows, from scaffolding to production practices, for the Kedah State Secretariat's development team."
+  date: "2026-05-01"
+  approx: true
   tags: ["Laravel", "Claude Code", "AI-Assisted Development"]
   order: 6
+
+- id: "lznk-laravel-beginner"
+  title: "Laravel Beginner"
+  client: "LZNK — Lembaga Zakat Negeri Kedah"
+  description: "Beginner Laravel course for Lembaga Zakat Negeri Kedah's development team — framework fundamentals, routing, Eloquent, and building a first application."
+  date: "2026-02-01"
+  approx: true
+  tags: ["Laravel", "PHP", "Beginner"]
+  order: 7
+
+- id: "suk-kedah-laravel-beginner"
+  title: "Laravel Beginner"
+  client: "SUK Kedah"
+  description: "Beginner Laravel course for the Kedah State Secretariat — PHP and Laravel fundamentals, MVC, routing, and Eloquent, laying the groundwork for the team's follow-up advanced training."
+  date: "2025-11-12"
+  tags: ["Laravel", "PHP", "Beginner"]
+  order: 8
 
 - id: "jpj-intro-figma"
   title: "Introduction to Figma"
   client: "JPJ — Bahagian Teknologi Maklumat"
   description: "Design fundamentals workshop for the Road Transport Department's IT division — interface design, prototyping, and collaboration workflows in Figma."
   tags: ["Figma", "UI/UX", "Design"]
-  order: 7
+  order: 9
 
 - id: "oku-ai-video-veo3"
   title: "AI Video Generation with Veo 3"
   client: "Persatuan OKU Malaysia"
   description: "Practical workshop on creating videos with Google's Veo 3 — prompt techniques and production workflows, making AI video tools accessible to the disabled persons' community."
   tags: ["Veo 3", "AI Video", "Generative AI"]
-  order: 8
+  order: 10
