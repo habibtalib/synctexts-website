@@ -1,0 +1,90 @@
+# Training delivered / scheduled by SyncTexts.
+# Add one entry per training. Newest date shows first on the timeline. Template:
+#
+# - id: "unique-slug"
+#   title: "Course / workshop title"
+#   client: "Organisation it was delivered for"
+#   description: "What was covered and for whom."
+#   date: "2026-06-23"        # start date, YYYY-MM-DD (optional)
+#   endDate: "2026-06-25"     # optional, for multi-day ranges
+#   duration: "3 days"        # optional
+#   venue: "Location"         # optional
+#   tags: ["Laravel", "AI"]   # optional
+#   order: 1                  # optional tie-breaker
+
+- id: "nres-dotnet-coaching"
+  title: ".NET Development Coaching"
+  client: "NRES"
+  description: "Seven-day hands-on coaching engagement for developers at the Ministry of Natural Resources & Environmental Sustainability — guided, project-based upskilling in .NET on the team's real systems."
+  date: "2026-07-23"
+  endDate: "2026-07-31"
+  duration: "7 days"
+  venue: "BPM Training Room, Kompleks F, Putrajaya"
+  tags: [".NET", "C#", "Coaching"]
+  order: 1
+
+- id: "kkdw-powerbi-fabric-copilot"
+  title: "Power BI + Fabric + Copilot"
+  client: "KKDW"
+  description: "Three-day analytics course for the Ministry of Rural & Regional Development — Microsoft Power BI dashboards, the Fabric data platform, and AI-assisted analytics with Copilot."
+  date: "2026-07-13"
+  endDate: "2026-07-15"
+  duration: "3 days"
+  venue: "Cyberview Resort & Spa, Cyberjaya"
+  tags: ["Power BI", "Microsoft Fabric", "Copilot"]
+  order: 2
+
+- id: "kpt-flutter"
+  title: "Flutter Mobile Development"
+  client: "KPT"
+  description: "Five-day Flutter bootcamp for the Ministry of Higher Education — Dart fundamentals, widget composition, state management, and building cross-platform mobile apps."
+  date: "2026-07-06"
+  endDate: "2026-07-10"
+  duration: "5 days"
+  venue: "KPT, Putrajaya"
+  tags: ["Flutter", "Dart", "Mobile"]
+  order: 3
+
+- id: "nres-powerbi"
+  title: "Microsoft Power BI"
+  client: "NRES"
+  description: "Two-day Microsoft Power BI course for the Ministry of Natural Resources & Environmental Sustainability — data modelling, DAX fundamentals, and building interactive dashboards."
+  date: "2026-06-29"
+  endDate: "2026-06-30"
+  duration: "2 days"
+  venue: "BPM Training Room, Kompleks F, Putrajaya"
+  tags: ["Power BI", "Data Visualization", "DAX"]
+  order: 4
+
+- id: "kpdn-nodejs-mongodb"
+  title: "Node.js & MongoDB"
+  client: "KPDN"
+  description: "Three-day hands-on Node.js & MongoDB course for the Ministry of Domestic Trade & Cost of Living — building a complaint-management system end to end with Express APIs and MongoDB data modelling."
+  date: "2026-06-23"
+  endDate: "2026-06-25"
+  duration: "3 days"
+  venue: "Tamarin Square, Cyberjaya"
+  tags: ["Node.js", "MongoDB", "Express"]
+  order: 5
+
+- id: "suk-kedah-laravel-claude-code"
+  title: "Laravel with Claude Code"
+  client: "SUK Kedah"
+  description: "Hands-on training on modern Laravel development supercharged with Claude Code — AI-assisted coding workflows, from scaffolding to production practices, for the Kedah State Secretariat's development team."
+  date: "2025-11-12"
+  tags: ["Laravel", "Claude Code", "AI-Assisted Development"]
+  order: 6
+
+- id: "jpj-intro-figma"
+  title: "Introduction to Figma"
+  client: "JPJ — Bahagian Teknologi Maklumat"
+  description: "Design fundamentals workshop for the Road Transport Department's IT division — interface design, prototyping, and collaboration workflows in Figma."
+  tags: ["Figma", "UI/UX", "Design"]
+  order: 7
+
+- id: "oku-ai-video-veo3"
+  title: "AI Video Generation with Veo 3"
+  client: "Persatuan OKU Malaysia"
+  description: "Practical workshop on creating videos with Google's Veo 3 — prompt techniques and production workflows, making AI video tools accessible to the disabled persons' community."
+  tags: ["Veo 3", "AI Video", "Generative AI"]
+  order: 8

@@ -190,4 +190,21 @@ const gallery = defineCollection({
   }),
 });
 
-export const collections = { blog, team, testimonials, pricing, portfolio, portfolioCaseStudies, gallery };
+// Training - courses & workshops delivered to clients
+const training = defineCollection({
+  loader: file('./src/data/training.yaml'),
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    client: z.string(),
+    description: z.string(),
+    date: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
+    duration: z.string().optional(),
+    venue: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { blog, team, testimonials, pricing, portfolio, portfolioCaseStudies, gallery, training };

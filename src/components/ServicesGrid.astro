@@ -26,6 +26,13 @@ const services = [
     description: 'Proactive security audits, vulnerability management, and compliance frameworks to protect your digital assets and customer data.',
     delay: '0.4s',
   },
+  {
+    icon: '\u{1F393}',
+    title: 'Technical Training',
+    description: 'Hands-on courses and workshops — Laravel, AI-assisted development, Power BI, Flutter, and more — delivered for government and enterprise teams.',
+    delay: '0.5s',
+    href: '/training',
+  },
 ];
 ---
 
@@ -42,6 +49,7 @@ const services = [
         title={service.title}
         description={service.description}
         delay={service.delay}
+        href={service.href}
       />
     ))}
   </div>

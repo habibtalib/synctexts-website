@@ -4,13 +4,38 @@ interface Props {
   title: string;
   description: string;
   delay?: string;
+  href?: string;
 }
 
-const { icon, title, description, delay } = Astro.props;
+const { icon, title, description, delay, href } = Astro.props;
+const Tag = href ? 'a' : 'div';
 ---
 
-<div class="service-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
+<Tag href={href} class="service-card glass-panel reveal" style={delay ? `--delay: ${delay}` : ''}>
   <div class="service-icon">{icon}</div>
   <h3>{title}</h3>
   <p>{description}</p>
-</div>
+  {href && <span class="service-more">Learn more &rarr;</span>}
+</Tag>
+
+<style>
+  a.service-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  a.service-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+  }
+
+  .service-more {
+    display: inline-block;
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+</style>

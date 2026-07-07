@@ -1,0 +1,373 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { getCollection } from 'astro:content';
+
+const sessions = (await getCollection('training')).sort((a, b) => {
+  const ad = a.data.date ? a.data.date.getTime() : 0;
+  const bd = b.data.date ? b.data.date.getTime() : 0;
+  if (ad !== bd) return bd - ad; // newest first
+  return a.data.order - b.data.order;
+});
+
+// "23–25 Jun" style range label (year lives in the month marker)
+function rangeLabel(start?: Date, end?: Date): string {
+  if (!start) return '';
+  const day = (x: Date) => x.getDate();
+  const mon = (x: Date) => x.toLocaleDateString('en-GB', { month: 'short' });
+  if (!end || start.getTime() === end.getTime()) return `${day(start)} ${mon(start)}`;
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear())
+    return `${day(start)}–${day(end)} ${mon(start)}`;
+  return `${day(start)} ${mon(start)} – ${day(end)} ${mon(end)}`;
+}
+
+const monthLabel = (d: Date) =>
+  d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }).toUpperCase();
+
+// Group sessions into month buckets (undated entries fall into "Earlier")
+type Session = (typeof sessions)[number];
+const groups: { label: string; items: Session[] }[] = [];
+for (const s of sessions) {
+  const label = s.data.date ? monthLabel(s.data.date) : 'EARLIER';
+  const last = groups[groups.length - 1];
+  if (last && last.label === label) last.items.push(s);
+  else groups.push({ label, items: [s] });
+}
+
+const now = new Date();
+const isUpcoming = (s: Session) => {
+  const end = s.data.endDate || s.data.date;
+  return !!end && end.getTime() >= now.getTime();
+};
+
+const areas = [
+  { icon: '\u{1F9E0}', title: 'AI-Assisted Development', text: 'Claude Code, Copilot, and generative AI workflows for real production teams.' },
+  { icon: '\u{1F527}', title: 'Web & Mobile Development', text: 'Laravel, Node.js, .NET, and Flutter — from fundamentals to advanced patterns.' },
+  { icon: '\u{1F4CA}', title: 'Data & Analytics', text: 'Microsoft Power BI, Fabric, MongoDB, and dashboarding for decision-makers.' },
+  { icon: '\u{1F3A8}', title: 'Design & Prototyping', text: 'Figma, UI/UX fundamentals, and design-to-development handoff.' },
+];
+---
+
+<BaseLayout title="Training" description="Hands-on technical training by SyncTexts — Laravel, Node.js, Flutter, Power BI, and AI-assisted development — delivered for government and enterprise teams across Malaysia.">
+  <PageHeader title="Training" subtitle="Hands-on technical training for government & enterprise teams" />
+
+  <section class="container section">
+    <div class="training-intro glass-panel reveal">
+      <p>We train the teams that build. SyncTexts delivers practical, hands-on courses — taught by engineers who ship production systems daily — tailored to your team's stack, level, and goals. Available on-site or remote, in English or Bahasa Malaysia.</p>
+    </div>
+
+    <div class="training-areas">
+      {areas.map((a, i) => (
+        <div class="training-area glass-panel reveal" style={`--delay: ${(i + 1) * 0.1}s`}>
+          <div class="area-icon">{a.icon}</div>
+          <h3>{a.title}</h3>
+          <p>{a.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="section-heading reveal">
+      <h2>Training <span class="text-gradient">Timeline</span></h2>
+      <p>Scheduled and delivered courses for public-sector and enterprise clients.</p>
+    </div>
+
+    <div class="tl reveal">
+      {groups.map((group) => (
+        <div class="tl-group">
+          <div class="tl-month">
+            <span class="tl-month-tick"></span>
+            <span class="tl-month-label">{group.label}</span>
+          </div>
+          {group.items.map((s) => (
+            <div class="tl-item">
+              <div class="tl-when">
+                <span class="tl-range">{rangeLabel(s.data.date, s.data.endDate)}</span>
+                {s.data.duration && <span class="tl-duration">{s.data.duration}</span>}
+              </div>
+              <div class="tl-rail"><span class="tl-dot"></span></div>
+              <div class="tl-card glass-panel">
+                <div class="tl-card-top">
+                  <span class="tl-client">{s.data.client}</span>
+                  {isUpcoming(s) && <span class="tl-badge">Upcoming</span>}
+                </div>
+                {s.data.date && (
+                  <span class="tl-range-inline">
+                    {rangeLabel(s.data.date, s.data.endDate)}{s.data.duration ? ` · ${s.data.duration}` : ''}
+                  </span>
+                )}
+                <h3>{s.data.title}</h3>
+                <p>{s.data.description}</p>
+                {s.data.venue && <div class="tl-venue">📍 {s.data.venue}</div>}
+                <div class="tl-tags">
+                  {s.data.tags.map((t) => <span class="tl-tag">{t}</span>)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="training-cta glass-panel">
+      <h2>Train Your <span class="text-gradient">Team</span></h2>
+      <p>Need a course tailored to your organisation? We design custom curricula around your stack and skill levels — from one-day workshops to multi-day bootcamps.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Request a Training</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .training-intro {
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .training-intro p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 900px;
+  }
+
+  .training-areas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .training-area {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .area-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .training-area h3 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .training-area p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ---- Ruler-style vertical timeline ---- */
+  .tl {
+    --when-w: 120px;
+    --rail-w: 44px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .tl-month {
+    display: grid;
+    grid-template-columns: var(--when-w) var(--rail-w) 1fr;
+    align-items: center;
+    margin: 2.25rem 0 1rem;
+  }
+
+  .tl-group:first-child .tl-month {
+    margin-top: 0;
+  }
+
+  .tl-month-tick {
+    grid-column: 2;
+    justify-self: center;
+    width: 22px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+  }
+
+  .tl-month-label {
+    grid-column: 3;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+    padding-left: 0.25rem;
+  }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: var(--when-w) var(--rail-w) 1fr;
+    padding-bottom: 1.25rem;
+  }
+
+  .tl-when {
+    text-align: right;
+    padding: 0.4rem 0.6rem 0 0;
+  }
+
+  .tl-range {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .tl-duration {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-dimmed);
+    margin-top: 0.2rem;
+  }
+
+  .tl-rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* the ruler line */
+  .tl-rail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: -1.25rem;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.6), rgba(236, 72, 153, 0.35));
+  }
+
+  .tl-group:last-child .tl-item:last-child .tl-rail::before {
+    bottom: 40%;
+  }
+
+  .tl-dot {
+    position: relative;
+    z-index: 1;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    margin-top: 0.5rem;
+    background: var(--bg-base);
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.55);
+  }
+
+  .tl-card {
+    padding: 1.5rem 1.75rem;
+  }
+
+  .tl-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .tl-client {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tl-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    color: var(--secondary);
+    background: rgba(236, 72, 153, 0.12);
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    white-space: nowrap;
+  }
+
+  .tl-card h3 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .tl-card p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.85rem;
+  }
+
+  .tl-venue {
+    font-size: 0.82rem;
+    color: var(--text-dimmed);
+    margin-bottom: 0.85rem;
+  }
+
+  .tl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tl-tag {
+    padding: 0.25rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  .training-cta {
+    text-align: center;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .training-cta h2 {
+    font-size: 2rem;
+  }
+
+  .training-cta p {
+    color: var(--text-secondary);
+    max-width: 560px;
+  }
+
+  .tl-range-inline {
+    display: none;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.4rem;
+  }
+
+  @media (max-width: 700px) {
+    .tl {
+      --when-w: 0px;
+      --rail-w: 30px;
+    }
+
+    .tl-when {
+      display: none;
+    }
+
+    .tl-month-label {
+      padding-left: 0.5rem;
+    }
+
+    /* show the date inside the card on mobile */
+    .tl-range-inline {
+      display: block;
+    }
+  }
+</style>
