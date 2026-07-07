@@ -14,3 +14,11 @@
 #   photo: "/images/team/hafizal.jpg"
 #   slug: "hafizal"
 #   order: 2
+
+- id: "asmawi"
+  name: "Nur Asmawi bin Subri"
+  role: "Software Engineer"
+  bio: "DevSecOps-minded software engineer and Linux veteran with 15+ years across fullstack PHP development, server administration, and infrastructure — from maintaining the open-source Sabily OS to Proxmox virtualization migrations for Malaysian government agencies."
+  photo: "/images/team/asmawi.jpg"
+  slug: "asmawi"
+  order: 3

@@ -1,0 +1,505 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Professional experience — sourced from Nur Asmawi's resume.
+const experience = [
+  {
+    company: 'Raisd Ai Sdn Bhd',
+    meta: 'Kuala Lumpur, Malaysia',
+    roles: [
+      {
+        title: 'DevSecOps & Consultant',
+        period: 'Feb 2024 — Present',
+        points: [
+          'DevSecOps for Limkokwing University systems — automated security checks in the CI/CD pipeline so every change is scanned before production.',
+          'Maintainer of the LKW CMS platforms and built a new LMS for short-course programmes.',
+          'Acting Chief Technology Officer.',
+        ],
+        tags: ['DevSecOps', 'CI/CD', 'PHP', 'Cloud'],
+      },
+    ],
+  },
+  {
+    company: 'IBPO Group',
+    meta: 'Malaysia',
+    roles: [
+      {
+        title: 'DevOps',
+        period: 'Nov 2023 — Jan 2024',
+        points: [
+          'DevOps for IBPO Group systems and contributed customisation to the Aria CCS platform.',
+        ],
+        tags: ['DevOps'],
+      },
+    ],
+  },
+  {
+    company: 'Gemas Lestari Sdn Bhd',
+    meta: 'Malaysia',
+    roles: [
+      {
+        title: 'Developer & Consultant',
+        period: 'Jun 2022 — Oct 2023',
+        points: [
+          'Customised the UM HR system on Laravel 9.',
+          'Deployed Proxmox VE for BERNAMA and KDN, and led a VMware-to-Proxmox migration for PDRM.',
+          'Acting Technical Manager.',
+        ],
+        tags: ['Laravel', 'Proxmox', 'Virtualization'],
+      },
+    ],
+  },
+  {
+    company: 'iSente Sdn Bhd',
+    meta: 'Malaysia',
+    roles: [
+      {
+        title: 'Software Programmer',
+        period: '2015',
+        points: [
+          'Built Ubuntu Server 14.04 LTS deployments, ran a stock system on OsPOS, and customised a Moodle-based LMS.',
+        ],
+        tags: ['Ubuntu', 'Moodle', 'PHP'],
+      },
+    ],
+  },
+  {
+    company: 'Sabily Enterprise',
+    meta: 'Open Source · Malaysia',
+    roles: [
+      {
+        title: 'Operating System Maintainer',
+        period: '2008 — 2021',
+        points: [
+          'Maintainer of Sabily OS, an open-source Linux distribution.',
+          'Built the Zakat-Calc application for Linux and taught new programmers to code on Linux with GAMBAS.',
+        ],
+        tags: ['Linux', 'Open Source', 'Debian'],
+      },
+    ],
+  },
+];
+
+const skillGroups = [
+  {
+    label: 'Languages & Frameworks',
+    skills: ['PHP', 'Laravel', 'HTML5', 'CSS', 'JavaScript', 'GAMBAS'],
+  },
+  {
+    label: 'Systems & Infrastructure',
+    skills: ['Ubuntu', 'Debian', 'Linux Server Administration', 'Proxmox', 'WSL', 'AWS', 'cPanel / CloudPanel', 'NextCloud'],
+  },
+  {
+    label: 'Data & Security',
+    skills: ['MySQL / MariaDB', 'MongoDB', 'DevSecOps', 'Kali Linux', 'Networking'],
+  },
+];
+---
+
+<BaseLayout
+  title="Nur Asmawi bin Subri — Software Engineer"
+  description="Meet Nur Asmawi bin Subri, Software Engineer at SyncTexts — DevSecOps practitioner and Linux veteran with 15+ years across fullstack development, server administration, and infrastructure."
+>
+  <section class="container section profile-hero reveal">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img src="/images/team/asmawi.jpg" alt="Nur Asmawi bin Subri" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.add('avatar-fallback');" />
+        <span class="avatar-initials">NA</span>
+      </div>
+      <div class="profile-intro">
+        <h1 class="profile-name">Nur Asmawi bin Subri</h1>
+        <span class="profile-role">Software Engineer, SyncTexts</span>
+        <p class="profile-headline">DevSecOps · Fullstack Development · Linux & Open Source</p>
+        <p class="profile-location">📍 Kuala Lumpur, Malaysia</p>
+        <div class="profile-links">
+          <a href="https://linkedin.com/in/nur-asmawi-subri" target="_blank" rel="noopener" class="profile-link glass-panel">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://sabily.info" target="_blank" rel="noopener" class="profile-link glass-panel">
+            🌐 sabily.info
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="profile-section glass-panel">
+      <h2>About</h2>
+      <p>Software engineer and Linux veteran with 15+ years across fullstack PHP development, server administration, and infrastructure. A DevSecOps practitioner at heart — automating security scanning into CI/CD pipelines, designing cloud infrastructure with automated monitoring and incident response, and keeping production systems recoverable without downtime.</p>
+      <p>Deeply rooted in open source: long-time maintainer of Sabily OS, contributor to community tooling, and a mentor who has taught new programmers to build on Linux. Experienced with networking, virtualization (Proxmox migrations for Malaysian government agencies), and pragmatic, get-it-done engineering.</p>
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <h2 class="profile-block-title">Experience</h2>
+    <div class="timeline">
+      {experience.map((company) => (
+        <div class="timeline-item glass-panel reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-company">{company.company}</div>
+          <div class="timeline-meta">{company.meta}</div>
+          {company.roles.map((role) => (
+            <div class="timeline-role">
+              <h3>{role.title}</h3>
+              <span class="timeline-period">{role.period}</span>
+              <ul>
+                {role.points.map((point) => <li>{point}</li>)}
+              </ul>
+              <div class="profile-tags">
+                {role.tags.map((tag) => <span class="profile-tag">{tag}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="profile-grid">
+      <div class="profile-section glass-panel reveal">
+        <h2>Skills</h2>
+        <div class="skill-groups">
+          {skillGroups.map((group) => (
+            <div class="skill-group">
+              <span class="skill-group-label">{group.label}</span>
+              <div class="profile-tags">
+                {group.skills.map((skill) => <span class="profile-tag">{skill}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="profile-section glass-panel reveal">
+        <h2>Education</h2>
+        <div class="profile-project" style="cursor: default;">
+          <h3>UniTAR</h3>
+          <p>Diploma of Information Technology · 2010 — 2016</p>
+        </div>
+        <h2 style="margin-top: 1.75rem;">Open Source</h2>
+        <div class="profile-project" style="cursor: default;">
+          <h3>Sabily OS — Maintainer</h3>
+          <p>Long-time maintainer of the open-source Sabily Linux distribution; built Zakat-Calc for Linux and mentored new Linux programmers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section reveal">
+    <div class="profile-cta glass-panel">
+      <h2>Work With Us</h2>
+      <p>Looking for a technology partner with deep infrastructure and security expertise? Let's discuss your next project.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Get In Touch</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .profile-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--glass-border);
+    background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .avatar-initials {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    user-select: none;
+  }
+
+  .profile-avatar:not(.avatar-fallback) .avatar-initials {
+    display: none;
+  }
+
+  .avatar-fallback img {
+    display: none;
+  }
+
+  .profile-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .profile-name {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+  }
+
+  .profile-role {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .profile-headline {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .profile-location {
+    color: var(--text-dimmed);
+    font-size: 0.95rem;
+  }
+
+  .profile-links {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .profile-link:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .profile-block-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .profile-section {
+    padding: 2rem;
+  }
+
+  .profile-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  .profile-section p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 1.75rem 2rem 1.75rem 2.5rem;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 2rem;
+    width: 4px;
+    height: calc(100% - 3.5rem);
+    border-radius: 4px;
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+  }
+
+  .timeline-company {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .timeline-meta {
+    font-size: 0.85rem;
+    color: var(--text-dimmed);
+    margin-top: 0.25rem;
+  }
+
+  .timeline-role {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .timeline-role:first-of-type {
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .timeline-role h3 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+
+  .timeline-period {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-top: 0.15rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-role ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timeline-role li {
+    position: relative;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+
+  .timeline-role li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+  }
+
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .profile-tag {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  .skill-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .skill-group-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dimmed);
+    margin-bottom: 0.6rem;
+  }
+
+  .profile-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .profile-project {
+    display: block;
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    text-decoration: none;
+  }
+
+  .profile-project h3 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-project p {
+    font-size: 0.85rem;
+    color: var(--text-dimmed);
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+
+  .profile-cta {
+    text-align: center;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .profile-cta h2 {
+    font-size: 2rem;
+  }
+
+  .profile-cta p {
+    color: var(--text-secondary);
+    max-width: 500px;
+  }
+
+  @media (max-width: 900px) {
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .profile-links {
+      justify-content: center;
+    }
+
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-name {
+      font-size: 2rem;
+    }
+  }
+</style>

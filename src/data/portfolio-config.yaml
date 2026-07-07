@@ -154,6 +154,18 @@
     - "/images/portfolio/merdekatimes.png"
   caseStudySlug: "merdekatimes"
 
+- slug: "matca"
+  title: "MATCA — Air Traffic Controllers Association Portal"
+  description: "Official web portal for the Malaysia Air Traffic Controllers Association (MATCA) — membership recruitment, association events, gallery, and merchandise for the professional community of air traffic controllers."
+  techTags:
+    - "WordPress"
+    - "Elementor"
+    - "PHP"
+  cover: "/images/portfolio/matca.png"
+  screenshots:
+    - "/images/portfolio/matca.png"
+  caseStudySlug: "matca"
+
 - slug: "noir"
   title: "Usahawan Noir — Beauty Agent Platform"
   description: "Agent and entrepreneur platform for the Noir beauty brand — member onboarding, agent dashboards, and sales operations for the Usahawan Noir network."
