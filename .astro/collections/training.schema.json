@@ -1,0 +1,91 @@
+{
+  "$ref": "#/definitions/training",
+  "definitions": {
+    "training": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "client": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "integer",
+                "format": "unix-time"
+              }
+            ]
+          },
+          "endDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "integer",
+                "format": "unix-time"
+              }
+            ]
+          },
+          "approx": {
+            "type": "boolean",
+            "default": false
+          },
+          "duration": {
+            "type": "string"
+          },
+          "venue": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "order": {
+            "type": "number",
+            "default": 0
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "client",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

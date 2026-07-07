@@ -1,0 +1,58 @@
+{
+  "$ref": "#/definitions/gallery",
+  "definitions": {
+    "gallery": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "integer",
+                "format": "unix-time"
+              }
+            ]
+          },
+          "image": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number",
+            "default": 0
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "image"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

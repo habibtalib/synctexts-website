@@ -170,6 +170,14 @@ declare module 'astro:content' {
   rendered?: RenderedContent;
   filePath?: string;
 }>;
+"gallery": Record<string, {
+  id: string;
+  body?: string;
+  collection: "gallery";
+  data: InferEntrySchema<"gallery">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
 "portfolio": Record<string, {
   id: string;
   body?: string;
@@ -207,6 +215,14 @@ declare module 'astro:content' {
   body?: string;
   collection: "testimonials";
   data: InferEntrySchema<"testimonials">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"training": Record<string, {
+  id: string;
+  body?: string;
+  collection: "training";
+  data: InferEntrySchema<"training">;
   rendered?: RenderedContent;
   filePath?: string;
 }>;
