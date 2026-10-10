@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JsonLdProduct from '../components/SEO/JsonLdProduct.astro';
+import JsonLdFaq from '../components/SEO/JsonLdFaq.astro';
+
+const title = 'SyncTexts OS: The Business OS for Malaysian SMEs';
+const description =
+  'SyncTexts OS brings AI Ads, CRM, HR + Recruit and Accounting into one login for Malaysian SMEs, with an AI assistant in every module. In development: join early access.';
+
+const modules = [
+  {
+    icon: '\u{1F91D}',
+    name: 'CRM',
+    tag: 'Coming first',
+    first: true,
+    description: 'Run your sales pipeline in one place.',
+    points: [
+      'Contacts, tags, lists and lead scoring',
+      'Lead forms, landing pages, order forms and checkout',
+      'Deal pipeline, calendar and booking pages',
+      'Follow-ups and email or WhatsApp broadcasts',
+    ],
+  },
+  {
+    icon: '\u{1F4E3}',
+    name: 'AI Ads',
+    tag: 'On the roadmap',
+    first: false,
+    description: 'AI agents that help plan, write, design and optimise your Meta ads.',
+    points: ['Campaign planning and ad copy', 'Creative design', 'Ongoing optimisation'],
+  },
+  {
+    icon: '\u{1F465}',
+    name: 'HR + Recruit',
+    tag: 'On the roadmap',
+    first: false,
+    description: 'People operations for a growing team.',
+    points: ['Attendance, leave and claims', 'Malaysian payroll', 'Hiring and recruitment'],
+  },
+  {
+    icon: '\u{1F4D2}',
+    name: 'Accounting',
+    tag: 'On the roadmap',
+    first: false,
+    description: 'Keep the books and stay compliant.',
+    points: ['Invoices and expenses', 'Bank reconciliation', 'LHDN MyInvois e-invoicing and SST'],
+  },
+];
+
+const highlights = [
+  {
+    icon: '\u{1F4AC}',
+    title: 'An AI assistant in every module',
+    description: 'Ask questions and get work done in a chat, inside the module you are using.',
+  },
+  {
+    icon: '\u{1F916}',
+    title: 'Named AI agents',
+    description: 'Each module has agents with a clear job, such as tracking deals, capturing leads or following up.',
+  },
+  {
+    icon: '\u{1FA99}',
+    title: 'Fair, metered AI credits',
+    description: 'AI usage is metered in credits and attributed to each module and user, so you can see where it goes.',
+  },
+  {
+    icon: '\u{1F5E3}\u{FE0F}',
+    title: 'Malay and English',
+    description: 'Use the whole system in Bahasa Melayu or English.',
+  },
+  {
+    icon: '\u{1F1F2}\u{1F1FE}',
+    title: 'Built for Malaysia',
+    description: 'MYR billing, local payment methods such as FPX and DuitNow, LHDN MyInvois, SST and Malaysian payroll.',
+  },
+  {
+    icon: '\u{1F511}',
+    title: 'One login',
+    description: 'Your team signs in once and sees only the modules they are given access to.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Is SyncTexts OS available now?',
+    a: 'Not yet. SyncTexts OS is in development, starting with the CRM module. Join early access and we will contact you when it is ready for you to try.',
+  },
+  {
+    q: 'Which modules are planned?',
+    a: 'Four modules under one login: CRM, AI Ads, HR + Recruit, and Accounting. CRM comes first; the others follow.',
+  },
+  {
+    q: 'How does the AI work?',
+    a: 'Every module has a chat assistant and named AI agents for specific jobs. AI usage is metered in credits, so you only use what you need.',
+  },
+  {
+    q: 'Does it support Bahasa Melayu?',
+    a: 'Yes. SyncTexts OS is built in Malay and English.',
+  },
+  {
+    q: 'Will the Accounting module support e-invoicing?',
+    a: 'Yes. The Accounting module is planned with LHDN MyInvois e-invoicing and SST support.',
+  },
+  {
+    q: 'How much will it cost?',
+    a: 'Pricing will be announced closer to launch. Early-access members will hear first.',
+  },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <JsonLdProduct
+      type="SoftwareApplication"
+      name="SyncTexts OS"
+      description={description}
+      url="https://synctexts.com/os"
+      category="BusinessApplication"
+      availability="PreOrder"
+      inLanguage={['ms', 'en']}
+    />
+    <JsonLdFaq items={faqs} />
+  </Fragment>
+
+  <section class="product-hero container">
+    <div class="product-hero-content">
+      <div class="badge">In development &middot; Early access</div>
+      <h1 class="product-title">The <span class="text-gradient">business OS</span> for Malaysian SMEs</h1>
+      <p class="hero-subtitle">
+        SyncTexts OS brings AI Ads, CRM, HR + Recruit and Accounting into one login, with an AI assistant and named AI agents in every module. In Malay and English.
+      </p>
+      <div class="hero-cta">
+        <a href="/contact?product=os" class="btn btn-primary btn-lg">Join early access</a>
+        <a href="#os-modules" class="btn btn-secondary btn-lg">See the modules</a>
+      </div>
+    </div>
+    <p class="product-note reveal">
+      <strong>Status:</strong> SyncTexts OS is being built now, starting with the CRM module. Early-access members get first access and help shape what comes next.
+    </p>
+  </section>
+
+  <section class="product-section container" aria-labelledby="os-modules">
+    <div class="section-heading reveal">
+      <h2 id="os-modules">Four modules, <span class="text-gradient">one login</span></h2>
+      <p>Start with CRM. Add the rest as they arrive.</p>
+    </div>
+    <div class="product-grid product-grid--2">
+      {modules.map((m, i) => (
+        <div class="product-card glass-panel reveal" style={`--delay: ${(i % 2) * 0.1}s`}>
+          <span class="product-card-icon" aria-hidden="true">{m.icon}</span>
+          <div class="product-card-head">
+            <h3>{m.name}</h3>
+            <span class:list={['product-tag', { 'product-tag--first': m.first }]}>{m.tag}</span>
+          </div>
+          <p>{m.description}</p>
+          <ul>
+            {m.points.map((point) => <li>{point}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="product-section container" aria-labelledby="os-ai">
+    <div class="section-heading reveal">
+      <h2 id="os-ai">AI that <span class="text-gradient">does the work</span></h2>
+      <p>Built in, metered fairly, and made for how Malaysian businesses operate.</p>
+    </div>
+    <div class="product-grid">
+      {highlights.map((h, i) => (
+        <div class="product-card glass-panel reveal" style={`--delay: ${(i % 3) * 0.1}s`}>
+          <span class="product-card-icon" aria-hidden="true">{h.icon}</span>
+          <h3>{h.title}</h3>
+          <p>{h.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="product-section container" aria-labelledby="os-faq">
+    <div class="section-heading reveal">
+      <h2 id="os-faq">Frequently asked <span class="text-gradient">questions</span></h2>
+    </div>
+    <div class="product-faq">
+      {faqs.map((f) => (
+        <details class="product-faq-item glass-panel reveal">
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="product-section container">
+    <div class="product-cta-card glass-panel reveal">
+      <h2>Be first to try <span class="text-gradient">SyncTexts OS</span></h2>
+      <p>Join early access and we will reach out as the CRM module opens to early users.</p>
+      <a href="/contact?product=os" class="btn btn-primary btn-lg">Join early access</a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,227 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JsonLdProduct from '../components/SEO/JsonLdProduct.astro';
+import JsonLdFaq from '../components/SEO/JsonLdFaq.astro';
+
+const title = 'SyncTexts Cloud: Managed Hosting & VPS';
+const description =
+  'Managed hosting and VPS for Laravel, WordPress and PHP on DigitalOcean, Hetzner, Vultr, AWS Lightsail or Hostinger. Per-site isolation, free SSL, 24/7 monitoring and MYR invoicing with SST.';
+
+const providers = ['DigitalOcean', 'Hetzner', 'Vultr', 'AWS Lightsail', 'Hostinger'];
+
+const features = [
+  {
+    icon: '\u{1F512}',
+    title: 'Per-site isolation',
+    description: 'Every site runs as its own system user. Application code is read-only to PHP, so one compromised site cannot touch another.',
+  },
+  {
+    icon: '\u{1F418}',
+    title: 'PHP 7.4 to 8.5',
+    description: 'A dedicated PHP-FPM pool per site, with the PHP version chosen per site. Tuned for Laravel, WordPress and plain PHP.',
+  },
+  {
+    icon: '\u{1F510}',
+    title: 'Free SSL',
+    description: "Let's Encrypt certificates or Cloudflare origin certificates on every site, issued and renewed for you.",
+  },
+  {
+    icon: '\u{1F310}',
+    title: 'Cloudflare integration',
+    description: 'Connect your domains to Cloudflare for DNS, caching and protection in front of your server.',
+  },
+  {
+    icon: '\u{1F5A5}\u{FE0F}',
+    title: 'Client portal',
+    description: 'Manage sites, servers, files and SFTP, databases, backups and logs, and download invoices, from one portal.',
+  },
+  {
+    icon: '\u{1F4C8}',
+    title: '24/7 monitoring',
+    description: 'Uptime and SSL expiry checks around the clock, so problems are caught before your customers see them.',
+  },
+  {
+    icon: '\u{1F6E0}\u{FE0F}',
+    title: 'Managed by engineers',
+    description: 'Our engineers handle OS and stack patching, security updates and server upkeep, so you can focus on your product.',
+  },
+  {
+    icon: '\u{1F511}',
+    title: '2FA and passkeys',
+    description: 'Protect portal accounts with two-factor authentication or passwordless passkeys.',
+  },
+  {
+    icon: '\u{1F9FE}',
+    title: 'MYR invoicing with SST',
+    description: 'SST-compliant invoices in Malaysian ringgit, billed monthly or annually. Pay by FPX through SecurePay, or by bank transfer.',
+  },
+];
+
+const steps = [
+  {
+    title: 'Tell us what you run',
+    description: 'Share your sites, traffic and stack. We recommend a plan and a cloud provider and send you a quote in MYR.',
+  },
+  {
+    title: 'We set it up',
+    description: 'We provision the server on your chosen provider, isolate each site, install SSL and get your sites live.',
+  },
+  {
+    title: 'We keep it running',
+    description: 'Monitoring, patching and backups continue in the background. You manage everything from the client portal.',
+  },
+];
+
+const plans = [
+  {
+    name: 'Managed web hosting',
+    description: 'For businesses and agencies that need their sites hosted and looked after, without managing a server.',
+    points: ['Sites on our managed servers', 'Per-site isolation and PHP version', 'Free SSL and backups', 'Uptime and SSL monitoring'],
+  },
+  {
+    name: 'Managed VPS',
+    description: 'A dedicated server on the provider you choose, fully managed by our engineers.',
+    points: ['DigitalOcean, Hetzner, Vultr, AWS Lightsail or Hostinger', 'Server sized to your workload', 'Patching and security updates', 'Full access from the client portal'],
+  },
+];
+
+const faqs = [
+  {
+    q: 'Which cloud providers can my server run on?',
+    a: 'We run servers on DigitalOcean, Hetzner, Vultr, AWS Lightsail and Hostinger. We can recommend one based on your budget, location and workload.',
+  },
+  {
+    q: 'Which applications do you support?',
+    a: 'SyncTexts Cloud is optimised for Laravel, WordPress and PHP applications, with PHP versions from 7.4 to 8.5 selectable per site.',
+  },
+  {
+    q: 'How are sites kept apart on the same server?',
+    a: 'Each site runs under its own system user with its own PHP-FPM pool, and application code is read-only to PHP. A problem on one site stays on that site.',
+  },
+  {
+    q: 'Is SSL included?',
+    a: "Yes. Every site gets a free Let's Encrypt certificate or a Cloudflare origin certificate, and renewals are handled for you.",
+  },
+  {
+    q: 'How does billing work?',
+    a: 'We invoice in MYR with SST, monthly or annually. Annual billing gives you two months free. You can pay by FPX through SecurePay or by bank transfer.',
+  },
+  {
+    q: 'Who manages updates and security patches?',
+    a: 'Our engineers do. We patch the operating system and server stack, monitor uptime and SSL around the clock, and respond when something needs attention.',
+  },
+  {
+    q: 'How much does it cost?',
+    a: 'Pricing depends on the provider, server size and number of sites. Contact us for a quote.',
+  },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <JsonLdProduct
+      type="Product"
+      name="SyncTexts Cloud"
+      description={description}
+      url="https://synctexts.com/cloud"
+      category="Managed web hosting and VPS"
+    />
+    <JsonLdFaq items={faqs} />
+  </Fragment>
+
+  <section class="product-hero container">
+    <div class="product-hero-content">
+      <div class="badge">Managed Hosting &amp; VPS</div>
+      <h1 class="product-title">Hosting that is <span class="text-gradient">engineered and managed</span> for you</h1>
+      <p class="hero-subtitle">
+        SyncTexts Cloud runs your Laravel, WordPress and PHP sites on the cloud provider you choose, with per-site isolation, free SSL and engineers who keep it patched and monitored.
+      </p>
+      <div class="hero-cta">
+        <a href="/contact?product=cloud" class="btn btn-primary btn-lg">Get a quote</a>
+        <a href="https://vps.synctexts.com" class="btn btn-secondary btn-lg" rel="noopener">Client login</a>
+      </div>
+    </div>
+
+    <div class="product-pills reveal">
+      <span class="product-pills-label">Runs on</span>
+      {providers.map((p) => <span class="product-pill">{p}</span>)}
+    </div>
+  </section>
+
+  <section class="product-section container" aria-labelledby="cloud-features">
+    <div class="section-heading reveal">
+      <h2 id="cloud-features">Everything a <span class="text-gradient">production site</span> needs</h2>
+      <p>Security, performance and day-to-day operations, handled.</p>
+    </div>
+    <div class="product-grid">
+      {features.map((f, i) => (
+        <div class="product-card glass-panel reveal" style={`--delay: ${(i % 3) * 0.1}s`}>
+          <span class="product-card-icon" aria-hidden="true">{f.icon}</span>
+          <h3>{f.title}</h3>
+          <p>{f.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="product-section container" aria-labelledby="cloud-how">
+    <div class="section-heading reveal">
+      <h2 id="cloud-how">How it <span class="text-gradient">works</span></h2>
+      <p>From first conversation to a managed server in three steps.</p>
+    </div>
+    <ol class="product-steps">
+      {steps.map((s, i) => (
+        <li class="product-step glass-panel reveal" style={`--delay: ${i * 0.1}s`}>
+          <h3>{s.title}</h3>
+          <p>{s.description}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="product-section container" aria-labelledby="cloud-plans">
+    <div class="section-heading reveal">
+      <h2 id="cloud-plans">Choose your <span class="text-gradient">setup</span></h2>
+      <p>Both are quoted to your needs.</p>
+    </div>
+    <div class="product-grid product-grid--2">
+      {plans.map((p, i) => (
+        <div class="product-card glass-panel reveal" style={`--delay: ${i * 0.1}s`}>
+          <h3>{p.name}</h3>
+          <p>{p.description}</p>
+          <ul>
+            {p.points.map((point) => <li>{point}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <p class="product-note reveal">
+      <strong>Billing:</strong> SST-compliant invoices in MYR, monthly or annually. Annual billing gives you two months free. Pay by FPX through SecurePay or by bank transfer.
+    </p>
+  </section>
+
+  <section class="product-section container" aria-labelledby="cloud-faq">
+    <div class="section-heading reveal">
+      <h2 id="cloud-faq">Frequently asked <span class="text-gradient">questions</span></h2>
+    </div>
+    <div class="product-faq">
+      {faqs.map((f) => (
+        <details class="product-faq-item glass-panel reveal">
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="product-section container">
+    <div class="product-cta-card glass-panel reveal">
+      <h2>Move your sites to <span class="text-gradient">SyncTexts Cloud</span></h2>
+      <p>Tell us what you run today and we will recommend a setup and send you a quote.</p>
+      <div class="hero-cta">
+        <a href="/contact?product=cloud" class="btn btn-primary btn-lg">Get a quote</a>
+        <a href="https://vps.synctexts.com" class="btn btn-secondary btn-lg" rel="noopener">Client login</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

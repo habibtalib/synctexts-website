@@ -1,0 +1,48 @@
+---
+const products = [
+  {
+    href: '/cloud',
+    icon: '\u{2601}\u{FE0F}',
+    name: 'SyncTexts Cloud',
+    tag: 'Available',
+    tagFirst: true,
+    description: 'Managed hosting and VPS tuned for Laravel, WordPress and PHP, run by our engineers on the cloud provider you choose.',
+    points: ['Per-site isolation and PHP 7.4–8.5', 'Free SSL, Cloudflare and 24/7 monitoring', 'MYR invoicing with SST'],
+    delay: '0.1s',
+  },
+  {
+    href: '/os',
+    icon: '\u{1F9E9}',
+    name: 'SyncTexts OS',
+    tag: 'Early access',
+    tagFirst: false,
+    description: 'One login for AI Ads, CRM, HR + Recruit and Accounting, built for Malaysian SMEs, with an AI assistant in every module.',
+    points: ['CRM module first', 'Malay and English', 'LHDN MyInvois and SST ready'],
+    delay: '0.2s',
+  },
+];
+---
+
+<section id="products" class="products-strip container section">
+  <div class="section-heading reveal">
+    <h2>Our <span class="text-gradient">Products</span></h2>
+    <p>Beyond client projects, we build and run our own platforms.</p>
+  </div>
+
+  <div class="product-grid product-grid--2">
+    {products.map((p) => (
+      <a href={p.href} class="products-strip-card product-card glass-panel reveal" style={`--delay: ${p.delay}`}>
+        <span class="product-card-icon" aria-hidden="true">{p.icon}</span>
+        <div class="product-card-head">
+          <h3>{p.name}</h3>
+          <span class:list={['product-tag', { 'product-tag--first': p.tagFirst }]}>{p.tag}</span>
+        </div>
+        <p>{p.description}</p>
+        <ul>
+          {p.points.map((point) => <li>{point}</li>)}
+        </ul>
+        <span class="service-more">Explore {p.name} &rarr;</span>
+      </a>
+    ))}
+  </div>
+</section>

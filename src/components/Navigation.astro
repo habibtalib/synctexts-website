@@ -12,6 +12,13 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
+const productLinks = [
+  { href: '/cloud', label: 'SyncTexts Cloud', desc: 'Managed hosting & VPS' },
+  { href: '/os', label: 'SyncTexts OS', desc: 'Business OS for SMEs (early access)' },
+];
+
+const productsActive = productLinks.some((p) => currentPath.startsWith(p.href));
+
 function isActive(linkHref: string): boolean {
   if (linkHref === '/') {
     return currentPath === '/' || currentPath === '';
@@ -29,9 +36,36 @@ function isActive(linkHref: string): boolean {
 
     <div class="nav-links-desktop">
       {navLinks.map((link) => (
-        <a href={link.href} class:list={[{ active: isActive(link.href) }]}>
-          {link.label}
-        </a>
+        <Fragment>
+          <a href={link.href} class:list={[{ active: isActive(link.href) }]}>
+            {link.label}
+          </a>
+          {link.href === '/' && (
+            <div class="nav-dropdown">
+              <button
+                type="button"
+                class:list={['nav-dropdown-toggle', { active: productsActive }]}
+                aria-expanded="false"
+                aria-controls="nav-products-menu"
+              >
+                Products
+                <svg class="nav-dropdown-chevron" viewBox="0 0 10 10" aria-hidden="true">
+                  <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </button>
+              <div class="nav-dropdown-menu" id="nav-products-menu">
+                <div class="nav-dropdown-panel">
+                  {productLinks.map((p) => (
+                    <a href={p.href} aria-current={currentPath.startsWith(p.href) ? 'page' : undefined}>
+                      <span class="nav-dropdown-name">{p.label}</span>
+                      <span class="nav-dropdown-desc">{p.desc}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </Fragment>
       ))}
       <a href="/contact" class="btn btn-primary">Start Project</a>
     </div>
@@ -51,14 +85,75 @@ function isActive(linkHref: string): boolean {
 <div class="sidebar-overlay" aria-hidden="true"></div>
 <div class="mobile-sidebar" aria-hidden="true">
   {navLinks.map((link) => (
-    <a href={link.href} class:list={['sidebar-link', { active: isActive(link.href) }]}>
-      {link.label}
-    </a>
+    <Fragment>
+      <a href={link.href} class:list={['sidebar-link', { active: isActive(link.href) }]}>
+        {link.label}
+      </a>
+      {link.href === '/' && (
+        <Fragment>
+          <span class="sidebar-group-label">Products</span>
+          {productLinks.map((p) => (
+            <a href={p.href} class:list={['sidebar-link', 'sidebar-sublink', { active: currentPath.startsWith(p.href) }]}>
+              {p.label}
+            </a>
+          ))}
+        </Fragment>
+      )}
+    </Fragment>
   ))}
   <a href="/contact" class="btn btn-primary btn-block">Start Project</a>
 </div>
 
 <script>
+  // Products dropdown: click/Enter toggles, ArrowDown opens and focuses the first item,
+  // Escape closes and returns focus, focus leaving or an outside click closes.
+  // Listeners are re-bound per page load; the controller drops the previous page's set.
+  let dropdownAbort: AbortController | null = null;
+
+  function initProductsDropdown() {
+    dropdownAbort?.abort();
+    dropdownAbort = new AbortController();
+    const { signal } = dropdownAbort;
+
+    const dropdown = document.querySelector<HTMLElement>('.nav-dropdown');
+    const toggle = dropdown?.querySelector<HTMLButtonElement>('.nav-dropdown-toggle');
+    if (!dropdown || !toggle) return;
+    const items = () => Array.from(dropdown.querySelectorAll<HTMLAnchorElement>('.nav-dropdown-panel a'));
+
+    const setOpen = (open: boolean) => {
+      dropdown.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+
+    toggle.addEventListener('click', () => setOpen(!dropdown.classList.contains('open')), { signal });
+
+    dropdown.addEventListener('keydown', (e) => {
+      const list = items();
+      const idx = list.indexOf(document.activeElement as HTMLAnchorElement);
+      if (e.key === 'Escape') {
+        setOpen(false);
+        toggle.focus();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setOpen(true);
+        list[(idx + 1) % list.length]?.focus();
+      } else if (e.key === 'ArrowUp' && idx >= 0) {
+        e.preventDefault();
+        list[(idx - 1 + list.length) % list.length]?.focus();
+      }
+    }, { signal });
+
+    dropdown.addEventListener('focusout', (e) => {
+      if (!dropdown.contains(e.relatedTarget as Node | null)) setOpen(false);
+    }, { signal });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target as Node)) setOpen(false);
+    }, { signal });
+  }
+
+  document.addEventListener('astro:page-load', initProductsDropdown);
+
   document.addEventListener('astro:page-load', () => {
     const hamburger = document.querySelector('.hamburger');
     const sidebar = document.querySelector('.mobile-sidebar');
@@ -102,6 +197,8 @@ function isActive(linkHref: string): boolean {
 
   // Close sidebar before View Transition navigation
   document.addEventListener('astro:before-preparation', () => {
+    document.querySelector('.nav-dropdown')?.classList.remove('open');
+    document.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
     const sidebar = document.querySelector('.mobile-sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
     const hamburger = document.querySelector('.hamburger');
