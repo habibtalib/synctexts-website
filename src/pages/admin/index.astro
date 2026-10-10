@@ -138,6 +138,8 @@ const SERVICE_LABELS: Record<string, string> = {
   web_dev: 'Web Dev',
   devops: 'DevOps',
   analytics: 'Analytics',
+  'cloud-hosting': 'SyncTexts Cloud',
+  'synctexts-os': 'SyncTexts OS',
 };
 ---
 
@@ -164,6 +166,8 @@ const SERVICE_LABELS: Record<string, string> = {
         <option value="web_dev" selected={serviceParam === 'web_dev'}>Web Dev</option>
         <option value="devops" selected={serviceParam === 'devops'}>DevOps</option>
         <option value="analytics" selected={serviceParam === 'analytics'}>Analytics</option>
+        <option value="cloud-hosting" selected={serviceParam === 'cloud-hosting'}>SyncTexts Cloud</option>
+        <option value="synctexts-os" selected={serviceParam === 'synctexts-os'}>SyncTexts OS</option>
       </select>
 
       <select name="min_score" class={`filter-select glass-input ${minScoreParam > 0 ? 'active' : ''}`} id="filter-score">

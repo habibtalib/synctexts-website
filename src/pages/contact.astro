@@ -59,6 +59,19 @@ import PageHeader from '../components/PageHeader.astro';
                 <span class="service-select-desc">Data pipelines, dashboards, and insights</span>
               </button>
             </div>
+            <p class="product-select-label">Or a SyncTexts product</p>
+            <div class="service-select-grid service-select-grid--products">
+              <button class="service-select-card glass-panel" data-service-value="cloud-hosting" type="button">
+                <span class="service-select-icon">&#9729;&#65039;</span>
+                <span class="service-select-name">SyncTexts Cloud</span>
+                <span class="service-select-desc">Managed hosting and VPS</span>
+              </button>
+              <button class="service-select-card glass-panel" data-service-value="synctexts-os" type="button">
+                <span class="service-select-icon">&#129513;</span>
+                <span class="service-select-name">SyncTexts OS</span>
+                <span class="service-select-desc">Early access: the business OS for SMEs</span>
+              </button>
+            </div>
           </div>
 
           <!-- Step 2: Project Details -->
@@ -435,6 +448,19 @@ import PageHeader from '../components/PageHeader.astro';
     gap: 1rem;
   }
 
+  .service-select-grid--products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-select-label {
+    margin: 1.5rem 0 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dimmed, #64748b);
+  }
+
   .service-select-card {
     display: flex;
     flex-direction: column;
@@ -563,7 +589,8 @@ import PageHeader from '../components/PageHeader.astro';
      ============================================================ */
 
   @media (max-width: 600px) {
-    .service-select-grid {
+    .service-select-grid,
+    .service-select-grid--products {
       grid-template-columns: 1fr;
     }
   }

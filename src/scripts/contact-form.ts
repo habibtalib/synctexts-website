@@ -25,6 +25,12 @@ interface FormState {
 // ============================================================
 
 const STORAGE_KEY = 'contact_form_state';
+
+// Short ?product= aliases used by product-page CTAs (e.g. /contact?product=os)
+const PRODUCT_ALIASES: Record<string, string> = {
+  cloud: 'cloud-hosting',
+  os: 'synctexts-os',
+};
 const CAL_URL = (import.meta as Record<string, unknown> & { env?: Record<string, string> }).env?.PUBLIC_CAL_URL ?? 'https://cal.com/synctexts/discovery';
 
 // ============================================================
@@ -145,6 +151,18 @@ function saveState(state: FormState): void {
 
 function clearState(): void {
   sessionStorage.removeItem(STORAGE_KEY);
+}
+
+// Preselected service from ?product= or ?service= — only values that match a card are accepted
+function serviceFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get('product') ?? params.get('service');
+  if (!raw) return null;
+  const value = PRODUCT_ALIASES[raw] ?? raw;
+  const card = Array.from(document.querySelectorAll<HTMLElement>('[data-service-value]')).find(
+    (c) => c.dataset.serviceValue === value,
+  );
+  return card ? value : null;
 }
 
 // ============================================================
@@ -348,6 +366,14 @@ function initContactForm(): void {
 
   let state = loadState();
   const completedSteps = new Set<number>();
+
+  // URL preselection overrides the saved service and skips straight to Step 2
+  const preselected = serviceFromUrl();
+  if (preselected) {
+    state.service_type = preselected;
+    if (state.step === 1) state.step = 2;
+    saveState(state);
+  }
 
   // --- Hydration from sessionStorage ---
   // Mark prior steps as completed based on saved step

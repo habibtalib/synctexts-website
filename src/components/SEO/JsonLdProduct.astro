@@ -1,0 +1,51 @@
+---
+interface Props {
+  type: 'Product' | 'SoftwareApplication';
+  name: string;
+  description: string;
+  url: string;
+  category?: string;
+  availability?: 'InStock' | 'PreOrder';
+  inLanguage?: string[];
+}
+
+const {
+  type,
+  name,
+  description,
+  url,
+  category,
+  availability = 'InStock',
+  inLanguage,
+} = Astro.props;
+
+// Offer deliberately carries no price — pricing is quoted on request
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': type,
+  name,
+  description,
+  url,
+  brand: {
+    '@type': 'Brand',
+    name: 'SyncTexts',
+  },
+  ...(type === 'SoftwareApplication'
+    ? { applicationCategory: category ?? 'BusinessApplication', operatingSystem: 'Web' }
+    : category ? { category } : {}),
+  ...(inLanguage ? { inLanguage } : {}),
+  offers: {
+    '@type': 'Offer',
+    url,
+    priceCurrency: 'MYR',
+    availability: `https://schema.org/${availability}`,
+    seller: {
+      '@type': 'Organization',
+      name: 'SyncTexts',
+      url: 'https://synctexts.com',
+    },
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

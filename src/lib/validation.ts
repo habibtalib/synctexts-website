@@ -3,7 +3,7 @@ export interface ValidationResult {
   errors: Record<string, string>;
 }
 
-export const ALLOWED_SERVICE_TYPES = ['web_dev', 'devops', 'analytics'] as const;
+export const ALLOWED_SERVICE_TYPES = ['web_dev', 'devops', 'analytics', 'cloud-hosting', 'synctexts-os'] as const;
 export const ALLOWED_BUDGETS = ['under_5k', '5k_15k', '15k_50k', '50k_plus'] as const;
 export const ALLOWED_TIMELINES = ['asap', '1_3_months', '3_6_months', 'exploring'] as const;
 

@@ -34,9 +34,13 @@ export const TIMELINE_SCORES: Record<string, number> = {
   asap: 25,
 } as const;
 
-// Service score map — web_dev highest due to largest typical deal size
+// Service score map — web_dev highest due to largest typical deal size.
+// Products: cloud-hosting is recurring managed-hosting revenue (devops-like);
+// synctexts-os is an early-access waitlist signup, so it scores lowest.
 export const SERVICE_SCORES: Record<string, number> = {
+  'synctexts-os': 5,
   analytics: 6,
+  'cloud-hosting': 7,
   devops: 8,
   web_dev: 10,
 } as const;
