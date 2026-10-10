@@ -1,3 +1,5 @@
+import type { ALLOWED_BUDGETS, ALLOWED_TIMELINES } from './validation';
+
 // Lead scoring signal weights — must sum to 100
 export const SIGNAL_WEIGHTS = {
   budget: 35,      // Largest deal-size signal: budget directly correlates with project value
@@ -16,23 +18,22 @@ export const TIER_THRESHOLDS = {
 // Lead tier type — three-level classification for prioritization
 export type LeadTier = 'cold' | 'warm' | 'hot';
 
-// Budget score map — keys are the values Phase 8's form must emit
+// Budget score map — keys must match ALLOWED_BUDGETS in validation.ts and the
+// contact form's <option> values exactly; the satisfies clause fails the type check if they drift
 export const BUDGET_SCORES: Record<string, number> = {
-  under_5k: 0,
-  '5k_10k': 10,
-  '10k_25k': 20,
-  '25k_50k': 28,
+  under_5k: 5,
+  '5k_15k': 15,
+  '15k_50k': 25,
   '50k_plus': 35,
-} as const;
+} satisfies Record<(typeof ALLOWED_BUDGETS)[number], number>;
 
-// Timeline score map — shorter timelines indicate higher urgency/intent
+// Timeline score map — keys must match ALLOWED_TIMELINES; shorter timelines indicate higher urgency/intent
 export const TIMELINE_SCORES: Record<string, number> = {
-  not_sure: 0,
-  '6_months_plus': 5,
-  '3_6_months': 15,
-  '1_3_months': 22,
+  exploring: 0,
+  '3_6_months': 12,
+  '1_3_months': 20,
   asap: 25,
-} as const;
+} satisfies Record<(typeof ALLOWED_TIMELINES)[number], number>;
 
 // Service score map — web_dev highest due to largest typical deal size.
 // Products: cloud-hosting is recurring managed-hosting revenue (devops-like);
