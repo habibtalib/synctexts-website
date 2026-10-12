@@ -19,7 +19,9 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/admin') && !page.includes('/api'),
+      // /team/hafizal is a redirect stub, not a real page
+      filter: (page) =>
+        !page.includes('/admin') && !page.includes('/api') && !page.includes('/team/hafizal'),
     }),
   ],
 });

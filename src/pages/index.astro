@@ -5,14 +5,11 @@ import ServicesGrid from '../components/ServicesGrid.astro';
 import ProductsStrip from '../components/ProductsStrip.astro';
 import TechGrid from '../components/TechGrid.astro';
 import PortfolioCard from '../components/PortfolioCard.astro';
-import TestimonialCard from '../components/TestimonialCard.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import { getCollection } from 'astro:content';
 
 const allProjects = await getCollection('portfolio');
 const projects = allProjects.slice(0, 3);
-
-const testimonials = await getCollection('testimonials');
 ---
 
 <BaseLayout title="Web Development, DevOps & Analytics Agency" description="SyncTexts delivers premium web development, DevOps automation, and data analytics solutions. Transform your digital presence with our expert team.">
@@ -47,30 +44,6 @@ const testimonials = await getCollection('testimonials');
 
     <div class="section-view-all reveal">
       <a href="/portfolio" class="view-all-link">View All Projects &rarr;</a>
-    </div>
-  </section>
-
-  <!-- Testimonials Preview -->
-  <section id="testimonials" class="testimonials container section">
-    <div class="section-heading reveal">
-      <h2>What <span class="text-gradient">Clients Say</span></h2>
-      <p>Trusted by teams building the next generation of digital products.</p>
-    </div>
-
-    <div class="testimonials-grid">
-      {testimonials.map((t, i) => (
-        <TestimonialCard
-          quote={t.data.quote}
-          name={t.data.name}
-          role={t.data.role}
-          company={t.data.company}
-          delay={`${(i + 1) * 0.1}s`}
-        />
-      ))}
-    </div>
-
-    <div class="section-view-all reveal">
-      <a href="/portfolio" class="view-all-link">Read More Testimonials &rarr;</a>
     </div>
   </section>
 

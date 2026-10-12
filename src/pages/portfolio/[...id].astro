@@ -1,23 +1,33 @@
 ---
-import type { GetStaticPathsResult } from 'astro';
-import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+export const getStaticPaths = (async () => {
   const caseStudies = await getCollection('portfolioCaseStudies');
   return caseStudies.map((entry) => ({
     params: { id: entry.id },
     props: { entry },
   }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: CollectionEntry<'portfolioCaseStudies'>;
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { title, client, industry, duration, techStack, cover, gallery, liveUrl } = entry.data;
 const galleryImages = (gallery && gallery.length ? gallery : cover ? [cover] : []);
+
+// The portfolio-config.yaml card description doubles as the meta description
+const card = (await getCollection('portfolio')).find(
+  (p) => (p.data.caseStudySlug || p.id) === entry.id,
+);
+const description = card?.data.description || `${title} - Case Study by SyncTexts`;
 ---
 
-<BaseLayout title={title} description={`${title} - Case Study by SyncTexts`}>
+<BaseLayout title={title} description={description} image={cover}>
   <article class="case-study-page container">
     <header class="case-study-header">
       <h1>{title}</h1>
@@ -40,7 +50,7 @@ const galleryImages = (gallery && gallery.length ? gallery : cover ? [cover] : [
 
     {cover && (
       <div class="case-study-cover glass-panel">
-        <img src={cover} alt={`${title} screenshot`} />
+        <img src={cover} alt={`${title} screenshot`} width="1366" height="900" />
       </div>
     )}
 

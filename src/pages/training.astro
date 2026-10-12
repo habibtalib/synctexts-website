@@ -35,10 +35,10 @@ for (const s of sessions) {
   else groups.push({ label, items: [s] });
 }
 
-const now = new Date();
-const isUpcoming = (s: Session) => {
+// The page is prerendered, so "upcoming" is decided client-side from this timestamp
+const upcomingUntil = (s: Session) => {
   const end = s.data.endDate || s.data.date;
-  return !!end && end.getTime() >= now.getTime();
+  return end ? end.toISOString() : undefined;
 };
 
 const areas = [
@@ -91,7 +91,9 @@ const areas = [
               <div class="tl-card glass-panel">
                 <div class="tl-card-top">
                   <span class="tl-client">{s.data.client}</span>
-                  {isUpcoming(s) && <span class="tl-badge">Upcoming</span>}
+                  {upcomingUntil(s) && (
+                    <span class="tl-badge" data-upcoming-until={upcomingUntil(s)} hidden>Upcoming</span>
+                  )}
                 </div>
                 {s.data.date && (
                   <span class="tl-range-inline">
@@ -120,6 +122,18 @@ const areas = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  function markUpcoming() {
+    const now = Date.now();
+    document.querySelectorAll<HTMLElement>('[data-upcoming-until]').forEach((badge) => {
+      const end = Date.parse(badge.dataset.upcomingUntil ?? '');
+      badge.hidden = !(end >= now);
+    });
+  }
+
+  document.addEventListener('astro:page-load', markUpcoming);
+</script>
 
 <style>
   .training-intro {
@@ -276,6 +290,10 @@ const areas = [
     color: var(--primary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .tl-badge[hidden] {
+    display: none;
   }
 
   .tl-badge {

@@ -163,8 +163,10 @@ const portfolio = defineCollection({
 });
 
 // Portfolio Case Studies - Markdown files with project details
+// Excludes project-*.md: stale placeholder case studies (project-crm/fintech/infra)
+// still sit on the server because the deploy rsync never deletes files.
 const portfolioCaseStudies = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/data/portfolio' }),
+  loader: glob({ pattern: ['**/*.md', '!project-*.md'], base: './src/data/portfolio' }),
   schema: z.object({
     title: z.string(),
     client: z.string(),

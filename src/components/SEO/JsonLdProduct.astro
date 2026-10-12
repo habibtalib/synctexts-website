@@ -7,6 +7,8 @@ interface Props {
   category?: string;
   availability?: 'InStock' | 'PreOrder';
   inLanguage?: string[];
+  /** Numeric price; offers are only emitted when set (Google flags priceless Offers) */
+  price?: string | number;
 }
 
 const {
@@ -17,9 +19,10 @@ const {
   category,
   availability = 'InStock',
   inLanguage,
+  price,
 } = Astro.props;
 
-// Offer deliberately carries no price — pricing is quoted on request
+// Pricing is quoted on request, so offers are omitted unless a price is passed
 const schema = {
   '@context': 'https://schema.org',
   '@type': type,
@@ -34,17 +37,22 @@ const schema = {
     ? { applicationCategory: category ?? 'BusinessApplication', operatingSystem: 'Web' }
     : category ? { category } : {}),
   ...(inLanguage ? { inLanguage } : {}),
-  offers: {
-    '@type': 'Offer',
-    url,
-    priceCurrency: 'MYR',
-    availability: `https://schema.org/${availability}`,
-    seller: {
-      '@type': 'Organization',
-      name: 'SyncTexts',
-      url: 'https://synctexts.com',
-    },
-  },
+  ...(price !== undefined
+    ? {
+        offers: {
+          '@type': 'Offer',
+          url,
+          price: String(price),
+          priceCurrency: 'MYR',
+          availability: `https://schema.org/${availability}`,
+          seller: {
+            '@type': 'Organization',
+            name: 'SyncTexts',
+            url: 'https://synctexts.com',
+          },
+        },
+      }
+    : {}),
 };
 ---
 
