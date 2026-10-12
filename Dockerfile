@@ -4,6 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+# PUBLIC_* vars are inlined at build time, so they must exist before the build
+ARG PUBLIC_GTM_ID
+ARG PUBLIC_CAL_URL
+ENV PUBLIC_GTM_ID=$PUBLIC_GTM_ID PUBLIC_CAL_URL=$PUBLIC_CAL_URL
 RUN npm run build
 
 # Stage 2: Runtime

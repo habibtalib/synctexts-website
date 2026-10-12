@@ -25,7 +25,7 @@ No test framework, linter, or formatter is configured. Type-check with `npx astr
 
 ### Rendering model
 
-SSR by default. Pages that hit the DB or read request headers set `export const prerender = false` explicitly (`src/pages/admin/index.astro`, all API routes). `BaseLayout.astro` wraps every page — SEO meta, Open Graph, JSON-LD, GTM injection (suppressed on `/admin`), Google Fonts, `<ClientRouter />` view transitions, and the shared nav/footer/background chrome.
+No `output` is set, so pages are **prerendered at build time** unless they opt out. Pages that hit the DB or read request headers set `export const prerender = false` explicitly (`src/pages/admin/index.astro`, all API routes). `BaseLayout.astro` wraps every page — SEO meta, Open Graph, JSON-LD, GTM injection (suppressed via the `noAnalytics` prop, which `/admin` passes along with `noindex`), Google Fonts, `<ClientRouter />` view transitions, and the shared nav/footer/background chrome.
 
 ### Content collections (`src/content.config.ts`)
 
@@ -55,11 +55,11 @@ Rate-limited submissions are still stored (flagged `rateLimited`) but skip both 
 
 ### Admin dashboard
 
-`/admin` and `/api/admin/*` are gated by HTTP Basic Auth (`ADMIN_USER` / `ADMIN_PASS`). `lib/auth.ts` is the shared helper for the API routes; the page itself inlines the same check because it must emit a `WWW-Authenticate` header. All filtering, sorting, and pagination is URL-param driven and executed in Drizzle.
+`/admin` and `/api/admin/*` are gated by HTTP Basic Auth (`ADMIN_USER` / `ADMIN_PASS`). `lib/auth.ts` (`checkBasicAuth`, timing-safe, fails closed when unset) is shared by the API routes and the page; the page additionally emits the `WWW-Authenticate` 401. All filtering, sorting, and pagination is URL-param driven and executed in Drizzle.
 
 ### Database
 
-Single `submissions` table (`src/db/schema.ts`). `src/db/index.ts` opens `data/submissions.db` at module load, creating `data/` if missing, with WAL + `busy_timeout=5000` + `synchronous=NORMAL`. `data/` is gitignored — in production it is the `app-data` Docker volume.
+Single `submissions` table (`src/db/schema.ts`). `src/db/index.ts` opens `data/submissions.db` at module load, creating `data/` if missing, with WAL + `busy_timeout=5000` + `synchronous=NORMAL`, then runs `CREATE TABLE IF NOT EXISTS submissions` (there is no baseline CREATE migration — the table was originally made with `drizzle-kit push`). Keep that statement in sync with `schema.ts` when adding columns. Caveat: on a *fresh* DB, `npm run db:migrate` would replay `0000`'s ALTERs and fail with duplicate columns; production already has every column. `data/` is gitignored — in production it is the `app-data` Docker volume.
 
 ### Client scripts
 
@@ -77,7 +77,7 @@ The rsync uses `rm: false`, so **files deleted from the repo are not deleted on 
 
 ## Environment
 
-`.env.example` is the reference. `RESEND_API_KEY` + `CONTACT_EMAIL` (email), `ADMIN_USER`/`ADMIN_PASS` (dashboard), `PUBLIC_GTM_ID` (analytics), plus three not in the example file: `GITHUB_PAT` (portfolio enrichment), `HUBSPOT_TOKEN`/`HUBSPOT_PORTAL_ID` (CRM), `CAL_WEBHOOK_SECRET` (booking webhook). Server-side code reads these via `import.meta.env`. Every integration degrades gracefully when its key is absent — except `CAL_WEBHOOK_SECRET`, whose absence 500s the webhook.
+`.env.example` is the reference. `RESEND_API_KEY` + `CONTACT_EMAIL` (email), `ADMIN_USER`/`ADMIN_PASS` (dashboard), `PUBLIC_GTM_ID` (analytics), plus three not in the example file: `GITHUB_PAT` (portfolio enrichment), `HUBSPOT_TOKEN`/`HUBSPOT_PORTAL_ID` (CRM), `CAL_WEBHOOK_SECRET` (booking webhook). Server-side code reads these via `import.meta.env` at runtime. `PUBLIC_*` values (`PUBLIC_GTM_ID`, `PUBLIC_CAL_URL`) are inlined at **build** time into prerendered pages, so they reach the Docker build as compose `build.args` interpolated from the server `.env` (`.env` itself is dockerignored). Every integration degrades gracefully when its key is absent — except `CAL_WEBHOOK_SECRET`, whose absence 500s the webhook.
 
 ## Design system
 
