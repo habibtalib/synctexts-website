@@ -31,7 +31,9 @@ const PRODUCT_ALIASES: Record<string, string> = {
   cloud: 'cloud-hosting',
   os: 'synctexts-os',
 };
-const CAL_URL = (import.meta as Record<string, unknown> & { env?: Record<string, string> }).env?.PUBLIC_CAL_URL ?? 'https://cal.com/synctexts/discovery';
+const CAL_URL: string = import.meta.env.PUBLIC_CAL_URL || 'https://cal.com/synctexts/discovery';
+// Cal embed wants the path only, e.g. 'synctexts/discovery'
+const CAL_LINK = CAL_URL.replace(/^https?:\/\/[^/]+\//, '').replace(/\/+$/, '');
 
 // ============================================================
 // Cal.com embed injection
@@ -39,7 +41,6 @@ const CAL_URL = (import.meta as Record<string, unknown> & { env?: Record<string,
 
 function injectCalEmbed(name: string, email: string): void {
   const EMBED_SCRIPT_ID = 'cal-embed-script';
-  const CAL_LINK = 'synctexts/discovery';
 
   // Inject Cal.com IIFE snippet once — guard against double-injection
   if (!document.getElementById(EMBED_SCRIPT_ID)) {
@@ -611,7 +612,9 @@ function initContactForm(): void {
         body: JSON.stringify(payload),
       });
 
-      const result = (await response.json()) as {
+      // Non-JSON bodies (proxy errors, HTML 413/5xx pages) must not reach .json()
+      const isJson = (response.headers.get('content-type') ?? '').includes('application/json');
+      const result = (isJson ? await response.json().catch(() => ({})) : {}) as {
         success?: boolean;
         message?: string;
         errors?: Record<string, string>;
@@ -659,7 +662,17 @@ function initContactForm(): void {
             }
           }, 10000);
         }
-      } else if (result.errors) {
+      } else if (response.status === 429) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'contact_form_submit',
+          form_status: 'error',
+        });
+
+        showErrorSummary({
+          submit: 'Too many submissions — please try again later or email us.',
+        });
+      } else if (result.errors && (response.status === 400 || response.status === 413)) {
         // Server validation errors
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
@@ -679,8 +692,10 @@ function initContactForm(): void {
           form_status: 'error',
         });
 
+        // Only trust the server's message for client errors; 5xx/non-JSON get a generic one
+        const serverMessage = response.status < 500 && result.message ? result.message : null;
         showErrorSummary({
-          submit: result.message ?? 'Something went wrong. Please try again later.',
+          submit: serverMessage ?? 'Something went wrong on our side — please try again or email us.',
         });
       }
     } catch {

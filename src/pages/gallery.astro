@@ -50,8 +50,8 @@ const fmt = (d?: Date) =>
   </section>
 
   <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lightbox-close" aria-label="Close">&times;</button>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true" inert>
+    <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
     <figure class="lightbox-figure">
       <img id="lightbox-img" src="" alt="" />
       <figcaption>
@@ -64,6 +64,20 @@ const fmt = (d?: Date) =>
 </BaseLayout>
 
 <script>
+  // Element that opened the lightbox, so focus can return to it on close
+  let lastTrigger: HTMLElement | null = null;
+
+  function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    if (!lightbox) return;
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightbox.inert = true;
+    document.body.classList.remove('lightbox-open');
+    lastTrigger?.focus();
+    lastTrigger = null;
+  }
+
   function initGalleryLightbox() {
     const lightbox = document.getElementById('lightbox');
     if (!lightbox) return;
@@ -71,6 +85,7 @@ const fmt = (d?: Date) =>
     const titleEl = document.getElementById('lightbox-title');
     const descEl = document.getElementById('lightbox-desc');
     const dateEl = document.getElementById('lightbox-date');
+    const closeBtn = lightbox.querySelector<HTMLButtonElement>('.lightbox-close');
 
     function open(card: HTMLElement) {
       if (!img || !titleEl || !descEl || !dateEl) return;
@@ -79,27 +94,29 @@ const fmt = (d?: Date) =>
       titleEl.textContent = card.dataset.title || '';
       descEl.textContent = card.dataset.desc || '';
       dateEl.textContent = card.dataset.date || '';
+      lastTrigger = card;
       lightbox!.classList.add('open');
       lightbox!.setAttribute('aria-hidden', 'false');
+      lightbox!.inert = false;
       document.body.classList.add('lightbox-open');
-    }
-    function close() {
-      lightbox!.classList.remove('open');
-      lightbox!.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('lightbox-open');
+      closeBtn?.focus();
     }
 
     document.querySelectorAll<HTMLElement>('.gallery-card').forEach((card) => {
       card.addEventListener('click', () => open(card));
     });
-    lightbox.querySelector('.lightbox-close')?.addEventListener('click', close);
+    closeBtn?.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) close();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox.classList.contains('open')) close();
+      if (e.target === lightbox) closeLightbox();
     });
   }
+
+  // Module scripts run once, so this document listener is registered a single time
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('lightbox')?.classList.contains('open')) {
+      closeLightbox();
+    }
+  });
 
   document.addEventListener('astro:page-load', initGalleryLightbox);
 </script>

@@ -73,6 +73,7 @@ function isActive(linkHref: string): boolean {
     <button
       class="hamburger"
       aria-expanded="false"
+      aria-controls="mobile-sidebar"
       aria-label="Toggle navigation"
     >
       <span></span>
@@ -83,7 +84,7 @@ function isActive(linkHref: string): boolean {
 </nav>
 
 <div class="sidebar-overlay" aria-hidden="true"></div>
-<div class="mobile-sidebar" aria-hidden="true">
+<div class="mobile-sidebar" id="mobile-sidebar" aria-hidden="true" inert>
   {navLinks.map((link) => (
     <Fragment>
       <a href={link.href} class:list={['sidebar-link', { active: isActive(link.href) }]}>
@@ -154,61 +155,63 @@ function isActive(linkHref: string): boolean {
 
   document.addEventListener('astro:page-load', initProductsDropdown);
 
-  document.addEventListener('astro:page-load', () => {
+  // Mobile sidebar: inert while closed so its links leave the tab order; Escape closes
+  // and returns focus to the hamburger. Same per-page AbortController pattern as above.
+  let sidebarAbort: AbortController | null = null;
+
+  function setSidebarOpen(open: boolean) {
     const hamburger = document.querySelector('.hamburger');
-    const sidebar = document.querySelector('.mobile-sidebar');
+    const sidebar = document.querySelector<HTMLElement>('.mobile-sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
-    const body = document.body;
+
+    hamburger?.setAttribute('aria-expanded', String(open));
+    if (sidebar) {
+      sidebar.classList.toggle('open', open);
+      sidebar.setAttribute('aria-hidden', String(!open));
+      sidebar.inert = !open;
+    }
+    overlay?.classList.toggle('open', open);
+    document.body.classList.toggle('sidebar-open', open);
+  }
+
+  function initMobileSidebar() {
+    sidebarAbort?.abort();
+    sidebarAbort = new AbortController();
+    const { signal } = sidebarAbort;
+
+    const hamburger = document.querySelector<HTMLButtonElement>('.hamburger');
+    const sidebar = document.querySelector<HTMLElement>('.mobile-sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
 
     if (!hamburger || !sidebar || !overlay) return;
 
-    function openSidebar() {
-      hamburger!.setAttribute('aria-expanded', 'true');
-      sidebar!.classList.add('open');
-      sidebar!.setAttribute('aria-hidden', 'false');
-      overlay!.classList.add('open');
-      body.classList.add('sidebar-open');
-    }
-
-    function closeSidebar() {
-      hamburger!.setAttribute('aria-expanded', 'false');
-      sidebar!.classList.remove('open');
-      sidebar!.setAttribute('aria-hidden', 'true');
-      overlay!.classList.remove('open');
-      body.classList.remove('sidebar-open');
-    }
+    const closeSidebar = () => setSidebarOpen(false);
 
     hamburger.addEventListener('click', () => {
-      const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
-      if (isOpen) {
-        closeSidebar();
-      } else {
-        openSidebar();
-      }
-    });
+      setSidebarOpen(hamburger.getAttribute('aria-expanded') !== 'true');
+    }, { signal });
 
-    overlay.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar, { signal });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+        closeSidebar();
+        hamburger.focus();
+      }
+    }, { signal });
 
     // Close sidebar on link click
     sidebar.querySelectorAll('.sidebar-link').forEach((link) => {
-      link.addEventListener('click', closeSidebar);
+      link.addEventListener('click', closeSidebar, { signal });
     });
-  });
+  }
+
+  document.addEventListener('astro:page-load', initMobileSidebar);
 
   // Close sidebar before View Transition navigation
   document.addEventListener('astro:before-preparation', () => {
     document.querySelector('.nav-dropdown')?.classList.remove('open');
     document.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
-    const sidebar = document.querySelector('.mobile-sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
-    const hamburger = document.querySelector('.hamburger');
-
-    if (sidebar) {
-      sidebar.classList.remove('open');
-      sidebar.setAttribute('aria-hidden', 'true');
-    }
-    if (overlay) overlay.classList.remove('open');
-    if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('sidebar-open');
+    setSidebarOpen(false);
   });
 </script>
