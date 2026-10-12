@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { validateContact } from '../../lib/validation';
-import { isRateLimited } from '../../lib/rate-limiter';
+import { getClientIp, recordRequest } from '../../lib/rate-limiter';
 import { db } from '../../db';
 import { submissions } from '../../db/schema';
 import { sendContactNotification } from '../../lib/email';
@@ -9,9 +9,41 @@ import { syncToHubSpot } from '../../lib/hubspot';
 
 export const prerender = false;
 
+const MAX_BODY_BYTES = 32768;
+const SOFT_LIMIT_PER_HOUR = 5;  // above this: stored + flagged, no email/HubSpot
+const HARD_LIMIT_PER_HOUR = 20; // above this: rejected outright, nothing stored
+
+function json(data: unknown, status: number): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
-    const body = await request.json();
+    // Reject oversized payloads before parsing
+    const contentLength = Number(request.headers.get('content-length') || 0);
+    if (contentLength > MAX_BODY_BYTES) {
+      return json({ success: false, message: 'Request too large.' }, 413);
+    }
+
+    // Content-Length may be absent (chunked), so re-check the actual body size
+    const rawBody = await request.text();
+    if (Buffer.byteLength(rawBody, 'utf8') > MAX_BODY_BYTES) {
+      return json({ success: false, message: 'Request too large.' }, 413);
+    }
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(rawBody);
+    } catch {
+      return json({ success: false, message: 'Invalid request body.' }, 400);
+    }
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      return json({ success: false, message: 'Invalid request body.' }, 400);
+    }
+    const body = parsed as Record<string, unknown>;
 
     // Honeypot check: if "website" field is filled, silently reject
     if (body.website) {
@@ -31,14 +63,18 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     }
 
     // Get client IP
-    const ip = clientAddress || request.headers.get('x-forwarded-for') || '127.0.0.1';
+    const ip = getClientIp(request, clientAddress);
 
-    // Check rate limit
-    const rateLimited = isRateLimited(ip);
+    // Check rate limit — hard cap drops floods without touching the DB
+    const hourlyCount = recordRequest(ip);
+    if (hourlyCount > HARD_LIMIT_PER_HOUR) {
+      return json({ success: false, message: 'Too many requests. Please try again later.' }, 429);
+    }
+    const rateLimited = hourlyCount > SOFT_LIMIT_PER_HOUR;
 
     // Extract required fields
     const name = (body.name as string).trim();
-    const email = (body.email as string).trim();
+    const email = (body.email as string).trim().toLowerCase();
     const company = body.company ? (body.company as string).trim() : null;
     const message = (body.message as string).trim();
 

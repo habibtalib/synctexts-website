@@ -13,6 +13,8 @@ interface Props {
   type?: string;
   canonicalUrl?: string;
   jsonLd?: object;
+  noAnalytics?: boolean;
+  noindex?: boolean;
 }
 
 const {
@@ -21,14 +23,15 @@ const {
   image = '/og-default.png',
   type = 'website',
   canonicalUrl,
+  noAnalytics = false,
+  noindex = false,
 } = Astro.props;
 
 const fullTitle = `${title} | SyncTexts`;
 const canonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
 
-const isAdmin = Astro.url.pathname.startsWith('/admin');
-const gtmId = isAdmin ? null : import.meta.env.PUBLIC_GTM_ID;
+const gtmId = noAnalytics ? null : import.meta.env.PUBLIC_GTM_ID;
 ---
 
 <!doctype html>
@@ -40,6 +43,7 @@ const gtmId = isAdmin ? null : import.meta.env.PUBLIC_GTM_ID;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={fullTitle} />

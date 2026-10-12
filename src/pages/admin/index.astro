@@ -7,21 +7,10 @@ import { db } from '../../db';
 import { submissions } from '../../db/schema';
 import { desc, asc, eq, gte, and, count } from 'drizzle-orm';
 import { scoreToTier } from '../../lib/scoring';
+import { checkBasicAuth } from '../../lib/auth';
 
 // Basic Auth check
-const authHeader = Astro.request.headers.get('Authorization');
-let authenticated = false;
-
-if (authHeader && authHeader.startsWith('Basic ')) {
-  const decoded = atob(authHeader.slice(6));
-  const [user, pass] = decoded.split(':');
-  const expectedUser = import.meta.env.ADMIN_USER;
-  const expectedPass = import.meta.env.ADMIN_PASS;
-
-  if (expectedUser && expectedPass && user === expectedUser && pass === expectedPass) {
-    authenticated = true;
-  }
-}
+const authenticated = checkBasicAuth(Astro.request);
 
 if (!authenticated) {
   return new Response('Unauthorized', {
@@ -36,9 +25,11 @@ const hubspotPortalId = import.meta.env.HUBSPOT_PORTAL_ID || '';
 const url = Astro.url;
 const statusParam = url.searchParams.get('status') || '';
 const serviceParam = url.searchParams.get('service') || '';
-const minScoreParam = parseInt(url.searchParams.get('min_score') || '0', 10);
+const minScoreRaw = parseInt(url.searchParams.get('min_score') || '0', 10);
+const minScoreParam = Number.isFinite(minScoreRaw) ? minScoreRaw : 0;
 const sortParam = url.searchParams.get('sort') || 'date_desc';
-const pageParam = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
+const pageRaw = parseInt(url.searchParams.get('page') || '1', 10);
+const pageParam = Number.isFinite(pageRaw) ? Math.max(1, pageRaw) : 1;
 
 const PAGE_SIZE = 25;
 
@@ -143,7 +134,7 @@ const SERVICE_LABELS: Record<string, string> = {
 };
 ---
 
-<BaseLayout title="Lead Dashboard - Admin">
+<BaseLayout title="Lead Dashboard - Admin" noAnalytics noindex>
   <PageHeader title="Lead Dashboard" subtitle="Manage and qualify leads" />
 
   <section class="container admin-section">
