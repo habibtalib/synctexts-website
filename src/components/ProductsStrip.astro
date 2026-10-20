@@ -20,6 +20,17 @@ const products = [
     points: ['CRM module first', 'Malay and English', 'LHDN MyInvois and SST ready'],
     delay: '0.2s',
   },
+  {
+    href: 'https://pelatih.my',
+    external: true,
+    icon: '\u{1F393}',
+    name: 'Pelatih.my',
+    tag: 'Live',
+    tagFirst: false,
+    description: 'Our training platform: hands-on courses for agencies and organisations, with in-browser labs, real Git and CI, and verifiable certificates.',
+    points: ['JavaScript, Node.js, Laravel, .NET', 'Power BI and JMeter', 'Bahasa Malaysia first'],
+    delay: '0.3s',
+  },
 ];
 ---
 
@@ -29,9 +40,14 @@ const products = [
     <p>Beyond client projects, we build and run our own platforms.</p>
   </div>
 
-  <div class="product-grid product-grid--2">
+  <div class="product-grid">
     {products.map((p) => (
-      <a href={p.href} class="products-strip-card product-card glass-panel reveal" style={`--delay: ${p.delay}`}>
+      <a
+        href={p.href}
+        class="products-strip-card product-card glass-panel reveal"
+        style={`--delay: ${p.delay}`}
+        {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}
+      >
         <span class="product-card-icon" aria-hidden="true">{p.icon}</span>
         <div class="product-card-head">
           <h3>{p.name}</h3>
@@ -41,7 +57,7 @@ const products = [
         <ul>
           {p.points.map((point) => <li>{point}</li>)}
         </ul>
-        <span class="service-more">Explore {p.name} &rarr;</span>
+        <span class="service-more">{p.external ? `Visit ${p.name} ↗` : <>Explore {p.name} &rarr;</>}</span>
       </a>
     ))}
   </div>

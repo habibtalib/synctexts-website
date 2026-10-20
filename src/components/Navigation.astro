@@ -15,6 +15,7 @@ const navLinks = [
 const productLinks = [
   { href: '/cloud', label: 'SyncTexts Cloud', desc: 'Managed hosting & VPS' },
   { href: '/os', label: 'SyncTexts OS', desc: 'Business OS for SMEs (early access)' },
+  { href: 'https://pelatih.my', label: 'Pelatih.my', desc: 'Hands-on tech training platform', external: true },
 ];
 
 const productsActive = productLinks.some((p) => currentPath.startsWith(p.href));
@@ -56,7 +57,11 @@ function isActive(linkHref: string): boolean {
               <div class="nav-dropdown-menu" id="nav-products-menu">
                 <div class="nav-dropdown-panel">
                   {productLinks.map((p) => (
-                    <a href={p.href} aria-current={currentPath.startsWith(p.href) ? 'page' : undefined}>
+                    <a
+                      href={p.href}
+                      aria-current={currentPath.startsWith(p.href) ? 'page' : undefined}
+                      {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}
+                    >
                       <span class="nav-dropdown-name">{p.label}</span>
                       <span class="nav-dropdown-desc">{p.desc}</span>
                     </a>
@@ -94,7 +99,11 @@ function isActive(linkHref: string): boolean {
         <Fragment>
           <span class="sidebar-group-label">Products</span>
           {productLinks.map((p) => (
-            <a href={p.href} class:list={['sidebar-link', 'sidebar-sublink', { active: currentPath.startsWith(p.href) }]}>
+            <a
+              href={p.href}
+              class:list={['sidebar-link', 'sidebar-sublink', { active: currentPath.startsWith(p.href) }]}
+              {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}
+            >
               {p.label}
             </a>
           ))}

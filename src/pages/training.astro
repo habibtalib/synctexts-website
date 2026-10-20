@@ -54,7 +54,7 @@ const areas = [
 
   <section class="container section">
     <div class="training-intro glass-panel reveal">
-      <p>We train the teams that build. SyncTexts delivers practical, hands-on courses — taught by engineers who ship production systems daily — tailored to your team's stack, level, and goals. Available on-site or remote, in English or Bahasa Malaysia.</p>
+      <p>We train the teams that build. SyncTexts delivers practical, hands-on courses — taught by engineers who ship production systems daily — tailored to your team's stack, level, and goals. Available on-site or remote, in English or Bahasa Malaysia. Our course labs, materials and certificates live on <a href="https://pelatih.my" target="_blank" rel="noopener">Pelatih.my</a>, our training platform.</p>
     </div>
 
     <div class="training-areas">
@@ -118,7 +118,10 @@ const areas = [
     <div class="training-cta glass-panel">
       <h2>Train Your <span class="text-gradient">Team</span></h2>
       <p>Need a course tailored to your organisation? We design custom curricula around your stack and skill levels — from one-day workshops to multi-day bootcamps.</p>
-      <a href="/contact" class="btn btn-primary btn-lg">Request a Training</a>
+      <div class="training-cta-actions">
+        <a href="/contact" class="btn btn-primary btn-lg">Request a Training</a>
+        <a href="https://pelatih.my" class="btn btn-secondary btn-lg" target="_blank" rel="noopener">Visit Pelatih.my ↗</a>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -146,6 +149,10 @@ const areas = [
     font-size: 1.05rem;
     line-height: 1.7;
     max-width: 900px;
+  }
+
+  .training-intro a {
+    color: var(--primary);
   }
 
   .training-areas {
@@ -354,6 +361,13 @@ const areas = [
 
   .training-cta h2 {
     font-size: 2rem;
+  }
+
+  .training-cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .training-cta p {
