@@ -1,6 +1,64 @@
 # SyncTexts portfolio — real client projects.
 # `cover` is the card thumbnail; case-study details live in src/data/portfolio/*.md
 
+- slug: "clms"
+  title: "CLMS — Loan Origination & Management SaaS"
+  description: "Multi-tenant loan origination and management platform for Malaysian licensed lenders — role-based panels for operations, telemarketing, agents, credit, documentation and finance, with credit-bureau checks, e-signing, collections, and a staff mobile app."
+  techTags:
+    - "Laravel 13"
+    - "Inertia"
+    - "React 19"
+    - "Tailwind CSS 4"
+    - "MySQL"
+    - "Expo / React Native"
+  cover: "/images/portfolio/clms.png"
+  screenshots:
+    - "/images/portfolio/clms.png"
+  caseStudySlug: "clms"
+
+- slug: "sauh-my"
+  title: "Sauh.my — Langkawi Travel Booking"
+  description: "Mobile-first booking platform for Langkawi travel — packages, ferry tickets, hotels, activities, car rental and charters — with server-side pricing, online payments, and QR e-tickets, rebuilt from WooCommerce."
+  techTags:
+    - "Laravel 13"
+    - "Inertia"
+    - "React 19"
+    - "FilamentPHP 5"
+    - "Tailwind CSS 4"
+    - "MySQL"
+  cover: "/images/portfolio/sauh.png"
+  screenshots:
+    - "/images/portfolio/sauh.png"
+  caseStudySlug: "sauh-my"
+
+- slug: "iluvquran"
+  title: "iLuvQuran — Quran E-learning Platform"
+  description: "Technology leadership and platform rebuild for a Quran e-learning company with 10 branches — a headless website, an in-house back office for students, scheduling and billing, and online class booking, moved onto Google Cloud."
+  techTags:
+    - "Astro"
+    - "Payload CMS"
+    - "Laravel 13"
+    - "FilamentPHP 5"
+    - "Google Cloud"
+    - "Cloudflare"
+  cover: "/images/portfolio/iluvquran.png"
+  screenshots:
+    - "/images/portfolio/iluvquran.png"
+  caseStudySlug: "iluvquran"
+
+- slug: "pinjamnow"
+  title: "PinjamNow — Personal Financing Website"
+  description: "Bilingual website for the PinjamNow personal-financing brand, with product pages and a multi-step loan application that submits straight into the CLMS lending platform."
+  techTags:
+    - "Next.js 16"
+    - "Payload CMS 3"
+    - "PostgreSQL"
+    - "Docker"
+  cover: "/images/portfolio/pinjamnow.png"
+  screenshots:
+    - "/images/portfolio/pinjamnow.png"
+  caseStudySlug: "pinjamnow"
+
 - slug: "eypj-v3"
   title: "eYPJ — Yayasan Pelajaran Johor Portal"
   description: "Multi-panel education financing platform for Yayasan Pelajaran Johor — managing scholarships, study loans, and grants with separate admin and applicant experiences, ProLIMS data migration, and analytics dashboards."
@@ -169,13 +227,15 @@
   caseStudySlug: "apmm-portal"
 
 - slug: "mdm-enav"
-  title: "MDM — Maritime Data Management (eNav)"
-  description: "Maritime data management platform for Jabatan Laut Malaysia (Marine Department) on the national e-Navigation platform — secure role-based access, real-time data updates via SignalR, and operational dashboards for maritime records."
+  title: "MDM — Maritime Data Management & VTMIS (eNav)"
+  description: "Vessel Traffic Management Information System for Jabatan Laut Malaysia (Marine Department) on the national e-Navigation platform — live AIS vessel tracking, alarms and aids-to-navigation monitoring, now being rebuilt as MDM v2 on modern .NET with a durable data pipeline and a Vue 3 console."
   techTags:
-    - "ASP.NET"
+    - ".NET 10 / ABP"
+    - "Vue 3"
     - "SignalR"
+    - "NATS JetStream"
+    - "TimescaleDB"
     - "MongoDB"
-    - "Bootstrap"
   cover: "/images/portfolio/mdm.png"
   screenshots:
     - "/images/portfolio/mdm.png"
